@@ -1,6 +1,6 @@
 # Trading Journal
 
-This app for trade journaling will tell you which criteria for entering a trade are most successfulk and what mistakes you're making on your losing trades.
+This app for trade journaling will tell you which criteria for entering a trade are most successful and what mistakes you're making on your losing trades. The goal of this app is to provide objective analysis of ones trading success or lack there of.
 
 ## User Stories
 
@@ -9,6 +9,10 @@ This app for trade journaling will tell you which criteria for entering a trade 
 - The user should be able to select triggers from a list of triggers. If the trigger does not exist, the user will be able to add a new trigger to that list.
 
 - The user should be able to review these trades with a screen shot or replay of the trade included in the notes.
+
+- The user should be able to review a list of triggers and see which of them are most successful. They will be ordered by how many successful trades they were included in.
+
+- The user should be able to review a list of mistakes ordered by how often they a re made in losing trades.
 
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
