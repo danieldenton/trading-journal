@@ -12,7 +12,7 @@ This app for trade journaling will tell you which criteria for entering a trade 
 
 - The user should be able to review a list of triggers and see which of them are most successful. They will be ordered by how many successful trades they were included in.
 
-- The user should be able to review a list of set-ups or groups of triggers, that are mst successful.
+- The user should be able to review a list of set-ups or groups of triggers, that are most successful.
 
 - The user should be able to review a list of mistakes ordered by how often they are made in losing trades.
 
