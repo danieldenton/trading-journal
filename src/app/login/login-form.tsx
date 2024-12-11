@@ -1,11 +1,11 @@
 "use client";
 
 import { useActionState } from "react";
-import SubmitButton from "./submit-button";
+// import SubmitButton from "./submit-button";
 import { login } from "@/actions";
 
 export default function LoginForm() {
-  const [state, loginAction] = useActionState(login, undefined);
+  const [state, loginAction, isPending] = useActionState(login, undefined);
   return (
     <form action={loginAction}>
       <label>
@@ -16,7 +16,9 @@ export default function LoginForm() {
         Password:
         <input type="password" name="password" />
       </label>
-      <SubmitButton />
+      <button disabled={isPending} type="submit">
+      Login
+    </button>
     </form>
   );
 }
