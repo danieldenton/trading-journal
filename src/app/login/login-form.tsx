@@ -8,17 +8,17 @@ export default function LoginForm() {
   const [state, loginAction, isPending] = useActionState(login, undefined);
   return (
     <form action={loginAction}>
-      <label>
-        Email:
-        <input type="email" name="email" />
-      </label>
-      <label>
-        Password:
-        <input type="password" name="password" />
-      </label>
+      <div>
+        <input type="email" name="email" placeholder="Email" />
+      </div>
+      {state?.errors?.email && (<p className="text-red-500">{state.errors.email}</p>)}
+      <div>
+        <input type="password" name="password" placeholder="Password" />
+      </div>
+      {state?.errors?.email && (<p className="text-red-500">{state.errors.email}</p>)}
       <button disabled={isPending} type="submit">
-      Login
-    </button>
+        Login
+      </button>
     </form>
   );
 }
