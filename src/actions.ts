@@ -16,6 +16,18 @@ const loginSchemaa = z.object({
     .trim(),
 });
 
-export async function login(prevState: any, formData: FormData) {}
+export async function login(prevState: any, formData: FormData) {
+  const result = loginSchemaa.safeParse(Object.fromEntries(formData));
+
+  if (!result.success) {
+    return { errors: result.error.flatten().fieldErrors };
+  }
+
+  const { email, password } = result.data;
+
+  if (email !== testUser.email || password !== testUser.password) {
+    return { errors: { email: ["Invalid email or password"] } };
+  }
+}
 
 export async function logout() {}
