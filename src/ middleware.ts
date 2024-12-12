@@ -20,4 +20,6 @@ export default async function middleware(req: NextRequest) {
   if (isPublicRoute && session) {
     return NextResponse.redirect("/dashboard");
   }
+
+  return NextResponse.next();
 }
