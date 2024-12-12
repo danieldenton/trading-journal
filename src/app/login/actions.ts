@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { createSession } from "./app/lib/sessions";
+import { createSession } from "../lib/sessions";
 import { redirect } from "next/navigation";
 
 const testUser = {

@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 // import SubmitButton from "./submit-button";
-import { login } from "@/actions";
+import { login } from "@/app/login/actions";
 
 export default function LoginForm() {
   const [state, loginAction, isPending] = useActionState(login, undefined);
