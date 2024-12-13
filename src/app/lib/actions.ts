@@ -1,19 +1,16 @@
 "use server";
 
-import { z } from "zod";
 import bcrypt from "bcrypt";
 import { sql } from "@vercel/postgres";
 import { redirect } from "next/navigation";
 import { createSession, deleteSession } from "./sessions";
-import { registerSchema, loginSchema } from "./schema";
+import { registerSchema, loginSchema, userDBSchema } from "./schema";
 
 const testUser = {
   id: "1",
   email: "daniel@danieldentondev.com",
   password: "password",
 };
-
-
 
 export async function register(prevState: any, formData: FormData) {
   try {
@@ -25,19 +22,15 @@ export async function register(prevState: any, formData: FormData) {
 
     const { email, firstName, lastName, password } = result.data;
 
-    if (email === testUser.email) {
+    const existingUser = await sql`
+      SELECT * FROM users WHERE email = ${email};
+    `;
+    if (existingUser.rows.length > 0) {
       return { errors: { email: ["Email already in use"] } };
     }
 
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-    const newUser = {
-      email,
-      firstName,
-      lastName,
-      password: hashedPassword,
-    };
 
     const response = await sql`
           INSERT INTO users (user_id, email, first_name, last_name)
@@ -45,10 +38,13 @@ export async function register(prevState: any, formData: FormData) {
           RETURNING *;
         `;
 
-    const validatedUser = registerSchema.safeParse(response.rows[0]);
-    // TODO: Save user to database and get the return with the user id.
+    const validatedUser = userDBSchema.safeParse(response.rows[0]);
 
-    await createSession(testUser.id);
+    if (!validatedUser.success) {
+      return { errors: { email: ["Failed to create user"] } };
+    }
+
+    await createSession(validatedUser.data.id);
 
     redirect("/dashboard");
   } catch (error) {
