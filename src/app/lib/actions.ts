@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import { sql } from "@vercel/postgres";
 import { redirect } from "next/navigation";
 import { createSession, deleteSession } from "./sessions";
+import { registerSchema, loginSchema } from "./schema";
 
 const testUser = {
   id: "1",
@@ -12,29 +13,7 @@ const testUser = {
   password: "password",
 };
 
-const loginSchema = z.object({
-  email: z.string().email({ message: "Invalid email address" }).trim(),
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters" })
-    .trim(),
-});
 
-const registerSchema = z
-  .object({
-    firstName: z.string().trim(),
-    lastName: z.string().trim(),
-    email: z.string().email({ message: "Invalid email address" }).trim(),
-    password: z
-      .string()
-      .min(8, { message: "Password must be at least 8 characters" })
-      .trim(),
-    confirmPassword: z.string().trim(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    path: ["confirmPassword"],
-    message: "Passwords must match",
-  });
 
 export async function register(prevState: any, formData: FormData) {
   try {
