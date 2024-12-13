@@ -2,10 +2,10 @@
 
 import { useActionState } from "react";
 // import SubmitButton from "./submit-button";
-import { register } from "@/app/lib/actions";
+import { registerUser } from "@/app/lib/actions";
 
 export default function SignupForm() {
-  const [state, loginAction, isPending] = useActionState(register, undefined);
+  const [state, loginAction, isPending] = useActionState(registerUser, undefined);
   return (
     <form action={loginAction}>
       <div>
@@ -15,7 +15,7 @@ export default function SignupForm() {
         <p className="text-red-500">{state.errors.email}</p>
       )}
       <div>
-        <input type="text" name="firstName" placeholder="First Nam" />
+        <input type="text" name="firstName" placeholder="First Name" />
       </div>
       <div>
         <input type="text" name="LastName" placeholder="Last Name" />

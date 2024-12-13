@@ -6,13 +6,7 @@ import { redirect } from "next/navigation";
 import { createSession, deleteSession } from "./sessions";
 import { registerSchema, loginSchema, userDBSchema } from "./schema";
 
-const testUser = {
-  id: "1",
-  email: "daniel@danieldentondev.com",
-  password: "password",
-};
-
-export async function register(prevState: any, formData: FormData) {
+export async function registerUser(prevState: any, formData: FormData) {
   try {
     const result = registerSchema.safeParse(Object.fromEntries(formData));
 
@@ -23,7 +17,7 @@ export async function register(prevState: any, formData: FormData) {
     const { email, firstName, lastName, password } = result.data;
 
     const existingUser = await sql`
-      SELECT * FROM users WHERE email = ${email};
+      SELECT 1 FROM users WHERE email = ${email};
     `;
     if (existingUser.rows.length > 0) {
       return { errors: { email: ["Email already in use"] } };
@@ -46,7 +40,8 @@ export async function register(prevState: any, formData: FormData) {
 
     await createSession(validatedUser.data.id);
 
-    redirect("/dashboard");
+    return { user: validatedUser.data };
+
   } catch (error) {
     console.error(error);
   }
