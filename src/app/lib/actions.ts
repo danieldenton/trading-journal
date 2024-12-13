@@ -54,6 +54,10 @@ export async function register(prevState: any, formData: FormData) {
     };
 
     // TODO: Save user to database and get the return with the user id.
+
+    await createSession(testUser.id);
+
+    redirect("/dashboard");
   } catch (error) {
     console.error(error);
   }
