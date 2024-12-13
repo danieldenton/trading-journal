@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 import bcrypt from "bcrypt";
+import { sql } from "@vercel/postgres";
 import { redirect } from "next/navigation";
 import { createSession, deleteSession } from "./sessions";
 
@@ -19,15 +20,21 @@ const loginSchema = z.object({
     .trim(),
 });
 
-const registerSchema = z.object({
-  firstName: z.string().trim(),
-  lastName: z.string().trim(),
-  email: z.string().email({ message: "Invalid email address" }).trim(),
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters" })
-    .trim(),
-});
+const registerSchema = z
+  .object({
+    firstName: z.string().trim(),
+    lastName: z.string().trim(),
+    email: z.string().email({ message: "Invalid email address" }).trim(),
+    password: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters" })
+      .trim(),
+    confirmPassword: z.string().trim(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Passwords must match",
+  });
 
 export async function register(prevState: any, formData: FormData) {
   try {
@@ -53,6 +60,13 @@ export async function register(prevState: any, formData: FormData) {
       password: hashedPassword,
     };
 
+    const response = await sql`
+          INSERT INTO users (user_id, email, first_name, last_name)
+          VALUES (${email}, ${firstName}, ${lastName}, ${hashedPassword})
+          RETURNING *;
+        `;
+
+    const validatedUser = registerSchema.safeParse(response.rows[0]);
     // TODO: Save user to database and get the return with the user id.
 
     await createSession(testUser.id);
@@ -78,14 +92,14 @@ export async function login(prevState: any, formData: FormData) {
   const user = testUser;
 
   if (!user) {
-    return error
+    return error;
   }
 
   const matchedPassowrd = await bcrypt.compare(password, testUser.password);
 
   if (!matchedPassowrd) {
     return error;
-  }  
+  }
 
   await createSession(testUser.id);
 
