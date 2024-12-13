@@ -68,9 +68,20 @@ export async function login(prevState: any, formData: FormData) {
 
   const { email, password } = result.data;
 
-  if (email !== testUser.email || password !== testUser.password) {
-    return { errors: { email: ["Invalid email or password"] } };
+  const error = { errors: { email: ["Invalid email or password"] } };
+
+  // find user by email
+  const user = testUser;
+
+  if (!user) {
+    return error
   }
+
+  const matchedPassowrd = await bcrypt.compare(password, testUser.password);
+
+  if (!matchedPassowrd) {
+    return error;
+  }  
 
   await createSession(testUser.id);
 
