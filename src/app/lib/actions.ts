@@ -3,7 +3,7 @@
 import { z } from "zod";
 import bcrypt from "bcrypt";
 import { redirect } from "next/navigation";
-import { createSession, deleteSession } from "../lib/sessions";
+import { createSession, deleteSession } from "./sessions";
 
 const testUser = {
   id: "1",
