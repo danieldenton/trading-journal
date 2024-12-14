@@ -3,13 +3,16 @@ const placeholderTriggers = [
   { name: "Inverse Fair Value Gap", successCount: 24, failureCount: 13 },
   { name: "SMT", successCount: 30, failureCount: 2 },
   { name: "Breaker", successCount: 15, failureCount: 5 },
-  { name: "Accumulation Manipulation Distribution", successCount: 6, failureCount: 1 },
+  {
+    name: "Accumulation Manipulation Distribution",
+    successCount: 6,
+    failureCount: 1,
+  },
 ];
-
+here is a change
 export default function TriggersPage() {
   return (
     <h1>Triggers Page</h1>
-    <p>Here is my change</p>
 
     // TODO: Basically a todo list.
     // 1. Make an input to create a new trigger that just has an input for the name
