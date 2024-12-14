@@ -9,6 +9,7 @@ const placeholderTriggers = [
 export default function TriggersPage() {
   return (
     <h1>Triggers Page</h1>
+    <p>Here is my change</p>
 
     // TODO: Basically a todo list.
     // 1. Make an input to create a new trigger that just has an input for the name
