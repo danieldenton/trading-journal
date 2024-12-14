@@ -3,7 +3,7 @@ const placeholderTriggers = [
   { name: "Inverse Fair Value Gap", successCount: 24, failureCount: 13 },
   { name: "SMT", successCount: 30, failureCount: 2 },
   { name: "Breaker", successCount: 15, failureCount: 5 },
-  { name: "Accumulation, Manipulation, Distribution", successCount: 6, failureCount: 1 },
+  { name: "Accumulation Manipulation Distribution", successCount: 6, failureCount: 1 },
 ];
 
 export default function TriggersPage() {
