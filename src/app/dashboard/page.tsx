@@ -5,7 +5,6 @@ export default function DashboardPage() {
     // total days traded
     // win rate
     // total P&L
-    // notes
 
   );
 }
