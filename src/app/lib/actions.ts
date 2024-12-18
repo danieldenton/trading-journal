@@ -19,6 +19,7 @@ export async function registerUser(prevState: any, formData: FormData) {
     const existingUser = await sql`
       SELECT 1 FROM users WHERE email = ${email};
     `;
+
     if (existingUser.rows.length > 0) {
       return { errors: { email: ["Email already in use"] } };
     }
@@ -29,7 +30,7 @@ export async function registerUser(prevState: any, formData: FormData) {
     const response = await sql`
           INSERT INTO users (email, first_name, last_name, hashedPassword)
           VALUES (${email}, ${firstName}, ${lastName}, ${hashedPassword})
-          RETURNING *;
+           RETURNING id, first_name, email;
         `;
 
     const user = response.rows[0];
@@ -53,26 +54,40 @@ export async function login(prevState: any, formData: FormData) {
     return { errors: result.error.flatten().fieldErrors };
   }
 
-  // const { email, password } = result.data;
+  const { email, password } = result.data;
 
-  // const error = { errors: { email: ["Invalid email or password"] } };
+  const error = { errors: { email: ["Invalid email or password"] } };
 
-  // // find user by email
-  // const user = testUser;
+  if (error) {
+    return error;
+  }
 
-  // if (!user) {
-  //   return error;
-  // }
+  const existingUser = await sql`
+  SELECT id, email, first_name, hashedPassword FROM users WHERE email = ${email};
+`;
 
-  // const matchedPassowrd = await bcrypt.compare(password, testUser.password);
+  if (existingUser.rows.length === 0) {
+    return { error: "User not found" };
+  }
 
-  // if (!matchedPassowrd) {
-  //   return error;
-  // }
+  const validPassword = await bcrypt.compare(
+    password,
+    existingUser.rows[0].hashedPassword
+  );
 
-  // await createSession(testUser.id);
+  if (!validPassword) {
+    return { error: "Invalid login credentials" };
+  }
 
-  // redirect("/dashboard");
+  const user = {
+    id: existingUser.rows[0].id,
+    email: existingUser.rows[0].email,
+    first_name: existingUser.rows[0].first_name,
+  };
+
+  await createSession(user.id);
+
+  return user;
 }
 
 export async function logout() {
