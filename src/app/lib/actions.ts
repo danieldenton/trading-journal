@@ -27,7 +27,7 @@ export async function registerUser(prevState: any, formData: FormData) {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     const response = await sql`
-          INSERT INTO users (user_id, email, first_name, last_name)
+          INSERT INTO users (email, first_name, last_name)
           VALUES (${email}, ${firstName}, ${lastName}, ${hashedPassword})
           RETURNING *;
         `;
