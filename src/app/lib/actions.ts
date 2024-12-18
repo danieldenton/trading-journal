@@ -28,7 +28,7 @@ export async function registerUser(prevState: any, formData: FormData) {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     const response = await sql`
-          INSERT INTO users (email, first_name, last_name, hashedPassword)
+          INSERT INTO users (email, first_name, last_name, password)
           VALUES (${email}, ${firstName}, ${lastName}, ${hashedPassword})
            RETURNING id, first_name, email;
         `;
@@ -63,7 +63,7 @@ export async function login(prevState: any, formData: FormData) {
   }
 
   const existingUser = await sql`
-  SELECT id, email, first_name, hashedPassword FROM users WHERE email = ${email};
+  SELECT id, email, first_name, password FROM users WHERE email = ${email};
 `;
 
   if (existingUser.rows.length === 0) {
@@ -72,7 +72,7 @@ export async function login(prevState: any, formData: FormData) {
 
   const validPassword = await bcrypt.compare(
     password,
-    existingUser.rows[0].hashedPassword
+    existingUser.rows[0].password
   );
 
   if (!validPassword) {
