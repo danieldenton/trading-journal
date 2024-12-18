@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import { sql } from "@vercel/postgres";
 import { redirect } from "next/navigation";
 import { createSession, deleteSession } from "./sessions";
-import { registerSchema, loginSchema, userDBSchema } from "./schema";
+import { registerSchema, loginSchema } from "./schema";
 
 export async function registerUser(prevState: any, formData: FormData) {
   try {
@@ -32,16 +32,15 @@ export async function registerUser(prevState: any, formData: FormData) {
           RETURNING *;
         `;
 
-    const validatedUser = userDBSchema.safeParse(response.rows[0]);
+    const user = response.rows[0];
 
-    if (!validatedUser.success) {
+    if (!user) {
       return { errors: { email: ["Failed to create user"] } };
     }
 
-    await createSession(validatedUser.data.id);
+    await createSession(user.id);
 
-    return { user: validatedUser.data };
-
+    return user;
   } catch (error) {
     console.error(error);
   }
