@@ -9,8 +9,9 @@ import { registerSchema, loginSchema } from "./schema";
 export async function registerUser(prevState: any, formData: FormData) {
   try {
     const result = registerSchema.safeParse(Object.fromEntries(formData));
-
+    console.log("hey");
     if (!result.success) {
+      console.log("Failed to validate form data");
       return { errors: result.error.flatten().fieldErrors };
     }
 
@@ -21,6 +22,7 @@ export async function registerUser(prevState: any, formData: FormData) {
     `;
 
     if (existingUser.rows.length > 0) {
+      console.log("Email already in use");
       return { errors: { email: ["Email already in use"] } };
     }
 
@@ -36,6 +38,7 @@ export async function registerUser(prevState: any, formData: FormData) {
     const user = response.rows[0];
 
     if (!user) {
+      console.log("Failed to create user");
       return { errors: { email: ["Failed to create user"] } };
     }
 
