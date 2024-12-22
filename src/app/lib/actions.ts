@@ -11,7 +11,7 @@ export async function registerUser(prevState: any, formData: FormData) {
     const result = registerSchema.safeParse(Object.fromEntries(formData));
     console.log("hey");
     if (!result.success) {
-      console.log("Failed to validate form data");
+      console.log(result.error.flatten().fieldErrors);
       return { errors: result.error.flatten().fieldErrors };
     }
 

@@ -34,7 +34,7 @@ export default function RegisterForm() {
 
       <input
         type="text"
-        name="LastName"
+        name="lastName"
         placeholder="Last Name"
         className="m-2 p-1 rounded-lg border-black border-2"
       />
