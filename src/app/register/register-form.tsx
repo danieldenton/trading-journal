@@ -4,7 +4,7 @@ import { useActionState } from "react";
 // import SubmitButton from "./submit-button";
 import { registerUser } from "@/app/lib/actions";
 
-export default function SignupForm() {
+export default function RegisterForm() {
   const [state, loginAction, isPending] = useActionState(registerUser, undefined);
   return (
     <form action={loginAction}>

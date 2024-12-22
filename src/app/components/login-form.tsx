@@ -22,7 +22,7 @@ export default function LoginForm() {
       <button disabled={isPending} type="submit" className="m-2 p-1 bg-red-600  font-bold text-white rounded-lg border-black border-2">
         Login
       </button>
-      <Link href="/signup"className="m-2 p-1 bg-red-600  font-bold text-white rounded-lg border-black border-2">
+      <Link href="/register"className="m-2 p-1 bg-red-600  font-bold text-white rounded-lg border-black border-2">
         Create an Account
       </Link>
     </form>
