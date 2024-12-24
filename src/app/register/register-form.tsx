@@ -1,10 +1,13 @@
 "use client";
 
 import { useActionState } from "react";
-// import SubmitButton from "./submit-button";
-import { registerUser } from "@/app/lib/actions";
+import { QueryResultRow } from "@vercel/postgres";
 
-export default function RegisterForm() {
+type RegisterFormProps = {
+  registerUser: (prevState: any, formData: FormData) => Promise<QueryResultRow | undefined>
+};
+
+export default function RegisterForm({ registerUser }: RegisterFormProps) {
   const [state, registerAction, isPending] = useActionState(
     registerUser,
     undefined
@@ -21,9 +24,9 @@ export default function RegisterForm() {
         className="m-2 p-1 rounded-lg border-black border-2"
       />
 
-      {state?.errors?.email && (
+      {/* {state?.errors?.email && (
         <p className="text-red-500">{state.errors.email}</p>
-      )}
+      )} */}
 
       <input
         type="text"
