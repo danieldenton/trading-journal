@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const placeholderTriggers = [
   { name: "Fair Value Gap", successCount: 25, failureCount: 11 },
@@ -14,13 +14,17 @@ const placeholderTriggers = [
 ];
 
 export default function TriggersPage() {
-  const [triggers, setTriggers] = useState(placeholderTriggers);
+  const [triggers, setTriggers] = useState([]);
   const [newTriggerName, setNewTriggerName] = useState("");
+
+  useEffect(() => {
+    setTriggers(placeholderTriggers);
+  }, []);
 
   const addTrigger = () => {
     if (newTriggerName.trim() !== "") {
-      setTriggers([
-        ...triggers,
+      setTriggers((prev) => [
+        ...prev,
         { name: newTriggerName, successCount: 0, failureCount: 0 },
       ]);
       setNewTriggerName("");
@@ -33,25 +37,39 @@ export default function TriggersPage() {
       : ((success / (success + failure)) * 100).toFixed(2);
   };
 
-  // Sort triggers by win rate (descending order)
-  const sortedTriggers = triggers.sort((a, b) => {
-    const winRateA = a.successCount / (a.successCount + a.failureCount);
-    const winRateB = b.successCount / (b.successCount + b.failureCount);
-    return winRateB - winRateA;
-  });
+  const updateTriggerCount = (index, type, operation) => {
+    setTriggers((prev) =>
+      prev.map((trigger, i) => {
+        if (i === index) {
+          const updatedCount =
+            operation === "increment"
+              ? trigger[type] + 1
+              : Math.max(trigger[type] - 1, 0);
+          return { ...trigger, [type]: updatedCount };
+        }
+        return trigger;
+      })
+    );
+  };
+
+  const sortedIndexes = triggers
+    .map((trigger, index) => ({ ...trigger, originalIndex: index }))
+    .sort((a, b) => {
+      const winRateA = a.successCount / (a.successCount + a.failureCount || 1);
+      const winRateB = b.successCount / (b.successCount + b.failureCount || 1);
+      return winRateB - winRateA;
+    });
 
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Trading Triggers</h1>
-
-      {/* Input to add a new trigger */}
-      <div className="mb-4">
+      <div className="mb-4 flex gap-2">
         <input
           type="text"
           value={newTriggerName}
           onChange={(e) => setNewTriggerName(e.target.value)}
           placeholder="Enter new trigger name"
-          className="border p-2 rounded mr-2"
+          className="border p-2 rounded w-full"
         />
         <button
           onClick={addTrigger}
@@ -60,38 +78,88 @@ export default function TriggersPage() {
           Add Trigger
         </button>
       </div>
-
-      {/* Trigger List */}
-      <table className="table-auto w-full border-collapse border border-gray-200">
+      <table className="table-auto w-full border-collapse border border-gray-300">
         <thead>
-          <tr className="bg-gray-100">
-            <th className="border border-gray-200 px-4 py-2 text-left">
+          <tr className="bg-white text-black">
+            <th className="border border-gray-300 px-4 py-2 text-left">
               Trigger Name
             </th>
-            <th className="border border-gray-200 px-4 py-2 text-left">
+            <th className="border border-gray-300 px-4 py-2 text-center">
               Success Count
             </th>
-            <th className="border border-gray-200 px-4 py-2 text-left">
+            <th className="border border-gray-300 px-4 py-2 text-center">
               Failure Count
             </th>
-            <th className="border border-gray-200 px-4 py-2 text-left">
+            <th className="border border-gray-300 px-4 py-2 text-center">
               Win Rate (%)
             </th>
           </tr>
         </thead>
         <tbody>
-          {sortedTriggers.map((trigger, index) => (
-            <tr key={index}>
-              <td className="border border-gray-200 px-4 py-2">
+          {sortedIndexes.map(({ originalIndex, ...trigger }) => (
+            <tr key={originalIndex}>
+              <td className="border border-gray-300 px-4 py-2">
                 {trigger.name}
               </td>
-              <td className="border border-gray-200 px-4 py-2">
-                {trigger.successCount}
+              <td className="border border-gray-300 px-4 py-2 text-center">
+                <div className="flex items-center justify-center gap-2">
+                  <button
+                    onClick={() =>
+                      updateTriggerCount(
+                        originalIndex,
+                        "successCount",
+                        "decrement"
+                      )
+                    }
+                    className="bg-gray-300 text-gray-700 px-2 rounded"
+                  >
+                    -
+                  </button>
+                  {trigger.successCount}
+                  <button
+                    onClick={() =>
+                      updateTriggerCount(
+                        originalIndex,
+                        "successCount",
+                        "increment"
+                      )
+                    }
+                    className="bg-gray-300 text-gray-700 px-2 rounded"
+                  >
+                    +
+                  </button>
+                </div>
               </td>
-              <td className="border border-gray-200 px-4 py-2">
-                {trigger.failureCount}
+              <td className="border border-gray-300 px-4 py-2 text-center">
+                <div className="flex items-center justify-center gap-2">
+                  <button
+                    onClick={() =>
+                      updateTriggerCount(
+                        originalIndex,
+                        "failureCount",
+                        "decrement"
+                      )
+                    }
+                    className="bg-gray-300 text-gray-700 px-2 rounded"
+                  >
+                    -
+                  </button>
+                  {trigger.failureCount}
+                  <button
+                    onClick={() =>
+                      updateTriggerCount(
+                        originalIndex,
+                        "failureCount",
+                        "increment"
+                      )
+                    }
+                    className="bg-gray-300 text-gray-700 px-2 rounded"
+                  >
+                    +
+                  </button>
+                </div>
               </td>
-              <td className="border border-gray-200 px-4 py-2">
+              <td className="border border-gray-300 px-4 py-2 text-center">
                 {calculateWinRate(trigger.successCount, trigger.failureCount)}%
               </td>
             </tr>
@@ -101,27 +169,3 @@ export default function TriggersPage() {
     </div>
   );
 }
-
-// const placeholderTriggers = [
-//   { name: "Fair Value Gap", successCount: 25, failureCount: 11 },
-//   { name: "Inverse Fair Value Gap", successCount: 24, failureCount: 13 },
-//   { name: "SMT", successCount: 30, failureCount: 2 },
-//   { name: "Breaker", successCount: 15, failureCount: 5 },
-//   {
-//     name: "Accumulation Manipulation Distribution",
-//     successCount: 6,
-//     failureCount: 1,
-//   },
-// ];
-
-// export default function TriggersPage() {
-//   return (
-//     <div>Triggers Page</div>
-
-//     // TODO: Basically a todo list.
-//     // 1. Make an input to create a new trigger that just has an input for the name
-//     // 2. Make a list of triggers
-//     // 3. Next to each trigger there should be 3 comlumns: 1. successCount 2. failureCount 3. Win Rate successCount/failureCount.
-//     // 4. The list should be sorted by win rate.
-//   );
-// }
