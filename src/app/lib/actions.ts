@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { createSession, deleteSession } from "./sessions";
 import { registerSchema, loginSchema, userDBSchema } from "./schema";
 
-export async function registerUser(prevState: any, formData: FormData) {
+export async function registerUser(prevState: undefined | any, formData: FormData) {
   try {
     const result = registerSchema.safeParse(Object.fromEntries(formData));
 
