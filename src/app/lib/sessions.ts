@@ -4,12 +4,11 @@ import { cookies } from "next/headers";
 
 const secretKey = process.env.SESSION_SECRET;
 const encodeKey = new TextEncoder().encode(secretKey);
+const cookieStore = await cookies();
 
 export async function createSession(userId: number) {
-  console.log("Creating session");
   const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7);
   const session = await encrypt({ userId, expiresAt });
-  const cookieStore = await cookies();
   cookieStore.set("session", session, {
     httpOnly: true,
     secure: true,
@@ -18,7 +17,7 @@ export async function createSession(userId: number) {
 }
 
 export async function deleteSession() {
-  (await cookies()).delete("session");
+  cookieStore.delete("session");
 }
 
 type SessionPayload = {

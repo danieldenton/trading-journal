@@ -5,7 +5,7 @@ import { decrypt } from "./app/lib/sessions";
 const protectedRoutes = ["/dashboard", "/day", "/mistakes", "/setup", "/trade"];
 const publicRoutes = ["/", "/register", "/triggers"];
 
-export default async function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const isProtectedRoute = protectedRoutes.includes(path);
   const isPublicRoute = publicRoutes.includes(path);
