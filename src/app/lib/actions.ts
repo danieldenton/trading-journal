@@ -42,11 +42,10 @@ export async function registerUser(prevState: any, formData: FormData) {
     }
 
     await createSession(user.id);
-
-    redirect("/dashboard");
   } catch (error) {
     console.error(error);
   }
+  redirect("/dashboard");
 }
 
 export async function login(prevState: any, formData: FormData) {
@@ -83,13 +82,17 @@ export async function login(prevState: any, formData: FormData) {
     };
 
     await createSession(user.id);
-
-    redirect("/dashboard");
   } catch (error) {
     console.error(error);
   }
+  redirect("/dashboard");
 }
 
 export async function logout() {
-  await deleteSession();
+  try {
+    await deleteSession();
+  } catch (error) {
+    console.error(error);
+  }
+  redirect("/");
 }
