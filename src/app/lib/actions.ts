@@ -9,7 +9,7 @@ import { registerSchema, loginSchema } from "./schema";
 export async function registerUser(prevState: any, formData: FormData) {
   try {
     const result = registerSchema.safeParse(Object.fromEntries(formData));
-    console.log("hey");
+
     if (!result.success) {
       console.log(result.error.flatten().fieldErrors);
       return { errors: result.error.flatten().fieldErrors };
@@ -34,7 +34,6 @@ export async function registerUser(prevState: any, formData: FormData) {
           VALUES (${email}, ${firstName}, ${lastName}, ${hashedPassword})
            RETURNING id, first_name, email;
         `;
-
     const user = response.rows[0];
 
     if (!user) {
@@ -44,13 +43,15 @@ export async function registerUser(prevState: any, formData: FormData) {
 
     await createSession(user.id);
 
-    return user;
+    redirect("/dashboard");
+
   } catch (error) {
     console.error(error);
   }
 }
 
 export async function login(prevState: any, formData: FormData) {
+  try {
   const result = loginSchema.safeParse(Object.fromEntries(formData));
 
   if (!result.success) {
@@ -58,13 +59,7 @@ export async function login(prevState: any, formData: FormData) {
   }
 
   const { email, password } = result.data;
-
-  const error = { errors: { email: ["Invalid email or password"] } };
-
-  if (error) {
-    return error;
-  }
-
+  
   const existingUser = await sql`
   SELECT id, email, first_name, password FROM users WHERE email = ${email};
 `;
@@ -87,10 +82,12 @@ export async function login(prevState: any, formData: FormData) {
     email: existingUser.rows[0].email,
     first_name: existingUser.rows[0].first_name,
   };
-
   await createSession(user.id);
 
-  return user;
+  redirect("/dashboard");
+} catch (error) {
+  console.error(error);
+}
 }
 
 export async function logout() {
