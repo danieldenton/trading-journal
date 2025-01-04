@@ -21,9 +21,9 @@ export const registerSchema = z
     message: "Passwords must match",
   });
 
-  export const userDBSchema = z.object({    
-    id: z.number(),
-    email: z.string().email(),
-    first_name: z.string(),
-    last_name: z.string(),
-  });
+  // export const userDBSchema = z.object({    
+  //   id: z.number(),
+  //   email: z.string().email(),
+  //   first_name: z.string(),
+  //   last_name: z.string(),
+  // });

@@ -1,10 +1,12 @@
-import LoginForm from "./login-form";
+import LoginForm from "./components/login-form";
 
 export default function Home() {
   return (
-    <div>
-      <h1>Login</h1>
-      <LoginForm />
+    <div className="flex flex-col items-center justify-center h-screen">
+      <div>
+        <h1 className="m-10 font-bold text-grey-100 text-4xl">Trade Journal</h1>
+        <LoginForm />
+      </div>
     </div>
   );
 }

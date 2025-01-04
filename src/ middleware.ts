@@ -5,21 +5,25 @@ import { decrypt } from "./app/lib/sessions";
 const protectedRoutes = ["/dashboard", "/day", "/mistakes", "/setup", "/trade"];
 const publicRoutes = ["/", "/register", "/triggers"];
 
-export default async function middleware(req: NextRequest) {
-  const path = req.nextUrl.pathname;
-  const isProtectedRoute = protectedRoutes.includes(path);
-  const isPublicRoute = publicRoutes.includes(path);
+export async function middleware(request: NextRequest) {
+  try {
+    const path = request.nextUrl.pathname;
+    const isProtectedRoute = protectedRoutes.includes(path);
+    const isPublicRoute = publicRoutes.includes(path);
+    const cookieStore = await cookies();
+    const cookie = cookieStore.get("session")?.value;
+    const session = await decrypt(cookie);
 
-  const cookie = (await cookies()).get("session")?.value;
-  const session = await decrypt(cookie);
+    if (isProtectedRoute && !session) {
+      return NextResponse.redirect(new URL("/", request.nextUrl));
+    }
 
-  if (isProtectedRoute && !session) {
-    return NextResponse.redirect("/login");
+    if (isPublicRoute && session) {
+      return NextResponse.redirect(new URL("/dashboard", request.nextUrl));
+    }
+
+    return NextResponse.next();
+  } catch (error) {
+    console.error(error);
   }
-
-  if (isPublicRoute && session) {
-    return NextResponse.redirect("/dashboard");
-  }
-
-  return NextResponse.next();
 }
