@@ -1,4 +1,4 @@
-import 'server-only'
+import "server-only";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -15,12 +15,12 @@ export async function createSession(userId: number) {
     secure: true,
     expires: expiresAt,
   });
-  redirect("/dashboard");
+
+  return session;
 }
 
 export async function deleteSession() {
   cookieStore.delete("session");
-  redirect("/");
 }
 
 type SessionPayload = {
