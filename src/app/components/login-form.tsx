@@ -20,19 +20,23 @@ export default function LoginForm() {
         className="m-2 p-1 rounded-lg border-black border-2"
       />
 
-      {/* {state?.errors?.email && (<p className="text-red-500">{state.errors.email}</p>)} */}
+      {state?.errors?.email && (
+        <p className="text-red-500">{state.errors.email}</p>
+      )}
 
       <input
-    type="password"
-    name="password"
-    placeholder="Password"
-    className="m-2 p-1 rounded-lg border-black border-2 focus:outline-none focus:ring-0 focus:border-black text-black"
-    style={{
-      color: "black",             
-    }}
-  />
+        type="password"
+        name="password"
+        placeholder="Password"
+        className="m-2 p-1 rounded-lg border-black border-2 focus:outline-none focus:ring-0 focus:border-black text-black"
+        style={{
+          color: "black",
+        }}
+      />
 
-      {/* {state?.errors?.email && (<p className="text-red-500">{state.errors.email}</p>)} */}
+      {state?.errors?.email && (
+        <p className="text-red-500">{state.errors.email}</p>
+      )}
       <button
         disabled={isPending}
         type="submit"
