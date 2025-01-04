@@ -82,9 +82,9 @@ export async function login(prevState: any, formData: FormData) {
     email: existingUser.rows[0].email,
     first_name: existingUser.rows[0].first_name,
   };
-  await createSession(user.id);
 
-  redirect("/dashboard");
+  await createSession(user.id);
+  
 } catch (error) {
   console.error(error);
 }
@@ -92,5 +92,4 @@ export async function login(prevState: any, formData: FormData) {
 
 export async function logout() {
   await deleteSession();
-  redirect("/");
 }
