@@ -9,7 +9,8 @@ export async function createSession(userId: number) {
   console.log("Creating session");
   const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7);
   const session = await encrypt({ userId, expiresAt });
-  (await cookies()).set("session", session, {
+  const cookieStore = await cookies();
+  cookieStore.set("session", session, {
     httpOnly: true,
     secure: true,
     expires: expiresAt,
@@ -17,9 +18,9 @@ export async function createSession(userId: number) {
 }
 
 export async function deleteSession() {
-    (await cookies()).delete("session");
-  }
-  
+  (await cookies()).delete("session");
+}
+
 type SessionPayload = {
   userId: number;
   expiresAt: Date;
