@@ -52,7 +52,7 @@ export default function TriggersPage() {
     );
   };
 
-  const sortedIndexes = triggers
+  const sortedTriggers = triggers
     .map((trigger, index) => ({ ...trigger, originalIndex: index }))
     .sort((a, b) => {
       const winRateA = a.successCount / (a.successCount + a.failureCount || 1);
@@ -68,9 +68,15 @@ export default function TriggersPage() {
           type="text"
           value={newTriggerName}
           onChange={(e) => setNewTriggerName(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              addTrigger();
+            }
+          }}
           placeholder="Enter new trigger name"
-          className="border p-2 rounded w-full"
+          className="border p-2 rounded w-full font-bold text-gray-700 placeholder-gray-500"
         />
+
         <button
           onClick={addTrigger}
           className="bg-blue-500 text-white px-4 py-2 rounded"
@@ -96,7 +102,7 @@ export default function TriggersPage() {
           </tr>
         </thead>
         <tbody>
-          {sortedIndexes.map(({ originalIndex, ...trigger }) => (
+          {sortedTriggers.map(({ originalIndex, ...trigger }) => (
             <tr key={originalIndex}>
               <td className="border border-gray-300 px-4 py-2">
                 {trigger.name}
@@ -115,7 +121,7 @@ export default function TriggersPage() {
                   >
                     -
                   </button>
-                  {trigger.successCount}
+                  {triggers[originalIndex].successCount}
                   <button
                     onClick={() =>
                       updateTriggerCount(
@@ -144,7 +150,7 @@ export default function TriggersPage() {
                   >
                     -
                   </button>
-                  {trigger.failureCount}
+                  {triggers[originalIndex].failureCount}
                   <button
                     onClick={() =>
                       updateTriggerCount(
@@ -160,7 +166,11 @@ export default function TriggersPage() {
                 </div>
               </td>
               <td className="border border-gray-300 px-4 py-2 text-center">
-                {calculateWinRate(trigger.successCount, trigger.failureCount)}%
+                {calculateWinRate(
+                  triggers[originalIndex].successCount,
+                  triggers[originalIndex].failureCount
+                )}
+                %
               </td>
             </tr>
           ))}
