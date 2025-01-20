@@ -16,7 +16,7 @@ const placeholderTriggers = [
 ];
 
 export default function TriggersPage() {
-  const [triggers, setTriggers] = useState([]);
+  const [triggers, setTriggers] = useState<Trigger[]>([]);
   const [newTriggerName, setNewTriggerName] = useState("");
 
   useEffect(() => {
@@ -33,13 +33,13 @@ export default function TriggersPage() {
     }
   };
 
-  const calculateWinRate = (success, failure) => {
+  const calculateWinRate = (success: number, failure: number) => {
     return failure === 0
       ? 100
       : ((success / (success + failure)) * 100).toFixed(2);
   };
 
-  const updateTriggerCount = (index, type, operation) => {
+  const updateTriggerCount = (index: number, type: string, operation: string) => {
     setTriggers((prev) =>
       prev.map((trigger, i) => {
         if (i === index) {
