@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Trigger } from "../lib/types";
 
 const placeholderTriggers = [
   { name: "Fair Value Gap", successCount: 25, failureCount: 11 },

@@ -5,9 +5,7 @@ export type User = {
 };
 
 export type Trigger = {
-  id: number;
   name: string;
-  successCount: string;
+  successCount: number;
   failureCount: number;
-  user_id: number;
 };
