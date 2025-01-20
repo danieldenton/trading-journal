@@ -1,3 +1,4 @@
+
 "use client";
 import { useState, useEffect } from "react";
 
@@ -12,6 +13,7 @@ const placeholderTriggers = [
     failureCount: 1,
   },
 ];
+
 
 export default function TriggersPage() {
   const [triggers, setTriggers] = useState([]);
