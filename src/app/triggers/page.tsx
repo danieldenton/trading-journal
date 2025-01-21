@@ -19,10 +19,12 @@ export default function TriggersPage() {
   const [triggers, setTriggers] = useState<Trigger[]>([]);
   const [newTriggerName, setNewTriggerName] = useState("");
 
+  // Gets existing triggers.
   useEffect(() => {
     setTriggers(placeholderTriggers);
   }, []);
 
+  // Adds triggers. Will need a post here.
   const addTrigger = () => {
     if (newTriggerName.trim() !== "") {
       setTriggers((prev) => [
@@ -33,12 +35,14 @@ export default function TriggersPage() {
     }
   };
 
+  // Calculates win rate.
   const calculateWinRate = (success: number, failure: number) => {
     return failure === 0
       ? 100
       : ((success / (success + failure)) * 100).toFixed(2);
   };
 
+  // We don't need to update the trigger count here.
   const updateTriggerCount = (index: number, type: string, operation: string) => {
     setTriggers((prev) =>
       prev.map((trigger, i) => {
@@ -54,6 +58,7 @@ export default function TriggersPage() {
     );
   };
 
+  // We already claculated win rate, This is doing that twice basically.
   const sortedTriggers = triggers
     .map((trigger, index) => ({ ...trigger, originalIndex: index }))
     .sort((a, b) => {
@@ -65,6 +70,7 @@ export default function TriggersPage() {
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Trading Triggers</h1>
+      {/* convert this to a form in it's own component */}
       <div className="mb-4 flex gap-2">
         <input
           type="text"
@@ -86,6 +92,8 @@ export default function TriggersPage() {
           Add Trigger
         </button>
       </div>
+      {/* end new trigger form here */}
+      {/* put this trigger table in it's own component */}
       <table className="table-auto w-full border-collapse border border-gray-300">
         <thead>
           <tr className="bg-white text-black">
@@ -178,6 +186,7 @@ export default function TriggersPage() {
           ))}
         </tbody>
       </table>
+      {/* end trigger table component here */}
     </div>
   );
 }
