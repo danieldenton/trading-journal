@@ -5,6 +5,27 @@ import { useTriggerContext } from "@/context/trigger";
 export default function TriggersTable() {
   const { triggers } = useTriggerContext();
 
+  const triggerTable = triggers.map((trigger, index) => {
+    return (
+      <tr key={index}>
+        <td className="border border-gray-300 px-4 py-2">{trigger.name}</td>
+        <td className="border border-gray-300 px-4 py-2 text-center">
+          <div className="flex items-center justify-center gap-2">
+            {trigger.successCount}
+          </div>
+        </td>
+        <td className="border border-gray-300 px-4 py-2 text-center">
+          <div className="flex items-center justify-center gap-2">
+            {trigger.failureCount}
+          </div>
+        </td>
+        <td className="border border-gray-300 px-4 py-2 text-center">
+          {trigger.winRate}%
+        </td>
+      </tr>
+    );
+  });
+
   return (
     <table className="table-auto w-full border-collapse border border-gray-300">
       <thead>
@@ -23,26 +44,7 @@ export default function TriggersTable() {
           </th>
         </tr>
       </thead>
-      <tbody>
-        {triggers.map((trigger, index) => (
-          <tr key={index}>
-            <td className="border border-gray-300 px-4 py-2">{trigger.name}</td>
-            <td className="border border-gray-300 px-4 py-2 text-center">
-              <div className="flex items-center justify-center gap-2">
-                {trigger.successCount}
-              </div>
-            </td>
-            <td className="border border-gray-300 px-4 py-2 text-center">
-              <div className="flex items-center justify-center gap-2">
-                {trigger.failureCount}
-              </div>
-            </td>
-            <td className="border border-gray-300 px-4 py-2 text-center">
-              {trigger.winRate}%
-            </td>
-          </tr>
-        ))}
-      </tbody>
+      <tbody>{triggerTable}</tbody>
     </table>
   );
 }
