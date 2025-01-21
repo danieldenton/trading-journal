@@ -1,34 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Trigger } from "../lib/types";
-import { placeholderTriggers } from "../lib/placeholders";
+import { useTriggerContext } from "@/context/trigger";
 import NewTriggerInput from "../components/new-trigger-input";
 
 export default function TriggersPage() {
-  const [triggers, setTriggers] = useState<Trigger[]>([]);
-
-  function calculateWinRate(
-    successCount: number,
-    failureCount: number
-  ): number {
-    const total = successCount + failureCount;
-    return total > 0 ? Math.round((successCount / total) * 100) : 0;
-  }
-
-  // Gets existing triggers and adds winRate key/value.
-  // TODO: This should be a GET call to the server.
-  useEffect(() => {
-    const triggersWithWinRate = placeholderTriggers
-      .map((trigger) => ({
-        ...trigger,
-        winRate: calculateWinRate(trigger.successCount, trigger.failureCount),
-      }))
-      .sort((a, b) => b.winRate - a.winRate);
-    setTriggers(triggersWithWinRate);
-  }, []);
-  
-
+const { triggers } = useTriggerContext();
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Triggers</h1>

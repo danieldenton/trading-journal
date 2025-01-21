@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 import { Trigger } from "@/app/lib/types";
+import { placeholderTriggers } from "@/app/lib/placeholders";
 
 type TriggerContext = {
   triggers: Trigger[];
@@ -23,10 +24,27 @@ export default function TriggerContextProvider({
   const [newTriggerName, setNewTriggerName] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Make sire this is necessary.
   useEffect(() => {
+    // TODO: This should be a GET call to the server.
+    const triggersWithWinRate = placeholderTriggers
+      .map((trigger) => ({
+        ...trigger,
+        winRate: calculateWinRate(trigger.successCount, trigger.failureCount),
+      }))
+      .sort((a, b) => b.winRate - a.winRate);
+    setTriggers(triggersWithWinRate);
+    // Make sire this is necessary.
     setIsLoaded(true);
   }, []);
+
+  function calculateWinRate(
+    successCount: number,
+    failureCount: number
+  ): number {
+    const total = successCount + failureCount;
+    return total > 0 ? Math.round((successCount / total) * 100) : 0;
+  }
+
 
   // TODO: This should be a POST call to the server.
   const addTrigger = () => {
