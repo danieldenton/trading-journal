@@ -3,12 +3,11 @@
 import { useState, useEffect } from "react";
 import { Trigger } from "../lib/types";
 import { placeholderTriggers } from "../lib/placeholders";
+import NewTriggerInput from "../components/new-trigger-input";
 
 export default function TriggersPage() {
   const [triggers, setTriggers] = useState<Trigger[]>([]);
-  const [newTriggerName, setNewTriggerName] = useState("");
 
-  // Calculates win rate.
   function calculateWinRate(
     successCount: number,
     failureCount: number
@@ -28,45 +27,12 @@ export default function TriggersPage() {
       .sort((a, b) => b.winRate - a.winRate);
     setTriggers(triggersWithWinRate);
   }, []);
-
-  // Adds triggers.
-  // TODO: This should be a POST call to the server.
-  const addTrigger = () => {
-    if (newTriggerName.trim() !== "") {
-      setTriggers((prev) => [
-        ...prev,
-        { name: newTriggerName, successCount: 0, failureCount: 0, winRate: 0 },
-      ]);
-      setNewTriggerName("");
-    }
-  };
+  
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Trading Triggers</h1>
-      {/* convert this to a form in it's own component */}
-      <div className="mb-4 flex gap-2">
-        <input
-          type="text"
-          value={newTriggerName}
-          onChange={(e) => setNewTriggerName(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              addTrigger();
-            }
-          }}
-          placeholder="Enter new trigger name"
-          className="border p-2 rounded w-full font-bold text-gray-700 placeholder-gray-500"
-        />
-
-        <button
-          onClick={addTrigger}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Add Trigger
-        </button>
-      </div>
-      {/* end new trigger form here */}
+      <h1 className="text-2xl font-bold mb-4">Triggers</h1>
+      <NewTriggerInput />
       {/* put this trigger table in it's own component */}
       <table className="table-auto w-full border-collapse border border-gray-300">
         <thead>
