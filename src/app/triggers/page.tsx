@@ -2,18 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Trigger } from "../lib/types";
-
-const placeholderTriggers = [
-  { name: "Fair Value Gap", successCount: 25, failureCount: 11 },
-  { name: "Inverse Fair Value Gap", successCount: 24, failureCount: 13 },
-  { name: "SMT", successCount: 30, failureCount: 2 },
-  { name: "Breaker", successCount: 15, failureCount: 5 },
-  {
-    name: "Accumulation Manipulation Distribution",
-    successCount: 6,
-    failureCount: 1,
-  },
-];
+import { placeholderTriggers } from "../lib/placeholders";
 
 export default function TriggersPage() {
   const [triggers, setTriggers] = useState<Trigger[]>([]);
@@ -43,7 +32,11 @@ export default function TriggersPage() {
   };
 
   // We don't need to update the trigger count here.
-  const updateTriggerCount = (index: number, type: string, operation: string) => {
+  const updateTriggerCount = (
+    index: number,
+    type: string,
+    operation: string
+  ) => {
     setTriggers((prev) =>
       prev.map((trigger, i) => {
         if (i === index) {
