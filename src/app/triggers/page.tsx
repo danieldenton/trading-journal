@@ -8,57 +8,38 @@ export default function TriggersPage() {
   const [triggers, setTriggers] = useState<Trigger[]>([]);
   const [newTriggerName, setNewTriggerName] = useState("");
 
-  // Gets existing triggers.
+  // Calculates win rate.
+  function calculateWinRate(
+    successCount: number,
+    failureCount: number
+  ): number {
+    const total = successCount + failureCount;
+    return total > 0 ? Math.round((successCount / total) * 100) : 0;
+  }
+
+  // Gets existing triggers and adds winRate key/value.
+  // TODO: This should be a GET call to the server.
   useEffect(() => {
-    setTriggers(placeholderTriggers);
+    const triggersWithWinRate = placeholderTriggers
+      .map((trigger) => ({
+        ...trigger,
+        winRate: calculateWinRate(trigger.successCount, trigger.failureCount),
+      }))
+      .sort((a, b) => b.winRate - a.winRate);
+    setTriggers(triggersWithWinRate);
   }, []);
 
-  // Adds triggers. Will need a post here.
+  // Adds triggers.
+  // TODO: This should be a POST call to the server.
   const addTrigger = () => {
     if (newTriggerName.trim() !== "") {
       setTriggers((prev) => [
         ...prev,
-        { name: newTriggerName, successCount: 0, failureCount: 0 },
+        { name: newTriggerName, successCount: 0, failureCount: 0, winRate: 0 },
       ]);
       setNewTriggerName("");
     }
   };
-
-  // Calculates win rate.
-  const calculateWinRate = (success: number, failure: number) => {
-    return failure === 0
-      ? 100
-      : ((success / (success + failure)) * 100).toFixed(2);
-  };
-
-  // We don't need to update the trigger count here.
-  const updateTriggerCount = (
-    index: number,
-    type: string,
-    operation: string
-  ) => {
-    setTriggers((prev) =>
-      prev.map((trigger, i) => {
-        if (i === index) {
-          const updatedCount =
-            operation === "increment"
-              ? trigger[type] + 1
-              : Math.max(trigger[type] - 1, 0);
-          return { ...trigger, [type]: updatedCount };
-        }
-        return trigger;
-      })
-    );
-  };
-
-  // We already claculated win rate, This is doing that twice basically.
-  const sortedTriggers = triggers
-    .map((trigger, index) => ({ ...trigger, originalIndex: index }))
-    .sort((a, b) => {
-      const winRateA = a.successCount / (a.successCount + a.failureCount || 1);
-      const winRateB = b.successCount / (b.successCount + b.failureCount || 1);
-      return winRateB - winRateA;
-    });
 
   return (
     <div className="p-6">
@@ -105,75 +86,23 @@ export default function TriggersPage() {
           </tr>
         </thead>
         <tbody>
-          {sortedTriggers.map(({ originalIndex, ...trigger }) => (
-            <tr key={originalIndex}>
+          {triggers.map((trigger, index) => (
+            <tr key={index}>
               <td className="border border-gray-300 px-4 py-2">
                 {trigger.name}
               </td>
               <td className="border border-gray-300 px-4 py-2 text-center">
                 <div className="flex items-center justify-center gap-2">
-                  <button
-                    onClick={() =>
-                      updateTriggerCount(
-                        originalIndex,
-                        "successCount",
-                        "decrement"
-                      )
-                    }
-                    className="bg-gray-300 text-gray-700 px-2 rounded"
-                  >
-                    -
-                  </button>
-                  {triggers[originalIndex].successCount}
-                  <button
-                    onClick={() =>
-                      updateTriggerCount(
-                        originalIndex,
-                        "successCount",
-                        "increment"
-                      )
-                    }
-                    className="bg-gray-300 text-gray-700 px-2 rounded"
-                  >
-                    +
-                  </button>
+                  {trigger.successCount}
                 </div>
               </td>
               <td className="border border-gray-300 px-4 py-2 text-center">
                 <div className="flex items-center justify-center gap-2">
-                  <button
-                    onClick={() =>
-                      updateTriggerCount(
-                        originalIndex,
-                        "failureCount",
-                        "decrement"
-                      )
-                    }
-                    className="bg-gray-300 text-gray-700 px-2 rounded"
-                  >
-                    -
-                  </button>
-                  {triggers[originalIndex].failureCount}
-                  <button
-                    onClick={() =>
-                      updateTriggerCount(
-                        originalIndex,
-                        "failureCount",
-                        "increment"
-                      )
-                    }
-                    className="bg-gray-300 text-gray-700 px-2 rounded"
-                  >
-                    +
-                  </button>
+                  {trigger.failureCount}
                 </div>
               </td>
               <td className="border border-gray-300 px-4 py-2 text-center">
-                {calculateWinRate(
-                  triggers[originalIndex].successCount,
-                  triggers[originalIndex].failureCount
-                )}
-                %
+                {trigger.winRate}%
               </td>
             </tr>
           ))}
