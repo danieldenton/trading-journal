@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { useTriggerContext } from "@/context/trigger";
 
 export default function TriggersTable() {
