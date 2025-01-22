@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { registerUser } from '../lib/actions';
+import { registerUser } from '../lib/auth-actions';
 import RegisterForm from './register-form';
 
 export default function RegisterPage() {
