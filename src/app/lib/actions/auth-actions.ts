@@ -3,8 +3,8 @@
 import bcrypt from "bcrypt";
 import { sql } from "@vercel/postgres";
 import { redirect } from "next/navigation";
-import { createSession, deleteSession } from "./sessions";
-import { registerSchema, loginSchema } from "./schema";
+import { createSession, deleteSession } from "../sessions";
+import { registerSchema, loginSchema } from "../schema";
 
 export async function registerUser(prevState: any, formData: FormData) {
   try {
