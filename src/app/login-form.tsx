@@ -2,7 +2,6 @@
 
 import { useActionState } from "react";
 import Link from "next/link";
-// import SubmitButton from "./submit-button";
 import { login } from "@/app/lib/actions/auth-actions";
 
 export default function LoginForm() {
