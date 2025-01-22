@@ -8,4 +8,5 @@ export type Trigger = {
   name: string;
   successCount: number;
   failureCount: number;
+  winRate: number | undefined
 };
