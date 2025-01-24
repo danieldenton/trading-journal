@@ -16,13 +16,11 @@ const publicRoutes = ["/", "/register"];
 
 export default async function middleware(request: NextRequest) {
   try {
-    console.log("hey middleware");
     const path = request.nextUrl.pathname;
     const isProtectedRoute = protectedRoutes.includes(path);
     const isPublicRoute = publicRoutes.includes(path);
     const cookieStore = await cookies();
     const cookie = cookieStore.get("session")?.value;
-    console.log(cookie)
     const session = await decrypt(cookie);
 
     if (isProtectedRoute && !session?.userId) {
