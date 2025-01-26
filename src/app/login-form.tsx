@@ -4,12 +4,10 @@ import { useActionState } from "react";
 import Link from "next/link";
 import { login } from "./lib/actions/auth-actions";
 import { useUserContext } from "./context/user";
-import { User, ZodLoginErrorResult, LoginErrorResult } from "./lib/types";
+import { User } from "./lib/types";
 
 export default function LoginForm() {
-  const [state, loginAction, isPending] = useActionState<
-    { result: User } | ZodLoginErrorResult | LoginErrorResult
-  >(login, undefined);
+  const [state, loginAction, isPending] = useActionState<User, {email?: string; password?: string }>(login, undefined);
   const { setUser } = useUserContext();
 
   if (state?.result && !isPending) {

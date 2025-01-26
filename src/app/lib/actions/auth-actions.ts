@@ -53,7 +53,7 @@ export async function registerUser(prevState: any, formData: FormData) {
 }
 
 export async function login(
-  prevState: any,
+  prevState: unknown,
   formData: FormData
 ): Promise<{ result: User } | ZodLoginErrorResult | LoginErrorResult> {
   try {
