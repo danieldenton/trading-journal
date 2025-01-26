@@ -90,7 +90,6 @@ export async function login(prevState: unknown, formData: FormData) {
   } catch (error) {
     console.error(error);
   }
-  // redirect("/dashboard");
 }
 
 export async function logout() {
