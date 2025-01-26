@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import TriggerContextProvider from "./context/trigger";
+import UserContextProvider from "./context/user";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,7 +19,6 @@ export const metadata: Metadata = {
   description: "Journal for trading ICT concepts",
 };
 
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -29,7 +29,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <TriggerContextProvider>{children}</TriggerContextProvider>
+        <UserContextProvider>
+          <TriggerContextProvider>{children}</TriggerContextProvider>
+        </UserContextProvider>
       </body>
     </html>
   );
