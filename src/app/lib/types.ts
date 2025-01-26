@@ -4,11 +4,23 @@ export type User = {
   first_name: string;
 };
 
-export type ZodLoginErrorResult = {
-  errors: { email?: string[] | undefined; password?: string[] | undefined };
+// login types
+export type LoginSuccessResult = {
+  success: true;
+  user: User;
 };
 
-export type LoginErrorResult = { error: string };
+export type ZodLoginErrorResult = {
+  success: false;
+  errors: { email?: string[]; password?: string[] };
+};
+
+export type LoginErrorResult = {
+  success: false;
+  error: string;
+};
+
+export type LoginResult = LoginSuccessResult | ZodLoginErrorResult | LoginErrorResult |undefined
 
 export type Trigger = {
   name: string;

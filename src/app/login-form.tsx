@@ -2,16 +2,23 @@
 
 import { useActionState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { login } from "./lib/actions/auth-actions";
 import { useUserContext } from "./context/user";
-import { User } from "./lib/types";
+import { LoginResult } from "./lib/types";
 
 export default function LoginForm() {
-  const [state, loginAction, isPending] = useActionState<User, {email?: string; password?: string }>(login, undefined);
+    // const router = useRouter();
+  const [state, loginAction, isPending] = useActionState(login, undefined);
   const { setUser } = useUserContext();
 
-  if (state?.result && !isPending) {
-    setUser(state.result); // Assuming `state.result` contains user information
+//   if (state?.result && !isPending) {
+//     setUser(state.result);
+//   }
+  
+  if (state) {
+    console.log(state);
+    // router.push("/dashboard");
   }
 
   return (

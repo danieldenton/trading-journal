@@ -5,7 +5,7 @@ import { sql } from "@vercel/postgres";
 import { redirect } from "next/navigation";
 import { createSession, deleteSession } from "../sessions";
 import { registerSchema, loginSchema } from "../schema/auth-schema";
-import { User, ZodLoginErrorResult, LoginErrorResult } from "../types";
+import { LoginResult } from "../types";
 
 export async function registerUser(prevState: unknown, formData: FormData) {
   try {
@@ -52,10 +52,7 @@ export async function registerUser(prevState: unknown, formData: FormData) {
   redirect("/dashboard");
 }
 
-export async function login(
-  prevState: unknown,
-  formData: FormData
-): Promise<{ result: User } | ZodLoginErrorResult | LoginErrorResult> {
+export async function login(prevState: unknown, formData: FormData) {
   try {
     const result = loginSchema.safeParse(Object.fromEntries(formData));
 
@@ -70,7 +67,7 @@ export async function login(
 `;
 
     if (existingUser.rows.length === 0) {
-      return { error: "User not found" };
+      return { success: false, error: "User not found" };
     }
 
     const validPassword = await bcrypt.compare(
@@ -90,11 +87,11 @@ export async function login(
 
     await createSession(user.id);
 
-    return { result: user };
+    return { user, errors: undefined };
   } catch (error) {
     console.error(error);
   }
-  redirect("/dashboard");
+  // redirect("/dashboard");
 }
 
 export async function logout() {
