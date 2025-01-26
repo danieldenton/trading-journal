@@ -101,5 +101,4 @@ export async function logout() {
   } catch (error) {
     console.error(error);
   }
-  redirect("/");
 }

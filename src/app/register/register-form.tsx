@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useUserContext } from "../context/user";
 import { registerUser } from "../lib/actions/auth-actions";
 
@@ -67,8 +68,14 @@ export default function RegisterForm() {
         type="submit"
         className="m-2 p-1 bg-red-600  font-bold text-white rounded-lg border-black border-2"
       >
-        Login
+        Create Acount
       </button>
+      <Link
+        href="/"
+        className="m-2 p-1  font-bold text-red-600 "
+      >
+        Back to login
+      </Link>
     </form>
   );
 }
