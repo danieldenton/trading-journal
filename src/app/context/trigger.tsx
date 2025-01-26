@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 import { Trigger } from "../lib/types";
-import { createTrigger } from "../lib/actions/trigger-actions";
+import { createTrigger, getTriggers } from "../lib/actions/trigger-actions";
 import { placeholderTriggers } from "../lib/placeholders";
 
 type TriggerContext = {
