@@ -3,9 +3,18 @@
 import { useActionState } from "react";
 import Link from "next/link";
 import { login } from "./lib/actions/auth-actions";
+import { useUserContext } from "./context/user";
+import { User, ZodLoginErrorResult, LoginErrorResult } from "./lib/types";
 
 export default function LoginForm() {
-  const [state, loginAction, isPending] = useActionState(login, undefined);
+  const [state, loginAction, isPending] = useActionState<
+    { result: User } | ZodLoginErrorResult | LoginErrorResult
+  >(login, undefined);
+  const { setUser } = useUserContext();
+
+  if (state?.result && !isPending) {
+    setUser(state.result); // Assuming `state.result` contains user information
+  }
 
   return (
     <form

@@ -5,6 +5,7 @@ import { sql } from "@vercel/postgres";
 import { redirect } from "next/navigation";
 import { createSession, deleteSession } from "../sessions";
 import { registerSchema, loginSchema } from "../schema/auth-schema";
+import { User, ZodLoginErrorResult, LoginErrorResult } from "../types";
 
 export async function registerUser(prevState: any, formData: FormData) {
   try {
@@ -51,7 +52,10 @@ export async function registerUser(prevState: any, formData: FormData) {
   redirect("/dashboard");
 }
 
-export async function login(prevState: any, formData: FormData) {
+export async function login(
+  prevState: any,
+  formData: FormData
+): Promise<{ result: User } | ZodLoginErrorResult | LoginErrorResult> {
   try {
     const result = loginSchema.safeParse(Object.fromEntries(formData));
 
@@ -86,7 +90,7 @@ export async function login(prevState: any, formData: FormData) {
 
     await createSession(user.id);
 
-    return;
+    return { result: user };
   } catch (error) {
     console.error(error);
   }
