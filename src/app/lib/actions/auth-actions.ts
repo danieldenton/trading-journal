@@ -2,7 +2,6 @@
 
 import bcrypt from "bcrypt";
 import { sql } from "@vercel/postgres";
-import { redirect } from "next/navigation";
 import { createSession, deleteSession } from "../sessions";
 import { registerSchema, loginSchema } from "../schema/auth-schema";
 
