@@ -7,7 +7,7 @@ import { createSession, deleteSession } from "../sessions";
 import { registerSchema, loginSchema } from "../schema/auth-schema";
 import { User, ZodLoginErrorResult, LoginErrorResult } from "../types";
 
-export async function registerUser(prevState: any, formData: FormData) {
+export async function registerUser(prevState: unknown, formData: FormData) {
   try {
     const result = registerSchema.safeParse(Object.fromEntries(formData));
 
