@@ -34,6 +34,7 @@ export async function registerUser(prevState: any, formData: FormData) {
           VALUES (${email}, ${firstName}, ${lastName}, ${hashedPassword})
            RETURNING id, first_name, email;
         `;
+
     const user = response.rows[0];
 
     if (!user) {
@@ -42,6 +43,8 @@ export async function registerUser(prevState: any, formData: FormData) {
     }
 
     await createSession(user.id);
+
+    return user;
   } catch (error) {
     console.error(error);
   }
@@ -82,6 +85,8 @@ export async function login(prevState: any, formData: FormData) {
     };
 
     await createSession(user.id);
+
+    return;
   } catch (error) {
     console.error(error);
   }

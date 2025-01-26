@@ -1,10 +1,12 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { User } from "../lib/types";
+
 
 type UserContext = {
-  userId: number | undefined;
-  setUserId: React.Dispatch<React.SetStateAction<number | undefined>>;
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
 };
 
 export const UserContext = createContext<UserContext | null>(null);
@@ -14,7 +16,7 @@ export default function UserContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [userId, setUserId] = useState<number | undefined>();
+  const [user, setUser] = useState<User | null>(null);
   //TODO make sure this below is necessary
   const [isLoaded, setIsLoaded] = useState(false);
   useEffect(() => {
@@ -24,8 +26,8 @@ export default function UserContextProvider({
   return (
     <UserContext.Provider
       value={{
-        userId,
-        setUserId,
+        user,
+        setUser,
       }}
     >
       {isLoaded ? children : null}
