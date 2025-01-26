@@ -35,7 +35,11 @@ export async function registerUser(prevState: unknown, formData: FormData) {
            RETURNING id, first_name, email;
         `;
 
-    const user = response.rows[0];
+    const user = {
+      id: response.rows[0].id,
+      email: response.rows[0].email,
+      first_name: response.rows[0].first_name,
+    };
 
     if (!user) {
       console.log("Failed to create user");
@@ -44,11 +48,10 @@ export async function registerUser(prevState: unknown, formData: FormData) {
 
     await createSession(user.id);
 
-    return user;
+    return { user, errors: undefined };
   } catch (error) {
     console.error(error);
   }
-  redirect("/dashboard");
 }
 
 export async function login(prevState: unknown, formData: FormData) {
