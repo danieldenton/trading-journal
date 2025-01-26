@@ -37,6 +37,10 @@ export async function encrypt(payload: SessionPayload) {
 }
 
 export async function decrypt(session: string | undefined = "") {
+  if (!session) {
+    console.log("Session token is missing.");
+    return 
+  }
   try {
     const { payload } = await jwtVerify(session, encodeKey, {
       algorithms: ["HS256"],
