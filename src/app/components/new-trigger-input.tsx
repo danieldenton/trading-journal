@@ -28,6 +28,9 @@ export default function NewTriggerInput() {
         >
           Add Trigger
         </button>
+          {state?.errors?.name && (
+        <p className="text-red-500">{state.errors.name}</p>
+      )}
       </form>
     </div>
   );

@@ -30,7 +30,7 @@ export default function RegisterForm() {
         className="m-2 p-1 rounded-lg border-black border-2"
       />
 
-      {state?.errors?.email && (
+      {state?.errors && (
         <p className="text-red-500">{state.errors.email}</p>
       )}
 

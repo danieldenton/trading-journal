@@ -10,6 +10,7 @@ export async function createTrigger(
   try {
     if (!userId) {
       console.error("User ID is missing");
+      return { errors: { name: ["User ID is missing"] } };
     }
 
     const result = triggerSchema.safeParse(Object.fromEntries(formData));

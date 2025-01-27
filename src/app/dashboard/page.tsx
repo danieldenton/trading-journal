@@ -1,6 +1,4 @@
 import React from "react";
-import Link from "next/link";
-import LogoutButton from "./logout-button";
 import UserName from "./user-name";
 
 export default function DashboardPage() {
@@ -14,8 +12,6 @@ export default function DashboardPage() {
       // win rate 
       // total P&L 
       // */}
-      <Link href="/triggers">Triggers</Link>
-      <LogoutButton />
     </>
   );
 }
