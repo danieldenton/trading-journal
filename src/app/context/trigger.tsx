@@ -2,10 +2,9 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 
-import { Trigger, TriggerWithWinRate } from "../lib/types";
+import { TriggerWithWinRate } from "../lib/types";
 import { createTrigger, getTriggers } from "../lib/actions/trigger-actions";
 import { useUserContext } from "./user";
-import { set } from "zod";
 
 type TriggerContext = {
   triggers: TriggerWithWinRate[];
@@ -63,7 +62,7 @@ export default function TriggerContextProvider({
         return;
       }
 
-      const newTrigger = await createTrigger(prevState, formData, id);
+      const newTrigger = await createTrigger(formData, id);
 
       if (newTrigger) {
         setTriggers((prev) => [

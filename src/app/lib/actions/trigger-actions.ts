@@ -4,7 +4,6 @@ import { sql } from "@vercel/postgres";
 import { triggerSchema } from "../schema/trigger-schema";
 
 export async function createTrigger(
-  prevState: any,
   formData: FormData,
   userId: number | undefined
 ) {

@@ -16,7 +16,7 @@ export default function NewTriggerInput() {
       <form action={newTriggerAction} className="mb-4 flex gap-2">
         <input
           type="text"
-          name="newTriggerName"
+          name="name"
           placeholder="Enter new trigger"
           className="border p-2 rounded w-full font-bold text-gray-700 placeholder-gray-500"
         />
