@@ -30,13 +30,13 @@ export default function TriggerContextProvider({
 
   const fetchTriggers = async () => {
     try {
-      console.log("user", user)
+      console.log("user", user);
       const userTriggers = await getTriggers(id);
       const triggersWithWinRate = userTriggers?.map((trigger) => ({
         name: trigger.name,
-        successCount: trigger.successCount,
-        failureCount: trigger.failureCount,
-        winRate: calculateWinRate(trigger.successCount, trigger.failureCount),
+        successCount: trigger.success_count,
+        failureCount: trigger.failure_count,
+        winRate: calculateWinRate(trigger.success_count, trigger.failure_count),
       }));
       const sortedTriggers =
         triggersWithWinRate?.sort((a, b) => b.winRate - a.winRate) || [];
