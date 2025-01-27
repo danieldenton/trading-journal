@@ -4,7 +4,7 @@ import React from "react";
 import { useTriggerContext } from "../context/trigger";
 
 export default function TriggersTable() {
-  const { triggers } = useTriggerContext();
+  const { triggers, deleteTriggerFromUser } = useTriggerContext();
 
   const triggerTable = triggers.map((trigger, index) => {
     return (
@@ -23,6 +23,14 @@ export default function TriggersTable() {
         <td className="border border-gray-300 px-4 py-2 text-center">
           {trigger.winRate}%
         </td>
+        <td className="border border-gray-300 px-4 py-2 flex items-center justify-center">
+  <button
+    className="bg-gray-300 rounded text-black px-4"
+    onClick={() => deleteTriggerFromUser(trigger.name)}
+  >
+    Delete
+  </button>
+</td>
       </tr>
     );
   });
@@ -43,6 +51,7 @@ export default function TriggersTable() {
           <th className="border border-gray-300 px-4 py-2 text-center">
             Win Rate
           </th>
+          <th className="border border-gray-300 px-4 py-2 text-center"></th>
         </tr>
       </thead>
       <tbody>{triggerTable}</tbody>

@@ -16,6 +16,7 @@ type TriggerContext = {
   newTriggerName: string;
   setNewTriggerName: React.Dispatch<React.SetStateAction<string>>;
   addNewTrigger: (prevState: any, formData: FormData) => void;
+  deleteTriggerFromUser: (triggerName: string) => void;
 };
 
 export const TriggerContext = createContext<TriggerContext | null>(null);
@@ -113,6 +114,7 @@ export default function TriggerContextProvider({
         newTriggerName,
         setNewTriggerName,
         addNewTrigger,
+        deleteTriggerFromUser,
       }}
     >
       {children}
