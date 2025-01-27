@@ -12,7 +12,7 @@ type TriggerContext = {
   setTriggers: React.Dispatch<React.SetStateAction<TriggerWithWinRate[]>>;
   newTriggerName: string;
   setNewTriggerName: React.Dispatch<React.SetStateAction<string>>;
-  addTrigger: () => void;
+  addNewTrigger: (prevState: any, formData: FormData) => void;
 };
 
 export const TriggerContext = createContext<TriggerContext | null>(null);
@@ -56,15 +56,28 @@ export default function TriggerContextProvider({
     return total > 0 ? Math.round((successCount / total) * 100) : 0;
   }
 
-  // TODO: This should be a POST call to the server.
-  const addTrigger = () => {
-    if (newTriggerName.trim() !== "") {
-      // createTrigger(userId)
-      setTriggers((prev) => [
-        ...prev,
-        { name: newTriggerName, successCount: 0, failureCount: 0, winRate: 0 },
-      ]);
-      setNewTriggerName("");
+  const addNewTrigger = async (prevState: any, formData: FormData) => {
+    try {
+      if (!id) {
+        console.error("User ID is missing");
+        return;
+      }
+
+      const newTrigger = await createTrigger(prevState, formData, id);
+
+      if (newTrigger) {
+        setTriggers((prev) => [
+          ...prev,
+          {
+            name: newTrigger.name,
+            successCount: 0,
+            failureCount: 0,
+            winRate: 0,
+          },
+        ]);
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -75,7 +88,7 @@ export default function TriggerContextProvider({
         setTriggers,
         newTriggerName,
         setNewTriggerName,
-        addTrigger,
+        addNewTrigger,
       }}
     >
       {children}

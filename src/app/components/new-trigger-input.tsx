@@ -1,32 +1,34 @@
 "use client";
 
-import React from "react";
+import React, { useActionState } from "react";
 import { useTriggerContext } from "../context/trigger";
 
 export default function NewTriggerInput() {
-  const { newTriggerName, setNewTriggerName, addTrigger } = useTriggerContext();
+  const { addNewTrigger } =
+    useTriggerContext();
+  const [state, newTriggerAction, isPending] = useActionState(
+    addNewTrigger,
+    undefined
+  );
 
   return (
-    <div className="mb-4 flex gap-2">
-      <input
-        type="text"
-        value={newTriggerName}
-        onChange={(e) => setNewTriggerName(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            addTrigger();
-          }
-        }}
-        placeholder="Enter new trigger name"
-        className="border p-2 rounded w-full font-bold text-gray-700 placeholder-gray-500"
-      />
+    <div>
+      <form action={newTriggerAction} className="mb-4 flex gap-2">
+        <input
+          type="text"
+          name="newTriggerName"
+          placeholder="Enter new trigger"
+          className="border p-2 rounded w-full font-bold text-gray-700 placeholder-gray-500"
+        />
 
-      <button
-        onClick={addTrigger}
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-      >
-        Add Trigger
-      </button>
+        <button
+          disabled={isPending}
+          type="submit"
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Add Trigger
+        </button>
+      </form>
     </div>
   );
 }

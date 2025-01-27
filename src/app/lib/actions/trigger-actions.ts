@@ -3,8 +3,16 @@
 import { sql } from "@vercel/postgres";
 import { triggerSchema } from "../schema/trigger-schema";
 
-export async function createTrigger(prevState: any, formData: FormData, userId: number) {
+export async function createTrigger(
+  prevState: any,
+  formData: FormData,
+  userId: number | undefined
+) {
   try {
+    if (!userId) {
+      console.error("User ID is missing");
+    }
+
     const result = triggerSchema.safeParse(Object.fromEntries(formData));
 
     if (!result.success) {
@@ -12,7 +20,7 @@ export async function createTrigger(prevState: any, formData: FormData, userId: 
       return { errors: result.error.flatten().fieldErrors };
     }
 
-    const { name, successCount, failureCount } = result.data;
+    const { name } = result.data;
 
     const existingTrigger = await sql`
         SELECT 1 FROM triggers WHERE name= ${name} AND user_id = ${userId};
@@ -24,9 +32,9 @@ export async function createTrigger(prevState: any, formData: FormData, userId: 
     }
 
     const response = await sql`
-            INSERT INTO triggers (name, successCount, failureCount)
-            VALUES (${name}, ${successCount}, ${failureCount}, ${userId})
-             RETURNING id, name, successCount, failureCount;
+            INSERT INTO triggers (name, user_id)
+            VALUES (${name}, ${userId})
+             RETURNING name
           `;
 
     const trigger = response.rows[0];
@@ -35,6 +43,8 @@ export async function createTrigger(prevState: any, formData: FormData, userId: 
       console.log("Failed to create trigger");
       return { errors: { name: ["Failed to create trigger"] } };
     }
+
+    return trigger;
   } catch (error) {
     console.error(error);
   }
