@@ -1,7 +1,7 @@
 "use server";
 
 import { sql } from "@vercel/postgres";
-import { triggerSchema } from "../schema/trigger-schema";
+import { newTriggerSchema } from "../schema/trigger-schema";
 import { Trigger } from "../types";
 
 export async function getTriggers(userId: number | undefined) {
@@ -32,7 +32,7 @@ export async function createTrigger(
       return { errors: { name: ["User ID is missing"] } };
     }
 
-    const result = triggerSchema.safeParse(Object.fromEntries(formData));
+    const result = newTriggerSchema.safeParse(Object.fromEntries(formData));
 
     if (!result.success) {
       console.log(result.error.flatten().fieldErrors);
@@ -69,13 +69,16 @@ export async function createTrigger(
   }
 }
 
-export async function updateTrigger(
-  trigger: Trigger,
-  userId: number | undefined
-) {
+export async function updateTrigger(trigger: Trigger) {
   try {
     const response = await sql`
-        UPDATE triggers SET name = ${trigger.name} WHERE name = ${triggerName} AND user_id = ${userId}
+        UPDATE triggers
+        SET 
+          name = ${trigger.name},
+          success_count = ${trigger.successCount},
+          failure_count = ${trigger.failureCount},
+        WHERE id = ${trigger.id}
+        RETURNING *;
       `;
 
     if (response.rowCount === 0) {
@@ -83,13 +86,18 @@ export async function updateTrigger(
       return { errors: { name: ["Failed to update trigger"] } };
     }
 
-    return { success: true, message: "Trigger updated" };
+    const updatedTrigger = response.rows[0];
+
+    return updatedTrigger;
   } catch (error) {
     console.error(error);
   }
 }
 
-export async function deleteTrigger(triggerName: string, userId: number | undefined) {
+export async function deleteTrigger(
+  triggerName: string,
+  userId: number | undefined
+) {
   try {
     const response = await sql`
         DELETE FROM triggers WHERE name = ${triggerName} AND user_id = ${userId}
