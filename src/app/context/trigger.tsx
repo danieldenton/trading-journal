@@ -58,14 +58,17 @@ export default function TriggerContextProvider({
   const addNewTrigger = async (prevState: any, formData: FormData) => {
     try {
       if (!id) {
-        console.error("User ID is missing");
-        return;
+        console.error("User needs to be logged in to add a trigger");
+        return "User needs to be logged in to add a trigger"
       }
 
       const newTrigger = await createTrigger(formData, id);
-      console.log(newTrigger);
+      if (newTrigger?.errors) {
+        const { name } = newTrigger.errors;
+        return name[0]
+      }
 
-      if (newTrigger) {
+      if (typeof newTrigger?.name === "string") {
         setTriggers((prev) => [
           ...prev,
           {

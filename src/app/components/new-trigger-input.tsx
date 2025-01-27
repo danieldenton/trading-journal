@@ -4,8 +4,7 @@ import React, { useActionState } from "react";
 import { useTriggerContext } from "../context/trigger";
 
 export default function NewTriggerInput() {
-  const { addNewTrigger } =
-    useTriggerContext();
+  const { addNewTrigger } = useTriggerContext();
   const [state, newTriggerAction, isPending] = useActionState(
     addNewTrigger,
     undefined
@@ -28,9 +27,7 @@ export default function NewTriggerInput() {
         >
           Add Trigger
         </button>
-          {state?.errors?.name && (
-        <p className="text-red-500">{state.errors.name}</p>
-      )}
+        {state ? <p className="text-red-500">{state}</p> : null}
       </form>
     </div>
   );
