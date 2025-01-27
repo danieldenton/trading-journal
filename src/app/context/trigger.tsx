@@ -3,7 +3,11 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 import { TriggerWithWinRate } from "../lib/types";
-import { createTrigger, getTriggers } from "../lib/actions/trigger-actions";
+import {
+  createTrigger,
+  getTriggers,
+  deleteTrigger,
+} from "../lib/actions/trigger-actions";
 import { useUserContext } from "./user";
 
 type TriggerContext = {
@@ -26,6 +30,14 @@ export default function TriggerContextProvider({
   const { user } = useUserContext();
   const id = user?.id;
 
+  function calculateWinRate(
+    successCount: number,
+    failureCount: number
+  ): number {
+    const total = successCount + failureCount;
+    return total > 0 ? Math.round((successCount / total) * 100) : 0;
+  }
+
   const fetchTriggers = async () => {
     try {
       const userTriggers = await getTriggers(id);
@@ -44,28 +56,22 @@ export default function TriggerContextProvider({
   };
 
   useEffect(() => {
-    fetchTriggers();
+    if (id) {
+      fetchTriggers();
+    }
   }, [id]);
-
-  function calculateWinRate(
-    successCount: number,
-    failureCount: number
-  ): number {
-    const total = successCount + failureCount;
-    return total > 0 ? Math.round((successCount / total) * 100) : 0;
-  }
 
   const addNewTrigger = async (prevState: any, formData: FormData) => {
     try {
       if (!id) {
         console.error("User needs to be logged in to add a trigger");
-        return "User needs to be logged in to add a trigger"
+        return "User needs to be logged in to add a trigger";
       }
 
       const newTrigger = await createTrigger(formData, id);
       if (newTrigger?.errors) {
         const { name } = newTrigger.errors;
-        return name[0]
+        return name[0];
       }
 
       if (typeof newTrigger?.name === "string") {
@@ -79,6 +85,21 @@ export default function TriggerContextProvider({
           },
         ]);
       }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const deleteTriggerFromUser = async (triggerName: string) => {
+    try {
+      if (!id) {
+        console.error("User needs to be logged in to delete a trigger");
+        return "User needs to be logged in to delete a trigger";
+      }
+      await deleteTrigger(triggerName, id);
+      setTriggers((prev) =>
+        prev.filter((trigger) => trigger.name !== triggerName)
+      );
     } catch (error) {
       console.error(error);
     }

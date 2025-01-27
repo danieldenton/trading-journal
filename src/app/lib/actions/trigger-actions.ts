@@ -68,7 +68,7 @@ export async function getTriggers(userId: number | undefined) {
   }
 }
 
-export async function deleteTrigger(triggerName: string, userId: number) {
+export async function deleteTrigger(triggerName: string, userId: number | undefined) {
   try {
     const response = await sql`
         DELETE FROM triggers WHERE name = ${triggerName} AND user_id = ${userId}
