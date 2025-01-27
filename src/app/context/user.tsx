@@ -1,35 +1,55 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { logout } from "../lib/actions/auth-actions";
 import { User } from "../lib/types";
 
 type UserContext = {
-  user: User | null;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  user: User | undefined;
+  setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
+  handleLogout: () => void;
 };
 
-export const UserContext = createContext<UserContext | null>(null);
+export const UserContext = createContext<UserContext | undefined>(undefined);
 
 export default function UserContextProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [user, setUser] = useState<User | null>(null);
-  //TODO make sure this below is necessary
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [user, setUser] = useState<User | undefined>();
+  const router = useRouter();
+
   useEffect(() => {
-    setIsLoaded(true);
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    }
+  }, [user]);
+
+  const handleLogout = () => {  
+    setUser(undefined);
+    localStorage.removeItem("user");
+    logout();
+    router.push("/");
+  }
 
   return (
     <UserContext.Provider
       value={{
         user,
         setUser,
+        handleLogout,
       }}
     >
-      {isLoaded ? children : null}
+      {children}
     </UserContext.Provider>
   );
 }

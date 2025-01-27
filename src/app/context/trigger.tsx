@@ -2,13 +2,14 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 
-import { Trigger } from "../lib/types";
+import { Trigger, TriggerWithWinRate } from "../lib/types";
 import { createTrigger, getTriggers } from "../lib/actions/trigger-actions";
-import { placeholderTriggers } from "../lib/placeholders";
+import { useUserContext } from "./user";
+import { set } from "zod";
 
 type TriggerContext = {
-  triggers: Trigger[];
-  setTriggers: React.Dispatch<React.SetStateAction<Trigger[]>>;
+  triggers: TriggerWithWinRate[];
+  setTriggers: React.Dispatch<React.SetStateAction<TriggerWithWinRate[]>>;
   newTriggerName: string;
   setNewTriggerName: React.Dispatch<React.SetStateAction<string>>;
   addTrigger: () => void;
@@ -21,22 +22,35 @@ export default function TriggerContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [triggers, setTriggers] = useState<Trigger[]>([]);
+  const [triggers, setTriggers] = useState<TriggerWithWinRate[]>([]);
   const [newTriggerName, setNewTriggerName] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
+  const { user } = useUserContext();
+  const id = user?.id;
+
+  const fetchTriggers = async () => {
+    try {
+      console.log("user", user)
+      const userTriggers = await getTriggers(id);
+      const triggersWithWinRate = userTriggers?.map((trigger) => ({
+        name: trigger.name,
+        successCount: trigger.successCount,
+        failureCount: trigger.failureCount,
+        winRate: calculateWinRate(trigger.successCount, trigger.failureCount),
+      }));
+      const sortedTriggers =
+        triggersWithWinRate?.sort((a, b) => b.winRate - a.winRate) || [];
+      setTriggers(sortedTriggers);
+      console.log("triggers", triggers);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-    // TODO: This should be a GET call to the server.
-    const triggersWithWinRate = placeholderTriggers
-      .map((trigger) => ({
-        ...trigger,
-        winRate: calculateWinRate(trigger.successCount, trigger.failureCount),
-      }))
-      .sort((a, b) => b.winRate - a.winRate);
-    setTriggers(triggersWithWinRate);
-    // Make sure this is necessary.
-    setIsLoaded(true);
-  }, []);
+    fetchTriggers();
+    // setIsLoaded(true);
+  }, [id]);
 
   function calculateWinRate(
     successCount: number,
@@ -45,7 +59,6 @@ export default function TriggerContextProvider({
     const total = successCount + failureCount;
     return total > 0 ? Math.round((successCount / total) * 100) : 0;
   }
-
 
   // TODO: This should be a POST call to the server.
   const addTrigger = () => {
@@ -69,7 +82,7 @@ export default function TriggerContextProvider({
         addTrigger,
       }}
     >
-      {isLoaded ? children : null}
+      {children}
     </TriggerContext.Provider>
   );
 }
