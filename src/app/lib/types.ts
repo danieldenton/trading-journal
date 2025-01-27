@@ -5,14 +5,12 @@ export type User = {
 };
 
 export type Trigger = {
+  id: number;
   name: string;
   successCount: number;
   failureCount: number;
 }
 
-export type TriggerWithWinRate = {
-  name: string;
-  successCount: number;
-  failureCount: number;
+export type TriggerWithWinRate = Trigger & {
   winRate: number | undefined;
 };

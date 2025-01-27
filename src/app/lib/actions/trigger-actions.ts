@@ -2,6 +2,25 @@
 
 import { sql } from "@vercel/postgres";
 import { triggerSchema } from "../schema/trigger-schema";
+import { Trigger } from "../types";
+
+export async function getTriggers(userId: number | undefined) {
+  try {
+    const response =
+      await sql`SELECT * FROM triggers WHERE user_id = ${userId}`;
+
+    const triggers = response.rows;
+
+    if (!triggers) {
+      console.log("User has no triggers");
+      return;
+    }
+
+    return triggers;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 export async function createTrigger(
   formData: FormData,
@@ -34,7 +53,7 @@ export async function createTrigger(
     const response = await sql`
             INSERT INTO triggers (name, user_id)
             VALUES (${name}, ${userId})
-             RETURNING name
+             RETURNING id, name
           `;
 
     const trigger = response.rows[0];
@@ -50,19 +69,21 @@ export async function createTrigger(
   }
 }
 
-export async function getTriggers(userId: number | undefined) {
+export async function updateTrigger(
+  trigger: Trigger,
+  userId: number | undefined
+) {
   try {
-    const response =
-      await sql`SELECT * FROM triggers WHERE user_id = ${userId}`;
+    const response = await sql`
+        UPDATE triggers SET name = ${trigger.name} WHERE name = ${triggerName} AND user_id = ${userId}
+      `;
 
-    const triggers = response.rows;
-
-    if (!triggers) {
-      console.log("User has no triggers");
-      return;
+    if (response.rowCount === 0) {
+      console.log("Failed to update trigger");
+      return { errors: { name: ["Failed to update trigger"] } };
     }
 
-    return triggers;
+    return { success: true, message: "Trigger updated" };
   } catch (error) {
     console.error(error);
   }

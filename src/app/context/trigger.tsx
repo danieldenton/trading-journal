@@ -43,6 +43,7 @@ export default function TriggerContextProvider({
     try {
       const userTriggers = await getTriggers(id);
       const triggersWithWinRate = userTriggers?.map((trigger) => ({
+        id: trigger.id,
         name: trigger.name,
         successCount: trigger.success_count,
         failureCount: trigger.failure_count,
@@ -79,6 +80,7 @@ export default function TriggerContextProvider({
         setTriggers((prev) => [
           ...prev,
           {
+            id: newTrigger.id,
             name: newTrigger.name,
             successCount: 0,
             failureCount: 0,
