@@ -1,9 +1,11 @@
 "use client";
 
-import React from "react";
+import { useState } from "react";
 import { useTriggerContext } from "../context/trigger";
+import { set } from "zod";
 
 export default function TriggersTable() {
+  const [modalType, setModalType] = useState<"delete" | "edit" | undefined>();
   const { triggers, deleteTriggerFromUser } = useTriggerContext();
 
   const triggerTable = triggers.map((trigger, index) => {
@@ -28,13 +30,13 @@ export default function TriggersTable() {
         <td className="border border-gray-300 py-2 flex items-center justify-center gap-2">
           <button
             className="bg-gray-300 rounded text-black px-4"
-            onClick={() => deleteTriggerFromUser(trigger.name)}
+            onClick={() => setModalType("edit")}
           >
             Edit
           </button>
           <button
             className="bg-gray-300 rounded text-black px-2"
-            onClick={() => deleteTriggerFromUser(trigger.name)}
+            onClick={() => setModalType("delete")}
           >
             Delete
           </button>
@@ -63,4 +65,17 @@ export default function TriggersTable() {
       <tbody>{triggerTable}</tbody>
     </table>
   );
+
+//   <button
+//   className="bg-gray-300 rounded text-black px-4"
+//   onClick={() => deleteTriggerFromUser(trigger.name)}
+// >
+//   Edit
+// </button>
+// <button
+//   className="bg-gray-300 rounded text-black px-2"
+//   onClick={() => deleteTriggerFromUser(trigger.name)}
+// >
+//   Delete
+// </button>
 }
