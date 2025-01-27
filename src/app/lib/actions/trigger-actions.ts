@@ -67,3 +67,20 @@ export async function getTriggers(userId: number | undefined) {
     console.error(error);
   }
 }
+
+export async function deleteTrigger(triggerName: string, userId: number) {
+  try {
+    const response = await sql`
+        DELETE FROM triggers WHERE name = ${triggerName} AND user_id = ${userId}
+      `;
+
+    if (response.rowCount === 0) {
+      console.log("Failed to delete trigger");
+      return { errors: { name: ["Failed to delete trigger"] } };
+    }
+
+    return { success: true, message: "Trigger deleted" };
+  } catch (error) {
+    console.error(error);
+  }
+}
