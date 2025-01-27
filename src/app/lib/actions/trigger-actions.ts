@@ -3,7 +3,7 @@
 import { sql } from "@vercel/postgres";
 import { triggerSchema } from "../schema/trigger-schema";
 
-export async function createTrigger(prevState: any, formData: FormData) {
+export async function createTrigger(prevState: any, formData: FormData, userId: number) {
   try {
     const result = triggerSchema.safeParse(Object.fromEntries(formData));
 
@@ -12,7 +12,7 @@ export async function createTrigger(prevState: any, formData: FormData) {
       return { errors: result.error.flatten().fieldErrors };
     }
 
-    const { name, successCount, failureCount, userId } = result.data;
+    const { name, successCount, failureCount } = result.data;
 
     const existingTrigger = await sql`
         SELECT 1 FROM triggers WHERE name= ${name} AND user_id = ${userId};
