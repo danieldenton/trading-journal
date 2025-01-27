@@ -1,7 +1,7 @@
 "use server";
 
 import { sql } from "@vercel/postgres";
-import { newTriggerSchema } from "../schema/trigger-schema";
+import { newTriggerSchema, updateTriggerSchema } from "../schema/trigger-schema";
 import { Trigger } from "../types";
 
 export async function getTriggers(userId: number | undefined) {
@@ -71,13 +71,23 @@ export async function createTrigger(
 
 export async function updateTrigger(trigger: Trigger) {
   try {
+
+    const result = updateTriggerSchema.safeParse(trigger);
+
+    if (!result.success) {
+      console.log(result.error.flatten().fieldErrors);
+      return { errors: result.error.flatten().fieldErrors };
+    }
+
+const { id, name, successCount, failureCount } = result.data;
+
     const response = await sql`
         UPDATE triggers
         SET 
-          name = ${trigger.name},
-          success_count = ${trigger.successCount},
-          failure_count = ${trigger.failureCount},
-        WHERE id = ${trigger.id}
+          name = ${name},
+          success_count = ${successCount},
+          failure_count = ${failureCount},
+        WHERE id = ${id}
         RETURNING *;
       `;
 
