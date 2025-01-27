@@ -41,7 +41,7 @@ export default function TriggersTable() {
             Failure Count
           </th>
           <th className="border border-gray-300 px-4 py-2 text-center">
-            Win Rate (%)
+            Win Rate
           </th>
         </tr>
       </thead>

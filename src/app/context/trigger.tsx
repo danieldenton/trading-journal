@@ -24,13 +24,11 @@ export default function TriggerContextProvider({
 }) {
   const [triggers, setTriggers] = useState<TriggerWithWinRate[]>([]);
   const [newTriggerName, setNewTriggerName] = useState("");
-  const [isLoaded, setIsLoaded] = useState(false);
   const { user } = useUserContext();
   const id = user?.id;
 
   const fetchTriggers = async () => {
     try {
-      console.log("user", user);
       const userTriggers = await getTriggers(id);
       const triggersWithWinRate = userTriggers?.map((trigger) => ({
         name: trigger.name,
@@ -41,7 +39,6 @@ export default function TriggerContextProvider({
       const sortedTriggers =
         triggersWithWinRate?.sort((a, b) => b.winRate - a.winRate) || [];
       setTriggers(sortedTriggers);
-      console.log("triggers", triggers);
     } catch (error) {
       console.error(error);
     }
@@ -49,7 +46,6 @@ export default function TriggerContextProvider({
 
   useEffect(() => {
     fetchTriggers();
-    // setIsLoaded(true);
   }, [id]);
 
   function calculateWinRate(
