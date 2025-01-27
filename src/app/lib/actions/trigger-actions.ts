@@ -28,7 +28,7 @@ export async function createTrigger(prevState: any, formData: FormData) {
             VALUES (${name}, ${successCount}, ${failureCount}, ${userId})
              RETURNING id, name, successCount, failureCount;
           `;
-          
+
     const trigger = response.rows[0];
 
     if (!trigger) {
@@ -40,18 +40,19 @@ export async function createTrigger(prevState: any, formData: FormData) {
   }
 }
 
-export async function getTriggers(userId: number) {
+export async function getTriggers(userId: number | undefined) {
   try {
     const response = await sql`
-            SELECT * FROM triggers WHERE user_id = ${userId};
+            SELECT name, success_count, failure_count 
+            FROM triggers 
+            WHERE user_id = ${userId};
             `;
 
-    console.log(response.rows);
-    const triggers = response.rows[0];
+    const triggers = response.rows;
 
     if (!triggers) {
       console.log("User has no triggers");
-      return [];
+      return undefined;
     }
 
     return triggers;

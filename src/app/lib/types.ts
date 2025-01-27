@@ -8,5 +8,11 @@ export type Trigger = {
   name: string;
   successCount: number;
   failureCount: number;
+}
+
+export type TriggerWithWinRate = {
+  name: string;
+  successCount: number;
+  failureCount: number;
   winRate: number | undefined;
 };
