@@ -63,6 +63,7 @@ export default function TriggerContextProvider({
       }
 
       const newTrigger = await createTrigger(formData, id);
+      console.log(newTrigger);
 
       if (newTrigger) {
         setTriggers((prev) => [
