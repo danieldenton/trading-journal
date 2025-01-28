@@ -1,12 +1,35 @@
-"use client"
+"use client";
 
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { useTriggerContext } from "../context/trigger";
+import { TriggerWithWinRate } from "../lib/types";
 
-export default function DeleteModal() {
+type DeleteModalProps = {
+  trigger: TriggerWithWinRate;
+  setModalType: Dispatch<SetStateAction<"delete" | "edit" | undefined>>;
+};
+
+export default function DeleteModal({
+  trigger,
+  setModalType,
+}: DeleteModalProps) {
+  const { deleteTriggerFromUser } = useTriggerContext();
+
+  const handleDelteModal = () => {
+    deleteTriggerFromUser(trigger.id);
+    setModalType(undefined);
+  };
+  
   return (
     <div>
-      <h1>Delete Modal</h1>
+      <p>Are you sure you want to delete {trigger.name}?</p>
+      <button
+        onClick={() => handleDelteModal()}
+        className="bg-red-500 text-white px-4 py-2 rounded"
+      >
+        Delete Trigger
+      </button>
+      <button onClick={() => setModalType(undefined)}>Cancel</button>
     </div>
   );
 }

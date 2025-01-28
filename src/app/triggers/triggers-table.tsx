@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useTriggerContext } from "../context/trigger";
-import { set } from "zod";
 import { TriggerWithWinRate } from "../lib/types";
+import DeleteModal from "./delete-modal";
 
 export default function TriggersTable() {
   const [modalType, setModalType] = useState<"delete" | "edit" | undefined>();
@@ -52,26 +52,33 @@ export default function TriggersTable() {
   });
 
   return (
-    <table className="table-auto w-full border-collapse border border-gray-300">
-      <thead>
-        <tr className="bg-white text-black">
-          <th className="border border-gray-300 py-2 text-center">
-            Trigger Name
-          </th>
-          <th className="border border-gray-300 py-2 text-center">
-            Success Count
-          </th>
-          <th className="border border-gray-300 py-2 text-center">
-            Failure Count
-          </th>
-          <th className="border border-gray-300 py-2 text-center">Win Rate</th>
-          <th className="border border-gray-300 py-2 w-15% text-center">
-            Update
-          </th>
-        </tr>
-      </thead>
-      <tbody>{triggerTable}</tbody>
-    </table>
+    <>
+      {modalType === "delete" && selectedTrigger ? (
+        <DeleteModal trigger={selectedTrigger} setModalType={setModalType}/>
+      ) : null}
+      <table className="table-auto w-full border-collapse border border-gray-300">
+        <thead>
+          <tr className="bg-white text-black">
+            <th className="border border-gray-300 py-2 text-center">
+              Trigger Name
+            </th>
+            <th className="border border-gray-300 py-2 text-center">
+              Success Count
+            </th>
+            <th className="border border-gray-300 py-2 text-center">
+              Failure Count
+            </th>
+            <th className="border border-gray-300 py-2 text-center">
+              Win Rate
+            </th>
+            <th className="border border-gray-300 py-2 w-15% text-center">
+              Update
+            </th>
+          </tr>
+        </thead>
+        <tbody>{triggerTable}</tbody>
+      </table>
+    </>
   );
 
   //   <button
