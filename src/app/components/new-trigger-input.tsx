@@ -11,24 +11,22 @@ export default function NewTriggerInput() {
   );
 
   return (
-    <div>
-      <form action={newTriggerAction} className="mb-4 flex gap-2">
-        <input
-          type="text"
-          name="name"
-          placeholder="Enter new trigger"
-          className="border p-2 rounded w-full font-bold text-gray-700 placeholder-gray-500"
-        />
+    <form action={newTriggerAction} className="mb-4 flex flex-col justify-center items-center gap-2">
+      <input
+        type="text"
+        name="name"
+        placeholder="Enter new trigger"
+        className="p-2 rounded font-bold text-black placeholder-gray-500 w-[25%] text-center"
+      />
 
-        <button
-          disabled={isPending}
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Add Trigger
-        </button>
-        {state ? <p className="text-red-500">{state}</p> : null}
-      </form>
-    </div>
+      <button
+        disabled={isPending}
+        type="submit"
+        className="bg-red-500 text-white font-bold px-4 py-2 rounded w-[15%]"
+      >
+        Add Trigger
+      </button>
+      {state ? <p className="text-red-500">{state}</p> : null}
+    </form>
   );
 }

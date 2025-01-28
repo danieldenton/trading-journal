@@ -43,13 +43,13 @@ export default function TriggersTable() {
         </td>
         <td className="border border-gray-300 py-2 flex items-center justify-center gap-2">
           <button
-            className="bg-gray-300 rounded text-black px-4"
+            className="bg-white rounded text-black px-4"
             onClick={() => handleEdit(trigger)}
           >
             Edit
           </button>
           <button
-            className="bg-gray-300 rounded text-black px-2"
+            className="bg-white rounded text-black px-2"
             onClick={() => handleDelete(trigger)}
           >
             Delete
