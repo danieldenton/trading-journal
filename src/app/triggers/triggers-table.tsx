@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTriggerContext } from "../context/trigger";
 import { TriggerWithWinRate } from "../lib/types";
 import DeleteModal from "./delete-modal";
+import EditModal from "./edit-modal";
 
 export default function TriggersTable() {
   const [modalType, setModalType] = useState<"delete" | "edit" | undefined>();
@@ -63,6 +64,8 @@ export default function TriggersTable() {
     <>
       {modalType === "delete" && selectedTrigger ? (
         <DeleteModal trigger={selectedTrigger} setModalType={setModalType} />
+      ) : modalType === "edit" && selectedTrigger ? (
+        <EditModal trigger={selectedTrigger} setModalType={setModalType} />
       ) : null}
       <table className="table-auto w-full border-collapse border border-gray-300">
         <thead>

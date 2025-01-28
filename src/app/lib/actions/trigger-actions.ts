@@ -1,15 +1,23 @@
 "use server";
 
 import { sql } from "@vercel/postgres";
-import { newTriggerSchema, updateTriggerSchema } from "../schema/trigger-schema";
-import { Trigger } from "../types";
+import {
+  newTriggerSchema,
+  updateTriggerSchema,
+} from "../schema/trigger-schema";
+import { TriggerWithWinRate, Trigger } from "../types";
 
 export async function getTriggers(userId: number | undefined) {
   try {
     const response =
       await sql`SELECT * FROM triggers WHERE user_id = ${userId}`;
 
-    const triggers = response.rows;
+    const triggers = response.rows.map((row) => ({
+      id: row.id,
+      name: row.name,
+      successCount: row.success_count,
+      failureCount: row.failure_count,
+    }));
 
     if (!triggers) {
       console.log("User has no triggers");
@@ -69,9 +77,8 @@ export async function createTrigger(
   }
 }
 
-export async function updateTrigger(trigger: Trigger) {
+export async function updateTrigger(trigger: TriggerWithWinRate) {
   try {
-
     const result = updateTriggerSchema.safeParse(trigger);
 
     if (!result.success) {
@@ -79,7 +86,7 @@ export async function updateTrigger(trigger: Trigger) {
       return { errors: result.error.flatten().fieldErrors };
     }
 
-const { id, name, successCount, failureCount } = result.data;
+    const { id, name, successCount, failureCount } = result.data;
 
     const response = await sql`
         UPDATE triggers
@@ -96,7 +103,12 @@ const { id, name, successCount, failureCount } = result.data;
       return { errors: { name: ["Failed to update trigger"] } };
     }
 
-    const updatedTrigger = response.rows[0];
+    const updatedTrigger = {
+      id: response.rows[0].id,
+      name: response.rows[0].name,
+      successCount: response.rows[0].success_count,
+      failureCount: response.rows[0].failure_count,
+    };
 
     return updatedTrigger;
   } catch (error) {

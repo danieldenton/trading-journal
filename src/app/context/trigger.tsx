@@ -1,8 +1,8 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, SetStateAction, Dispatch } from "react";
+import React, { createContext, useContext, useState, useEffect, SetStateAction, Dispatch, ReactNode } from "react";
 
-import { TriggerWithWinRate } from "../lib/types";
+import { Trigger, TriggerWithWinRate } from "../lib/types";
 import {
   createTrigger,
   getTriggers,
@@ -24,7 +24,7 @@ export const TriggerContext = createContext<TriggerContext | null>(null);
 export default function TriggerContextProvider({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const [triggers, setTriggers] = useState<TriggerWithWinRate[]>([]);
   const [newTriggerName, setNewTriggerName] = useState("");
@@ -39,19 +39,23 @@ export default function TriggerContextProvider({
     return total > 0 ? Math.round((successCount / total) * 100) : 0;
   }
 
+  function addWinRateToTriggers(triggersToUpdated: Trigger[] | undefined): TriggerWithWinRate[] {
+    const triggersWithWinRate = triggersToUpdated?.map((trigger) => ({
+      ...trigger,
+      winRate: calculateWinRate(trigger.successCount, trigger.failureCount),
+    }));
+    const sortedTriggers =
+    triggersWithWinRate?.sort((a, b) => b.winRate - a.winRate) || [];
+    return sortedTriggers;
+  }
+    
+
   const fetchTriggers = async () => {
     try {
       const userTriggers = await getTriggers(id);
-      const triggersWithWinRate = userTriggers?.map((trigger) => ({
-        id: trigger.id,
-        name: trigger.name,
-        successCount: trigger.success_count,
-        failureCount: trigger.failure_count,
-        winRate: calculateWinRate(trigger.success_count, trigger.failure_count),
-      }));
-      const sortedTriggers =
-        triggersWithWinRate?.sort((a, b) => b.winRate - a.winRate) || [];
-      setTriggers(sortedTriggers);
+      const triggersWithWinRate = addWinRateToTriggers(userTriggers);
+     
+      
     } catch (error) {
       console.error(error);
     }
