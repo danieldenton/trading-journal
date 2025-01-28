@@ -10,7 +10,7 @@ export default function TriggersTable() {
   const [selectedTrigger, setSelectedTrigger] = useState<
     TriggerWithWinRate | undefined
   >();
-  const { triggers, deleteTriggerFromUser } = useTriggerContext();
+  const { triggers } = useTriggerContext();
 
   const triggerTable = triggers.map((trigger, index) => {
     return (
