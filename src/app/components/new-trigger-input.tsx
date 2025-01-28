@@ -16,7 +16,7 @@ export default function NewTriggerInput() {
         type="text"
         name="name"
         placeholder="Enter new trigger"
-        className="p-2 rounded font-bold text-black placeholder-gray-500 w-[25%] text-center"
+        className="p-2 rounded font-bold text-black placeholder-gray-500 w-[25%] text-center focus:outline-none"
       />
 
       <button

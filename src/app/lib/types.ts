@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react";
+
 export type User = {
   id: number;
   email: string;
@@ -14,3 +16,8 @@ export type Trigger = {
 export type TriggerWithWinRate = Trigger & {
   winRate: number | undefined;
 };
+
+export type TriggerModalProps = {
+  trigger: TriggerWithWinRate;
+  setModalType: Dispatch<SetStateAction<"delete" | "edit" | undefined>>;
+}
