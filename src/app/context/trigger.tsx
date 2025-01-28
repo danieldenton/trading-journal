@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, SetStateAction, Dispatch } from "react";
 
 import { TriggerWithWinRate } from "../lib/types";
 import {
@@ -12,9 +12,9 @@ import { useUserContext } from "./user";
 
 type TriggerContext = {
   triggers: TriggerWithWinRate[];
-  setTriggers: React.Dispatch<React.SetStateAction<TriggerWithWinRate[]>>;
+  setTriggers: Dispatch<SetStateAction<TriggerWithWinRate[]>>;
   newTriggerName: string;
-  setNewTriggerName: React.Dispatch<React.SetStateAction<string>>;
+  setNewTriggerName: Dispatch<SetStateAction<string>>;
   addNewTrigger: (prevState: any, formData: FormData) => void;
   deleteTriggerFromUser: (triggerId: number) => void;
 };
