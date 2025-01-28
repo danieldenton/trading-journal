@@ -15,7 +15,7 @@ export default function DeleteModal({
 }: DeleteModalProps) {
   const { deleteTriggerFromUser } = useTriggerContext();
 
-  const handleDelteModal = () => {
+  const handleDeleteModal = () => {
     deleteTriggerFromUser(trigger.id);
     setModalType(undefined);
   };
@@ -30,7 +30,7 @@ export default function DeleteModal({
           {trigger.name}?
         </p>
         <button
-          onClick={() => handleDelteModal()}
+          onClick={() => handleDeleteModal()}
           className="bg-red-500 text-white font-bold px-4 py-2 m-1 rounded"
         >
           Delete Trigger
