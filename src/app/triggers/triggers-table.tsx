@@ -12,6 +12,16 @@ export default function TriggersTable() {
   >();
   const { triggers } = useTriggerContext();
 
+  const handleEdit = (trigger: TriggerWithWinRate) => {
+    setModalType("edit");
+    setSelectedTrigger(trigger);
+  };
+
+  const handleDelete = (trigger: TriggerWithWinRate) => {
+    setModalType("delete");
+    setSelectedTrigger(trigger);
+  };
+
   const triggerTable = triggers.map((trigger, index) => {
     return (
       <tr key={index}>
@@ -34,15 +44,13 @@ export default function TriggersTable() {
         <td className="border border-gray-300 py-2 flex items-center justify-center gap-2">
           <button
             className="bg-gray-300 rounded text-black px-4"
-            onClick={() => (setModalType("edit"), setSelectedTrigger(trigger))}
+            onClick={() => handleEdit(trigger)}
           >
             Edit
           </button>
           <button
             className="bg-gray-300 rounded text-black px-2"
-            onClick={() => (
-              setModalType("delete"), setSelectedTrigger(trigger)
-            )}
+            onClick={() => handleDelete(trigger)}
           >
             Delete
           </button>
@@ -54,7 +62,7 @@ export default function TriggersTable() {
   return (
     <>
       {modalType === "delete" && selectedTrigger ? (
-        <DeleteModal trigger={selectedTrigger} setModalType={setModalType}/>
+        <DeleteModal trigger={selectedTrigger} setModalType={setModalType} />
       ) : null}
       <table className="table-auto w-full border-collapse border border-gray-300">
         <thead>
