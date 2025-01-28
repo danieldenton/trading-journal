@@ -1,5 +1,5 @@
 import NewTriggerInput from "../components/new-trigger-input";
-import TriggersTable from "../components/triggers-table";
+import TriggersTable from "./triggers-table";
 
 export default function TriggersPage() {
   return (

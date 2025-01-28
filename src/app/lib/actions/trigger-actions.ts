@@ -105,12 +105,12 @@ const { id, name, successCount, failureCount } = result.data;
 }
 
 export async function deleteTrigger(
-  triggerName: string,
+  triggerId: number,
   userId: number | undefined
 ) {
   try {
     const response = await sql`
-        DELETE FROM triggers WHERE name = ${triggerName} AND user_id = ${userId}
+        DELETE FROM triggers WHERE id = ${triggerId} AND user_id = ${userId}
       `;
 
     if (response.rowCount === 0) {

@@ -93,13 +93,13 @@ export default function TriggerContextProvider({
     }
   };
 
-  const deleteTriggerFromUser = async (triggerName: string) => {
+  const deleteTriggerFromUser = async (triggerId: number) => {
     try {
       if (!id) {
         console.error("User needs to be logged in to delete a trigger");
         return "User needs to be logged in to delete a trigger";
       }
-      await deleteTrigger(triggerName, id);
+      await deleteTrigger(triggerId, id);
       setTriggers((prev) =>
         prev.filter((trigger) => trigger.name !== triggerName)
       );
