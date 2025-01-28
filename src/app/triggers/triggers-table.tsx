@@ -3,9 +3,13 @@
 import { useState } from "react";
 import { useTriggerContext } from "../context/trigger";
 import { set } from "zod";
+import { TriggerWithWinRate } from "../lib/types";
 
 export default function TriggersTable() {
   const [modalType, setModalType] = useState<"delete" | "edit" | undefined>();
+  const [selectedTrigger, setSelectedTrigger] = useState<
+    TriggerWithWinRate | undefined
+  >();
   const { triggers, deleteTriggerFromUser } = useTriggerContext();
 
   const triggerTable = triggers.map((trigger, index) => {
@@ -30,13 +34,15 @@ export default function TriggersTable() {
         <td className="border border-gray-300 py-2 flex items-center justify-center gap-2">
           <button
             className="bg-gray-300 rounded text-black px-4"
-            onClick={() => setModalType("edit")}
+            onClick={() => (setModalType("edit"), setSelectedTrigger(trigger))}
           >
             Edit
           </button>
           <button
             className="bg-gray-300 rounded text-black px-2"
-            onClick={() => setModalType("delete")}
+            onClick={() => (
+              setModalType("delete"), setSelectedTrigger(trigger)
+            )}
           >
             Delete
           </button>
@@ -59,23 +65,25 @@ export default function TriggersTable() {
             Failure Count
           </th>
           <th className="border border-gray-300 py-2 text-center">Win Rate</th>
-          <th className="border border-gray-300 py-2 w-15% text-center">Update</th>
+          <th className="border border-gray-300 py-2 w-15% text-center">
+            Update
+          </th>
         </tr>
       </thead>
       <tbody>{triggerTable}</tbody>
     </table>
   );
 
-//   <button
-//   className="bg-gray-300 rounded text-black px-4"
-//   onClick={() => deleteTriggerFromUser(trigger.name)}
-// >
-//   Edit
-// </button>
-// <button
-//   className="bg-gray-300 rounded text-black px-2"
-//   onClick={() => deleteTriggerFromUser(trigger.name)}
-// >
-//   Delete
-// </button>
+  //   <button
+  //   className="bg-gray-300 rounded text-black px-4"
+  //   onClick={() => deleteTriggerFromUser(trigger.name)}
+  // >
+  //   Edit
+  // </button>
+  // <button
+  //   className="bg-gray-300 rounded text-black px-2"
+  //   onClick={() => deleteTriggerFromUser(trigger.name)}
+  // >
+  //   Delete
+  // </button>
 }

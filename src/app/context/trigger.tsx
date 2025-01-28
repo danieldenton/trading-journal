@@ -16,7 +16,7 @@ type TriggerContext = {
   newTriggerName: string;
   setNewTriggerName: React.Dispatch<React.SetStateAction<string>>;
   addNewTrigger: (prevState: any, formData: FormData) => void;
-  deleteTriggerFromUser: (triggerName: string) => void;
+  deleteTriggerFromUser: (triggerId: number) => void;
 };
 
 export const TriggerContext = createContext<TriggerContext | null>(null);
@@ -100,9 +100,7 @@ export default function TriggerContextProvider({
         return "User needs to be logged in to delete a trigger";
       }
       await deleteTrigger(triggerId, id);
-      setTriggers((prev) =>
-        prev.filter((trigger) => trigger.name !== triggerName)
-      );
+      setTriggers((prev) => prev.filter((trigger) => trigger.id !== triggerId));
     } catch (error) {
       console.error(error);
     }
