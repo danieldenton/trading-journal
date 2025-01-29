@@ -1,17 +1,24 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, SetStateAction, Dispatch, ReactNode } from "react";
 
-import { Trigger } from "../lib/types";
-import { createTrigger } from "../lib/actions/trigger-actions";
-import { placeholderTriggers } from "../lib/placeholders";
+import { Trigger, TriggerWithWinRate } from "../lib/types";
+import {
+  createTrigger,
+  getTriggers,
+  updateTrigger,
+  deleteTrigger,
+} from "../lib/actions/trigger-actions";
+import { useUserContext } from "./user";
 
 type TriggerContext = {
-  triggers: Trigger[];
-  setTriggers: React.Dispatch<React.SetStateAction<Trigger[]>>;
+  triggers: TriggerWithWinRate[];
+  setTriggers: Dispatch<SetStateAction<TriggerWithWinRate[]>>;
   newTriggerName: string;
-  setNewTriggerName: React.Dispatch<React.SetStateAction<string>>;
-  addTrigger: () => void;
+  setNewTriggerName: Dispatch<SetStateAction<string>>;
+  addNewTrigger: (prevState: any, formData: FormData) => void;
+  deleteTriggerFromUser: (triggerId: number) => void;
+  postAndSaveUpdatedTriggerToTriggers: (updatedTrigger: TriggerWithWinRate) => void;
 };
 
 export const TriggerContext = createContext<TriggerContext | null>(null);
@@ -19,24 +26,11 @@ export const TriggerContext = createContext<TriggerContext | null>(null);
 export default function TriggerContextProvider({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
-  const [triggers, setTriggers] = useState<Trigger[]>([]);
+  const [triggers, setTriggers] = useState<TriggerWithWinRate[]>([]);
   const [newTriggerName, setNewTriggerName] = useState("");
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    // TODO: This should be a GET call to the server.
-    const triggersWithWinRate = placeholderTriggers
-      .map((trigger) => ({
-        ...trigger,
-        winRate: calculateWinRate(trigger.successCount, trigger.failureCount),
-      }))
-      .sort((a, b) => b.winRate - a.winRate);
-    setTriggers(triggersWithWinRate);
-    // Make sure this is necessary.
-    setIsLoaded(true);
-  }, []);
+  const { user } = useUserContext();
 
   function calculateWinRate(
     successCount: number,
@@ -46,19 +40,100 @@ export default function TriggerContextProvider({
     return total > 0 ? Math.round((successCount / total) * 100) : 0;
   }
 
+  function addWinRateToTriggers(triggersToUpdated: Trigger[] | undefined): TriggerWithWinRate[] {
+    const triggersWithWinRate = triggersToUpdated?.map((trigger) => ({
+      ...trigger,
+      winRate: calculateWinRate(trigger.successCount, trigger.failureCount),
+    }));
+    const sortedTriggers =
+    triggersWithWinRate?.sort((a, b) => b.winRate - a.winRate) || [];
+    return sortedTriggers;
+  }
+    
 
-  // TODO: This should be a POST call to the server.
-  const addTrigger = () => {
-    if (newTriggerName.trim() !== "") {
-      // createTrigger(userId)
-      setTriggers((prev) => [
-        ...prev,
-        { name: newTriggerName, successCount: 0, failureCount: 0, winRate: 0 },
-      ]);
-      setNewTriggerName("");
+  const fetchTriggers = async () => {
+    try {
+      const userTriggers = await getTriggers(user?.id);
+      const triggersWithWinRate = addWinRateToTriggers(userTriggers);
+      setTriggers(triggersWithWinRate);
+    } catch (error) {
+      console.error(error);
     }
   };
 
+  useEffect(() => {
+    if (user?.id) {
+      fetchTriggers();
+    }
+  }, [user?.id]);
+
+  const addNewTrigger = async (prevState: any, formData: FormData) => {
+    try {
+      if (!user?.id) {
+        console.error("User needs to be logged in to add a trigger");
+        return "User needs to be logged in to add a trigger";
+      }
+
+      const newTrigger = await createTrigger(formData, user.id);
+      if (newTrigger?.errors) {
+        const { name } = newTrigger.errors;
+        return name[0];
+      }
+
+      if (typeof newTrigger?.name === "string") {
+        setTriggers((prev) => [
+          ...prev,
+          {
+            id: newTrigger.id,
+            name: newTrigger.name,
+            successCount: 0,
+            failureCount: 0,
+            winRate: 0,
+          },
+        ]);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const deleteTriggerFromUser = async (triggerId: number) => {
+    try {
+      if (!user?.id) {
+        console.error("User needs to be logged in to delete a trigger");
+        return "User needs to be logged in to delete a trigger";
+      }
+      await deleteTrigger(triggerId, user.id);
+      setTriggers((prev) => prev.filter((trigger) => trigger.id !== triggerId));
+    } catch (error) {
+      console.error(error);
+    }
+  }
+    
+  const postAndSaveUpdatedTriggerToTriggers = async (updatedTrigger: TriggerWithWinRate) => {
+    try {
+      const returnedTrigger = await updateTrigger(updatedTrigger);
+      if (returnedTrigger && !returnedTrigger.errors) {
+        const triggerWithWinRate = {
+          ...returnedTrigger,
+          winRate: calculateWinRate(
+            returnedTrigger.successCount,
+            returnedTrigger.failureCount
+          ),
+        };
+  
+        setTriggers((prevTriggers) =>
+          prevTriggers.map((trigger) =>
+            trigger.id === triggerWithWinRate.id ? triggerWithWinRate : trigger
+          )
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+  
   return (
     <TriggerContext.Provider
       value={{
@@ -66,10 +141,12 @@ export default function TriggerContextProvider({
         setTriggers,
         newTriggerName,
         setNewTriggerName,
-        addTrigger,
+        addNewTrigger,
+        deleteTriggerFromUser,
+        postAndSaveUpdatedTriggerToTriggers
       }}
     >
-      {isLoaded ? children : null}
+      {children}
     </TriggerContext.Provider>
   );
 }

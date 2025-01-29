@@ -1,10 +1,10 @@
 import NewTriggerInput from "../components/new-trigger-input";
-import TriggersTable from "../components/triggers-table";
+import TriggersTable from "./triggers-table";
 
 export default function TriggersPage() {
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Triggers</h1>
+      <h1 className="text-2xl font-bold mb-4 text-center">Triggers</h1>
       <NewTriggerInput />
       <TriggersTable />
     </div>

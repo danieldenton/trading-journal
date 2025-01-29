@@ -2,11 +2,10 @@
 
 import bcrypt from "bcrypt";
 import { sql } from "@vercel/postgres";
-import { redirect } from "next/navigation";
 import { createSession, deleteSession } from "../sessions";
 import { registerSchema, loginSchema } from "../schema/auth-schema";
 
-export async function registerUser(prevState: any, formData: FormData) {
+export async function registerUser(prevState: unknown, formData: FormData) {
   try {
     const result = registerSchema.safeParse(Object.fromEntries(formData));
 
@@ -34,7 +33,12 @@ export async function registerUser(prevState: any, formData: FormData) {
           VALUES (${email}, ${firstName}, ${lastName}, ${hashedPassword})
            RETURNING id, first_name, email;
         `;
-    const user = response.rows[0];
+
+    const user = {
+      id: response.rows[0].id,
+      email: response.rows[0].email,
+      first_name: response.rows[0].first_name,
+    };
 
     if (!user) {
       console.log("Failed to create user");
@@ -42,13 +46,14 @@ export async function registerUser(prevState: any, formData: FormData) {
     }
 
     await createSession(user.id);
+
+    return { user, errors: undefined };
   } catch (error) {
     console.error(error);
   }
-  redirect("/dashboard");
 }
 
-export async function login(prevState: any, formData: FormData) {
+export async function login(prevState: unknown, formData: FormData) {
   try {
     const result = loginSchema.safeParse(Object.fromEntries(formData));
 
@@ -63,7 +68,7 @@ export async function login(prevState: any, formData: FormData) {
 `;
 
     if (existingUser.rows.length === 0) {
-      return { error: "User not found" };
+      return { success: false, error: "User not found" };
     }
 
     const validPassword = await bcrypt.compare(
@@ -82,10 +87,11 @@ export async function login(prevState: any, formData: FormData) {
     };
 
     await createSession(user.id);
+
+    return { user, errors: undefined };
   } catch (error) {
     console.error(error);
   }
-  redirect("/dashboard");
 }
 
 export async function logout() {
@@ -94,5 +100,4 @@ export async function logout() {
   } catch (error) {
     console.error(error);
   }
-  redirect("/");
 }
