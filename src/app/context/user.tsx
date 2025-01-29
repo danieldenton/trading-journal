@@ -1,13 +1,13 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, Dispatch, SetStateAction, ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { logout } from "../lib/actions/auth-actions";
 import { User } from "../lib/types";
 
 type UserContext = {
   user: User | undefined;
-  setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
+  setUser: Dispatch<SetStateAction<User | undefined>>;
   handleLogout: () => void;
 };
 
@@ -16,7 +16,7 @@ export const UserContext = createContext<UserContext | undefined>(undefined);
 export default function UserContextProvider({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const [user, setUser] = useState<User | undefined>();
   const router = useRouter();

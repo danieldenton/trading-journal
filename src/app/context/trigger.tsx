@@ -1,6 +1,14 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, SetStateAction, Dispatch, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  SetStateAction,
+  Dispatch,
+  ReactNode,
+} from "react";
 
 import { Trigger, TriggerWithWinRate } from "../lib/types";
 import {
@@ -18,7 +26,9 @@ type TriggerContext = {
   setNewTriggerName: Dispatch<SetStateAction<string>>;
   addNewTrigger: (prevState: any, formData: FormData) => void;
   deleteTriggerFromUser: (triggerId: number) => void;
-  postAndSaveUpdatedTriggerToTriggers: (updatedTrigger: TriggerWithWinRate) => void;
+  postAndSaveUpdatedTriggerToTriggers: (
+    updatedTrigger: TriggerWithWinRate
+  ) => void;
 };
 
 export const TriggerContext = createContext<TriggerContext | null>(null);
@@ -40,16 +50,17 @@ export default function TriggerContextProvider({
     return total > 0 ? Math.round((successCount / total) * 100) : 0;
   }
 
-  function addWinRateToTriggers(triggersToUpdated: Trigger[] | undefined): TriggerWithWinRate[] {
+  function addWinRateToTriggers(
+    triggersToUpdated: Trigger[] | undefined
+  ): TriggerWithWinRate[] {
     const triggersWithWinRate = triggersToUpdated?.map((trigger) => ({
       ...trigger,
       winRate: calculateWinRate(trigger.successCount, trigger.failureCount),
     }));
     const sortedTriggers =
-    triggersWithWinRate?.sort((a, b) => b.winRate - a.winRate) || [];
+      triggersWithWinRate?.sort((a, b) => b.winRate - a.winRate) || [];
     return sortedTriggers;
   }
-    
 
   const fetchTriggers = async () => {
     try {
@@ -108,12 +119,14 @@ export default function TriggerContextProvider({
     } catch (error) {
       console.error(error);
     }
-  }
-    
-  const postAndSaveUpdatedTriggerToTriggers = async (updatedTrigger: TriggerWithWinRate) => {
+  };
+
+  const postAndSaveUpdatedTriggerToTriggers = async (
+    updatedTrigger: TriggerWithWinRate
+  ) => {
     try {
       const returnedTrigger = await updateTrigger(updatedTrigger);
-      if (returnedTrigger && !returnedTrigger.errors) {
+      if (typeof returnedTrigger === "object" && "id" in returnedTrigger) {
         const triggerWithWinRate = {
           ...returnedTrigger,
           winRate: calculateWinRate(
@@ -121,7 +134,7 @@ export default function TriggerContextProvider({
             returnedTrigger.failureCount
           ),
         };
-  
+
         setTriggers((prevTriggers) =>
           prevTriggers.map((trigger) =>
             trigger.id === triggerWithWinRate.id ? triggerWithWinRate : trigger
@@ -132,8 +145,7 @@ export default function TriggerContextProvider({
       console.error(error);
     }
   };
-  
-  
+
   return (
     <TriggerContext.Provider
       value={{
@@ -143,7 +155,7 @@ export default function TriggerContextProvider({
         setNewTriggerName,
         addNewTrigger,
         deleteTriggerFromUser,
-        postAndSaveUpdatedTriggerToTriggers
+        postAndSaveUpdatedTriggerToTriggers,
       }}
     >
       {children}
