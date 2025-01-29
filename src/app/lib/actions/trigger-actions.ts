@@ -80,20 +80,20 @@ export async function createTrigger(
 export async function updateTrigger(trigger: TriggerWithWinRate): Promise<any> {
   try {
     const result = updateTriggerSchema.safeParse(trigger);
-
+    
     if (!result.success) {
       console.log(result.error.flatten().fieldErrors);
       return { errors: result.error.flatten().fieldErrors };
     }
 
     const { id, name, successCount, failureCount } = result.data;
-
+   
     const response = await sql`
         UPDATE triggers
         SET 
           name = ${name},
           success_count = ${successCount},
-          failure_count = ${failureCount},
+          failure_count = ${failureCount}
         WHERE id = ${id}
         RETURNING *;
       `;
