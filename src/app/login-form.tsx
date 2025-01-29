@@ -1,11 +1,22 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { login } from "./lib/actions/auth-actions";
+import { useUserContext } from "./context/user";
 
 export default function LoginForm() {
+  const router = useRouter();
   const [state, loginAction, isPending] = useActionState(login, undefined);
+  const { setUser } = useUserContext();
+
+  useEffect(() => {
+    if (state?.user && !isPending) {
+      setUser(state.user);
+      router.push("/dashboard");
+    }
+  }, [state?.user]);
 
   return (
     <form
