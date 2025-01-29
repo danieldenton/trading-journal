@@ -1,23 +1,27 @@
 import React, { useState } from "react";
 import { TriggerModalProps } from "../lib/types";
 import { useTriggerContext } from "../context/trigger";
-import { set } from "zod";
 
 export default function EditModal({
   trigger,
   setModalType,
 }: TriggerModalProps) {
-    const [newTriggerName, setNewTriggerName] = useState(trigger.name);
-  const { saveUpdatedTriggerToTriggers } = useTriggerContext();
+  const [newTriggerName, setNewTriggerName] = useState(trigger.name);
+  const { postAndSaveUpdatedTriggerToTriggers } = useTriggerContext();
 
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //     const { name, value } = e.target;
+  const updatedTigger = {
+    id: trigger.id,
+    name: newTriggerName,
+    successCount: trigger.successCount,
+    failureCount: trigger.failureCount,
+    winRate: trigger.winRate,
+  };
 
-  //     setTrigger((prev) => ({
-  //       ...prev,
-  //       [name]: value,
-  //     }));
-  //   };
+  const handleCompleteEdit = () => {
+    postAndSaveUpdatedTriggerToTriggers(updatedTigger);
+    setModalType(undefined);
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white h-[25%] w-[25%] flex items-center justify-center flex-col rounded shadow-lg">
@@ -32,7 +36,7 @@ export default function EditModal({
           className="p-2 rounded font-bold text-black placeholder-gray-500 w-[50%] text-center focus:outline-none"
         />
         <button
-          onClick={() => setModalType(undefined)}
+          onClick={() => handleCompleteEdit()}
           className="bg-red-500 text-white font-bold px-11 py-2 m-1 rounded"
         >
           Save
