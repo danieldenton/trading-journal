@@ -77,7 +77,7 @@ export async function createTrigger(
   }
 }
 
-export async function updateTrigger(trigger: TriggerWithWinRate) {
+export async function updateTrigger(trigger: TriggerWithWinRate): Promise<any> {
   try {
     const result = updateTriggerSchema.safeParse(trigger);
 
@@ -103,7 +103,7 @@ export async function updateTrigger(trigger: TriggerWithWinRate) {
       return { errors: { name: ["Failed to update trigger"] } };
     }
 
-    const updatedTrigger = {
+    const updatedTrigger: Trigger = {
       id: response.rows[0].id,
       name: response.rows[0].name,
       successCount: response.rows[0].success_count,
