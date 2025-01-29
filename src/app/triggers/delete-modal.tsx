@@ -26,13 +26,13 @@ export default function DeleteModal({
         </p>
         <button
           onClick={() => handleDeleteModal()}
-          className="bg-red-500 text-white font-bold px-4 py-2 m-1 rounded"
+          className="bg-red-500 text-white font-bold px-3 py-2 m-1 rounded"
         >
           Delete Trigger
         </button>
         <button
           onClick={() => setModalType(undefined)}
-          className="bg-black text-white font-bold px-11 py-2 m-1 rounded"
+          className="bg-black text-white font-bold px-10 py-2 m-1 rounded"
         >
           Cancel
         </button>

@@ -26,31 +26,31 @@ export default function TriggersTable() {
   const triggerTable = triggers.map((trigger, index) => {
     return (
       <tr key={index}>
-        <td className="border border-gray-300 py-2 text-center">
+        <td className="border border-gray-300 py-2 text-center font-bold">
           {trigger.name}
         </td>
-        <td className="border border-gray-300 py-2 text-center">
+        <td className="border border-gray-300 py-2 text-center font-bold">
           <div className="flex items-center justify-center gap-2">
             {trigger.successCount}
           </div>
         </td>
-        <td className="border border-gray-300 py-2 text-center">
+        <td className="border border-gray-300 py-2 text-center font-bold"  >
           <div className="flex items-center justify-center gap-2">
             {trigger.failureCount}
           </div>
         </td>
-        <td className="border border-gray-300 py-2 text-center">
+        <td className="border border-gray-300 py-2 text-center  font-bold">
           {trigger.winRate}%
         </td>
         <td className="border border-gray-300 py-2 flex items-center justify-center gap-2">
           <button
-            className="bg-white rounded text-black px-4"
+            className="bg-white rounded text-black font-bold px-4"
             onClick={() => handleEdit(trigger)}
           >
             Edit
           </button>
           <button
-            className="bg-white rounded text-black px-2"
+            className="bg-white rounded text-black font-bold px-2"
             onClick={() => handleDelete(trigger)}
           >
             Delete

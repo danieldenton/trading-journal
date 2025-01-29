@@ -4,7 +4,7 @@ import LogoutButton from "./dashboard/logout-button";
 
 export default function Navbar() {
   return (
-    <nav className="bg-gray-800 text-white py-4 px-8 flex justify-between items-center">
+    <nav className="bg-white text-black font-bold py-4 px-8 flex justify-between items-center">
       <Link href="/dashboard">Home</Link>
       <Link href="/trades">Trades</Link>
       <Link href="/setups">Setups</Link>
