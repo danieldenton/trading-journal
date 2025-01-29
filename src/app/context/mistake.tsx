@@ -1,16 +1,32 @@
 "use client";
 
-import React, { useState, useContext, createContext } from "react";
+import React, {
+  createContext,
+  useState,
+  useContext,
+  SetStateAction,
+  Dispatch,
+  ReactNode,
+  useEffect,
+} from "react";
 
 import { Mistake } from "../lib/types";
-import { mistakePlaceholder } from "../lib/placeholders";
+import {
+  createMistake,
+  getMistake,
+  updateMistake,
+  deleteMistake,
+} from "../lib/actions/mistake-actions";
+import { UserContext, useUserContext } from "./user";
 
 type MistakeContext = {
   mistakes: Mistake[];
-  setMistakes: React.Dispatch<React.SetStateAction<Mistake[]>>;
+  setMistakes: Dispatch<SetStateAction<Mistake[]>>;
   newMistakeName: string;
-  setNewMistakeName: React.Dispatch<React.SetStateAction<string>>;
-  addMistake: () => void;
+  setNewMistakeName: Dispatch<SetStateAction<string>>;
+  addMistake: (prevState: any, formData: FormData) => void;
+  deleteMistakeFromUser: (mistakeId: number) => void;
+  postAndSaveUpdatedMistakeToMistakes: (updatedMistake: Mistake) => void;
 };
 
 export const MistakeContext = createContext<MistakeContext | null>(null);
@@ -22,14 +38,47 @@ export default function MistakeContextProvider({
 }) {
   const [mistakes, setMistakes] = useState<Mistake[]>([]);
   const [newMistakeName, setNewMistakeName] = useState("");
-  const [isLoaded, setIsLoaded] = useState(false);
+  const { user } = useUserContext();
 
-  //TODO: POST call to the server
-  const addMistake = () => {
-    if (newMistakeName.trim() !== "") {
-      // createMistake(userId)
-      setMistakes((prev) => [...prev]);
-      setNewMistakeName("");
+  const fetchMistakes = async () => {
+    try {
+      const userMistakes = await getMistake(user?.id);
+      setMistakes(Mistake);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    if (user?.id) {
+      fetchMistakes();
+    }
+  }, [user?.id]);
+
+  const addNewMistake = async (prevState: any, formData: FormData) => {
+    try {
+      if (!user?.id) {
+        console.error("User need to be logged in to add a mistake");
+        return "User needs to be logged in to add a mistake";
+      }
+
+      const newMistake = await createMistake(formData, user.id);
+      if (newMistake?.errors) {
+        const { name } = newMistake.errors;
+        return name[0];
+      }
+
+      if (typeof newMistake?.name === "string") {
+        setMistakes((prev) => [
+          ...prev,
+          {
+            id: newMistake.id,
+            name: newMistake.name,
+          },
+        ]);
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
