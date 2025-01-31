@@ -1,5 +1,13 @@
+import DateTime from "./date-time";
+
 export default function TodayPage() {
+
+
     return (
-      <h1>Today Page</h1>
+      <div className="p-6 w-full h-screen">
+      <DateTime />
+
+      </div>
+      
     );
   }

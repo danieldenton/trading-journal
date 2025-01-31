@@ -10,7 +10,7 @@ export default function DashboardPage() {
       <div className="flex justify-center">
         <Link
           href={"/today"}
-          className="bg-red-700 p-4 m-4 font-bold hover:text-yellow-200 rounded"
+          className="bg-red-700 p-4 m-4 font-bold hover:text-yellow-200 hover:bg-red-800 rounded"
         >
           Begin a new trading day
         </Link>
