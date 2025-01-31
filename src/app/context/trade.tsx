@@ -10,30 +10,16 @@ import React, {
   ReactNode,
 } from "react";
 
-import { Trigger, TriggerWithWinRate } from "../lib/types";
-import {
-  createTrigger,
-  getTriggers,
-  updateTrigger,
-  deleteTrigger,
-} from "../lib/actions/trigger-actions";
+
 import { useUserContext } from "./user";
 
-type TriggerContext = {
-  triggers: TriggerWithWinRate[];
-  setTriggers: Dispatch<SetStateAction<TriggerWithWinRate[]>>;
-  newTriggerName: string;
-  setNewTriggerName: Dispatch<SetStateAction<string>>;
-  addNewTrigger: (prevState: any, formData: FormData) => void;
-  deleteTriggerFromUser: (triggerId: number) => void;
-  postAndSaveUpdatedTriggerToTriggers: (
-    updatedTrigger: TriggerWithWinRate
-  ) => void;
+type TradeContext = {
+  
 };
 
-export const TriggerContext = createContext<TriggerContext | undefined>(undefined);
+export const TradeContext = createContext<TradeContext | undefined>(undefined);
 
-export default function TriggerContextProvider({
+export default function TradeContextProvider({
   children,
 }: {
   children: ReactNode;
@@ -147,7 +133,7 @@ export default function TriggerContextProvider({
   };
 
   return (
-    <TriggerContext.Provider
+    <TradeContext.Provider
       value={{
         triggers,
         setTriggers,
@@ -159,15 +145,15 @@ export default function TriggerContextProvider({
       }}
     >
       {children}
-    </TriggerContext.Provider>
+    </TradeContext.Provider>
   );
 }
 
-export const useTriggerContext = () => {
-  const context = useContext(TriggerContext);
+export const useTradeContext = () => {
+  const context = useContext(TradeContext);
   if (!context) {
     throw new Error(
-      "useTriggerContext must be used within a TriggerContextProvider"
+      "useTradeContext must be used within a TradeContextProvider"
     );
   }
   return context;
