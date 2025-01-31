@@ -5,8 +5,9 @@ import { decrypt } from "./app/lib/sessions";
 
 const protectedRoutes = [
   "/dashboard",
-  "/day",
+  "/today",
   "/trade",
+  "/trades",
   "/stats",
   "/triggers",
   "/mistakes",
