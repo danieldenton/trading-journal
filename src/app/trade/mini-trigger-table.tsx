@@ -1,5 +1,5 @@
 "use client";
-import React, { MouseEventHandler } from "react";
+import React from "react";
 
 import { useTriggerContext } from "../context/trigger";
 import { useTradeContext } from "../context/trade";
@@ -9,20 +9,35 @@ export default function MiniTriggerTable() {
   const { triggers } = useTriggerContext();
   const { setTrade, trade } = useTradeContext();
 
-  const handleAddTrigger = (triggerId: number) => {
-    setTrade((prevState: Trade | undefined) => {
-      return {
-        ...prevState,
-        triggerIds: [...(prevState?.triggerIds ?? []), triggerId],
-      };
-    });
-  };
+//   const handleAddTrigger = (triggerId: number) => {
+//     if (trade?.triggerIds?.includes(triggerId)) {
+//       setTrade((prevState: Trade) => {
+//         return {
+//           ...prevState,
+//           triggerIds: [...prevState.triggerIds, triggerId],
+//         };
+//       });
+//     } else {
+//       setTrade((prevState: Trade) => {
+//         return {
+//           ...prevState,
+//           triggerIds: prevState.triggerIds.filter((id) => id !== triggerId),
+//         };
+//       });
+//     }
+//   };
 
   const miniTriggerTable = triggers.map((trigger, index) => {
     return (
       <tr key={index}>
         <td className="border border-gray-300 p-2 text-center">
-          <input type="checkbox" onClick={handleAddTrigger(trigger.id)} />
+          <input
+            type="checkbox"
+            // checked={trade?.triggerIds.includes(trigger.id) ?? false}
+            // onClick={() => {
+            //   handleAddTrigger(trigger.id);
+            // }}
+          />
         </td>
         <td className="border border-gray-300 p-2 text-center font-bold">
           {trigger.name}
