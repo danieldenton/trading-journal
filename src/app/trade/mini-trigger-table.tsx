@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { ChangeEvent } from "react";
 
 import { useTriggerContext } from "../context/trigger";
 import { useTradeContext } from "../context/trade";
@@ -9,7 +9,10 @@ export default function MiniTriggerTable() {
   const { triggers } = useTriggerContext();
   const { setTrade, trade } = useTradeContext();
 
-  const handleAddTrigger = (e: any, triggerId: number) => {
+  const handleAddTrigger = (
+    e: ChangeEvent<HTMLInputElement>,
+    triggerId: number
+  ) => {
     if (e.target.checked) {
       setTrade((prevState: Trade) => {
         return {
@@ -26,7 +29,7 @@ export default function MiniTriggerTable() {
       });
     }
   };
-  console.log(trade.triggerIds)
+
   const miniTriggerTable = triggers.map((trigger, index) => {
     return (
       <tr key={index}>
