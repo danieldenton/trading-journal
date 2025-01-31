@@ -1,6 +1,4 @@
-// create inputs for triggers and mistakes
-// Create checkboxes forn existing triggers and mistakes
-
+//This page is for reviewing old trades. 
 import React from "react";
 
 export default function TradePage() {

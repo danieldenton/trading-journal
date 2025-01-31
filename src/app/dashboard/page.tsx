@@ -1,5 +1,5 @@
 import React from "react";
-import Link from "next/link";
+import LinkButton from "../components/link-button";
 import UserName from "./user-name";
 
 export default function DashboardPage() {
@@ -8,12 +8,7 @@ export default function DashboardPage() {
       <h1 className="text-2xl font-bold mb-4 text-center">Dashboard</h1>
       <UserName />
       <div className="flex justify-center">
-        <Link
-          href={"/today"}
-          className="bg-red-700 p-4 m-4 font-bold hover:text-yellow-200 hover:bg-red-800 rounded"
-        >
-          Begin a new trading day
-        </Link>
+        <LinkButton href="/today" text="Begin a new trading day" />
       </div>
       <p>total trades logged</p>
       <p>total days traded</p>
