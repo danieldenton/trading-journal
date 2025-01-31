@@ -11,7 +11,7 @@ export type Trigger = {
   name: string;
   successCount: number;
   failureCount: number;
-}
+};
 
 export type TriggerWithWinRate = Trigger & {
   winRate: number | undefined;
@@ -20,4 +20,16 @@ export type TriggerWithWinRate = Trigger & {
 export type TriggerModalProps = {
   trigger: TriggerWithWinRate;
   setModalType: Dispatch<SetStateAction<"delete" | "edit" | undefined>>;
-}
+};
+
+export type Trade = {
+  date: string;
+  time: string;
+  symbol: string;
+  setupIds: number[];
+  triggerIds: number[];
+  mistakeIds: number[];
+  notes: string;
+  success: boolean;
+  pnl: number;
+};
