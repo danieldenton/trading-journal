@@ -28,13 +28,13 @@ export default function MiniTriggerTable() {
       <table className="border border-gray-300">
         <thead>
           <tr className="bg-white text-black">
-            <th className="border border-gray-300 py-2 text-center">
+            <th className="border border-gray-300 p-2 text-center">
               Add
             </th>
-            <th className="border border-gray-300 py-2 text-center">
+            <th className="border border-gray-300 p-2 text-center">
               Trigger Name
             </th>
-            <th className="border border-gray-300 py-2 text-center">
+            <th className="border border-gray-300 p-2 text-center">
               Win Rate
             </th>
            

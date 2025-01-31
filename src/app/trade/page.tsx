@@ -6,8 +6,8 @@ import TradePageTriggers from "./trade-page-triggers";
 
 export default function TradePage() {
   return (
-    <div>
-      <h1>Trade Page</h1>
+    <div className="p-6 w-full h-screen">
+      <h1 className="text-2xl font-bold mb-4 text-center">Trade</h1>
       <TradePageTriggers />
     </div>
   );
