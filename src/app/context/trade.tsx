@@ -16,8 +16,8 @@ import { useUserContext } from "./user";
 type TradeContext = {
   trades: Trade[];
   setTrades: Dispatch<SetStateAction<Trade[]>>;
-  trade: Trade | undefined;
-  setTrade: Dispatch<SetStateAction<Trade | undefined>>;
+  trade: Trade
+  setTrade: Dispatch<SetStateAction<Trade>>;
 };
 
 export const TradeContext = createContext<TradeContext | undefined>(undefined);
@@ -28,7 +28,18 @@ export default function TradeContextProvider({
   children: ReactNode;
 }) {
   const [trades, setTrades] = useState<Trade[]>([]);
-  const [trade, setTrade] = useState<Trade | undefined>(undefined);
+  const [trade, setTrade] = useState<Trade>({
+    id: undefined,
+    date: "",
+    time: "",
+    symbol: "",
+    setupIds: [],
+    triggerIds: [],
+    mistakeIds: [],
+    notes: "",
+    success: false,
+    pnl: 0,
+  });
 
   const { user } = useUserContext();
 

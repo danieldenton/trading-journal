@@ -23,6 +23,7 @@ export type TriggerModalProps = {
 };
 
 export type Trade = {
+  id: number | undefined
   date: string;
   time: string;
   symbol: string;
