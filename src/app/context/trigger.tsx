@@ -101,19 +101,7 @@ export default function TriggerContextProvider({
     }
   };
 
-  const deleteTriggerFromUser = async (triggerId: number) => {
-    try {
-      if (!user?.id) {
-        console.error("User needs to be logged in to delete a trigger");
-        return "User needs to be logged in to delete a trigger";
-      }
-      await deleteTrigger(triggerId, user.id);
-      setTriggers((prev) => prev.filter((trigger) => trigger.id !== triggerId));
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
+ 
   const patchAndSaveUpdatedTriggerToTriggers = async (
     updatedTrigger: TriggerWithWinRate
   ) => {
@@ -138,6 +126,20 @@ export default function TriggerContextProvider({
       console.error(error);
     }
   };
+
+  const deleteTriggerFromUser = async (triggerId: number) => {
+    try {
+      if (!user?.id) {
+        console.error("User needs to be logged in to delete a trigger");
+        return "User needs to be logged in to delete a trigger";
+      }
+      await deleteTrigger(triggerId, user.id);
+      setTriggers((prev) => prev.filter((trigger) => trigger.id !== triggerId));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
 
   return (
     <TriggerContext.Provider

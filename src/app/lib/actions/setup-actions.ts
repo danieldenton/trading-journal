@@ -59,7 +59,7 @@ export async function createSetup(
     const response = await sql`
         INSERT INTO triggers (name, trigger_ids, user_id)
         VALUES (${name}, ${formattedTriggerIds}, ${userId})
-        RETURNING id,trigger_ids, name;
+        RETURNING id, name, trigger_ids;
         `;
     const setup = response.rows[0];
 
@@ -91,11 +91,11 @@ export async function updateSetup(setup: SetupWithWinRate) {
         UPDATE setups
         SET
           name = ${name},
-            trigger_ids = ${formattedTriggerIds},
+          trigger_ids = ${formattedTriggerIds},
           success_count = ${successCount},
           failure_count = ${failureCount}
         WHERE id = ${id}
-        RETURNING id, name, success_count, failure_count;
+        RETURNING id, name, trigger_ids, success_count, failure_count;
       `;
 
     if (response.rowCount === 0) {
