@@ -16,15 +16,13 @@ export default function NewSetupInput() {
       action={newSetupAction}
       className="mb-4 flex flex-col justify-center items-center gap-2"
     >
-      <div className="flex flex-row justify-center items-center gap-2">
-        <input
-          type="text"
-          name="name"
-          placeholder="Enter new setup"
-          className="p-2 rounded font-bold text-black placeholder-gray-500 text-center focus:outline-none"
-        />
-        <MiniTriggerTable forSetup={true} />
-      </div>
+      <input
+        type="text"
+        name="name"
+        placeholder="Enter new setup name"
+        className="p-2 rounded font-bold text-black placeholder-gray-500 text-center focus:outline-none"
+      />
+      <MiniTriggerTable forSetup={true} />
 
       <button
         disabled={isPending}

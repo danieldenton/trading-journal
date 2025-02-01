@@ -37,37 +37,51 @@ export async function createSetup(
       return { errors: { name: ["User ID is missing"] } };
     }
 
-    const result = newSetupSchema.safeParse(Object.fromEntries(formData));
+    const formDataObject = Object.fromEntries(formData);
+    const triggerIds = formDataObject.triggerIds
+      ? JSON.parse(formDataObject.triggerIds as string)
+      : [];
+    if (triggerIds.length >= 2) {
+      console.log(
+        "You need to have at least 2 triggers selected to create a setup"
+      );
+      return {
+        errors: {
+          triggerIds: [
+            "You need to have at least 2 triggers selected to create a setup",
+          ],
+        },
+      };
+    }
+
+    const result = newSetupSchema.safeParse({
+      name: formDataObject.name,
+      triggerIds,
+    });
 
     if (!result.success) {
       console.log(result.error.flatten().fieldErrors);
       return { errors: result.error.flatten().fieldErrors };
     }
 
-    const { name, triggerIds } = result.data;
+    const { name, triggerIds: validatedTriggerIds } = result.data;
 
     const existingSetup = await sql`
-        SELECT 1 FROM triggers WHERE name= ${name} AND user_id = ${userId};
-      `;
+      SELECT 1 FROM setups WHERE name = ${name} AND user_id = ${userId};
+    `;
 
     if (existingSetup.rows.length > 0) {
       console.log("Setup already exists");
       return { errors: { name: ["Setup already exists"] } };
     }
-    const formattedTriggerIds = `{${triggerIds.join(",")}}`;
 
     const response = await sql`
-        INSERT INTO triggers (name, trigger_ids, user_id)
-        VALUES (${name}, ${formattedTriggerIds}, ${userId})
-        RETURNING id, name, trigger_ids;
-        `;
+      INSERT INTO setups (name, trigger_ids, user_id)
+      VALUES (${name}, ${triggerIds}, ${userId})
+      RETURNING id, name, trigger_ids;
+    `;
+
     const setup = response.rows[0];
-
-    if (!setup) {
-      console.log("Failed to create setup");
-      return { errors: { name: ["Failed to create setup "] } };
-    }
-
     return setup;
   } catch (error) {
     console.error(error);
