@@ -4,6 +4,7 @@ import "./globals.css";
 import TradeContextProvider from "./context/trade";
 import TriggerContextProvider from "./context/trigger";
 import UserContextProvider from "./context/user";
+import SetupContextProvider from "./context/setup";
 import Navbar from "./components/navbar";
 
 const geistSans = Geist({
@@ -33,10 +34,12 @@ export default function RootLayout({
       >
         <UserContextProvider>
           <TriggerContextProvider>
+            <SetupContextProvider>
             <TradeContextProvider>
               <Navbar />
               {children}
             </TradeContextProvider>
+            </SetupContextProvider>
           </TriggerContextProvider>
         </UserContextProvider>
       </body>

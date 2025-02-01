@@ -10,35 +10,28 @@ import React, {
   ReactNode,
 } from "react";
 
-import { Trade } from "../lib/types";
+import { Setup } from "../lib/types";
 import { useUserContext } from "./user";
 
-type TradeContext = {
-  trades: Trade[];
-  setTrades: Dispatch<SetStateAction<Trade[]>>;
-  trade: Trade
-  setTrade: Dispatch<SetStateAction<Trade>>;
+type SetupContext = {
+  setups: Setup[];
+  setSetups: Dispatch<SetStateAction<Setup[]>>;
+  setup: Setup;
+  setSetup: Dispatch<SetStateAction<Setup>>;
 };
 
-export const TradeContext = createContext<TradeContext | undefined>(undefined);
+export const SetupContext = createContext<SetupContext | undefined>(undefined);
 
-export default function TradeContextProvider({
+export default function SetupContextProvider({
   children,
 }: {
   children: ReactNode;
 }) {
-  const [trades, setTrades] = useState<Trade[]>([]);
-  const [trade, setTrade] = useState<Trade>({
+  const [setups, setSetups] = useState<Setup[]>([]);
+  const [setup, setSetup] = useState<Setup>({
     id: undefined,
-    date: "",
-    time: "",
-    symbol: "",
-    setupIds: [],
+    name: "",
     triggerIds: [],
-    mistakeIds: [],
-    notes: "",
-    success: false,
-    pnl: 0,
   });
 
   const { user } = useUserContext();
@@ -49,24 +42,24 @@ export default function TradeContextProvider({
   }, [user?.id]);
 
   return (
-    <TradeContext.Provider
+    <SetupContext.Provider
       value={{
-        trades,
-        setTrades,
-        trade,
-        setTrade,
+        setups,
+        setSetups,
+        setup,
+        setSetup,
       }}
     >
       {children}
-    </TradeContext.Provider>
+    </SetupContext.Provider>
   );
 }
 
-export const useTradeContext = () => {
-  const context = useContext(TradeContext);
+export const useSetupContext = () => {
+  const context = useContext(SetupContext);
   if (!context) {
     throw new Error(
-      "useTradeContext must be used within a TradeContextProvider"
+      "useSetupContext must be used within a SetupContextProvider"
     );
   }
   return context;
