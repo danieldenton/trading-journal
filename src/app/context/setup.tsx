@@ -27,6 +27,7 @@ type SetupContext = {
   setSetup: Dispatch<SetStateAction<Setup>>;
   addNewSetup: (prevState: any, formData: FormData) => void;
   patchAndSaveUpdatedSetupToSetups: (updatedSetup: SetupWithWinRate) => void;
+  deleteSetupFromUser: (setupId: number) => void;
 };
 
 export const SetupContext = createContext<SetupContext | undefined>(undefined);
@@ -152,7 +153,8 @@ export default function SetupContextProvider({
         setup,
         setSetup,
         addNewSetup,
-        patchAndSaveUpdatedSetupToSetups
+        patchAndSaveUpdatedSetupToSetups,
+        deleteSetupFromUser
       }}
     >
       {children}
