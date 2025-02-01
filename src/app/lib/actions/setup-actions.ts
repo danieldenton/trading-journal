@@ -4,28 +4,29 @@ import { sql } from "@vercel/postgres";
 import { newSetupSchema, updateSetupSchema } from "../schema/setup-schema";
 import { SetupWithWinRate, Setup } from "../types";
 
-// export async function getTriggers(userId: number | undefined) {
-//   try {
-//     const response =
-//       await sql`SELECT * FROM triggers WHERE user_id = ${userId}`;
+export async function getSetups(userId: number | undefined) {
+  try {
+    const response =
+      await sql`SELECT * FROM setups WHERE user_id = ${userId}`;
 
-//     const triggers = response.rows.map((row) => ({
-//       id: row.id,
-//       name: row.name,
-//       successCount: row.success_count,
-//       failureCount: row.failure_count,
-//     }));
+    const setups = response.rows.map((row) => ({
+      id: row.id,
+      name: row.name,
+      triggerIds: row.trigger_ids,
+      successCount: row.success_count,
+      failureCount: row.failure_count,
+    }));
 
-//     if (!triggers) {
-//       console.log("User has no triggers");
-//       return;
-//     }
+    if (!setups) {
+      console.log("User has no setups");
+      return;
+    }
 
-//     return triggers;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// }
+    return setups;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 export async function createSetup(
   formData: FormData,
