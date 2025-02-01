@@ -69,7 +69,7 @@ export default function SetupsTable() {
         <thead>
           <tr className="bg-white text-black">
             <th className="border border-gray-300 py-2 text-center">
-              Setup Name
+              Setup
             </th>
             <th className="border border-gray-300 py-2 text-center">
               Success Count

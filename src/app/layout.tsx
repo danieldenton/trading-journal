@@ -3,8 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import TradeContextProvider from "./context/trade";
 import TriggerContextProvider from "./context/trigger";
-import UserContextProvider from "./context/user";
 import SetupContextProvider from "./context/setup";
+import UserContextProvider from "./context/user";
 import Navbar from "./components/navbar";
 
 const geistSans = Geist({

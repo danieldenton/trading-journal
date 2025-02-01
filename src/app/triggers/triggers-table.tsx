@@ -71,7 +71,7 @@ export default function TriggersTable() {
         <thead>
           <tr className="bg-white text-black">
             <th className="border border-gray-300 py-2 text-center">
-              Trigger Name
+              Trigger
             </th>
             <th className="border border-gray-300 py-2 text-center">
               Success Count
