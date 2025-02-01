@@ -36,8 +36,19 @@ export default function SetupContextProvider({
     successCount: 0,
     failureCount: 0,
   });
-
   const { user } = useUserContext();
+
+  function addWinRateToSetups(
+      setupsToUpdated: Setup[] | undefined
+    ): SetupWithWinRate[] {
+      const setupsWithWinRate = setupsToUpdated?.map((setup) => ({
+        ...setup,
+        winRate: calculateWinRate(setup.successCount, setup.failureCount),
+      }));
+      const sortedSetups =
+        setupsWithWinRate?.sort((a, b) => b.winRate - a.winRate) || [];
+      return sortedSetups;
+    }
 
   useEffect(() => {
     if (user?.id) {
