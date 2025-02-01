@@ -10,6 +10,12 @@ import React, {
   ReactNode,
 } from "react";
 
+import {
+  getSetups,
+  createSetup,
+  updateSetup,
+  deleteSetup,
+} from "../lib/actions/setup-actions";
 import { Setup, SetupWithWinRate } from "../lib/types";
 import { calculateWinRate } from "../lib/utils";
 import { useUserContext } from "./user";
@@ -39,16 +45,26 @@ export default function SetupContextProvider({
   const { user } = useUserContext();
 
   function addWinRateToSetups(
-      setupsToUpdated: Setup[] | undefined
-    ): SetupWithWinRate[] {
-      const setupsWithWinRate = setupsToUpdated?.map((setup) => ({
-        ...setup,
-        winRate: calculateWinRate(setup.successCount, setup.failureCount),
-      }));
-      const sortedSetups =
-        setupsWithWinRate?.sort((a, b) => b.winRate - a.winRate) || [];
-      return sortedSetups;
+    setupsToUpdated: Setup[] | undefined
+  ): SetupWithWinRate[] {
+    const setupsWithWinRate = setupsToUpdated?.map((setup) => ({
+      ...setup,
+      winRate: calculateWinRate(setup.successCount, setup.failureCount),
+    }));
+    const sortedSetups =
+      setupsWithWinRate?.sort((a, b) => b.winRate - a.winRate) || [];
+    return sortedSetups;
+  }
+
+  const fetchSetups = async () => {
+    try {
+      const userSetups = await getSetups(user?.id);
+      const setupsWithWinRate = addWinRateToSetups(userSetups);
+      setSetups(setupsWithWinRate);
+    } catch (error) {
+      console.error(error);
     }
+  };
 
   useEffect(() => {
     if (user?.id) {
