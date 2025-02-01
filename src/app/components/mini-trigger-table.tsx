@@ -13,7 +13,7 @@ type Props = {
 export default function MiniTriggerTable({ forSetup }: { forSetup: boolean }) {
   const { triggers } = useTriggerContext();
   const { setTrade, trade } = useTradeContext();
-  const { setSetup, setup } = useSetupContext();
+  const { addOrRemoveTriggerFromSetup, setup } = useSetupContext();
   const state = forSetup ? setup : trade;
 
   const handleAddTrigger = (
@@ -21,21 +21,7 @@ export default function MiniTriggerTable({ forSetup }: { forSetup: boolean }) {
     triggerId: number
   ) => {
     if (forSetup) {
-      if (e.target.checked) {
-        setSetup((prevState) => {
-          return {
-            ...prevState,
-            triggerIds: [...prevState.triggerIds, triggerId],
-          };
-        });
-      } else {
-        setSetup((prevState) => {
-          return {
-            ...prevState,
-            triggerIds: prevState.triggerIds.filter((id) => id !== triggerId),
-          };
-        });
-      }
+      addOrRemoveTriggerFromSetup(e.target.checked, triggerId);
     } else {
       if (e.target.checked) {
         setTrade((prevState) => {
