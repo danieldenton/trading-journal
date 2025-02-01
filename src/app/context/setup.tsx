@@ -83,6 +83,8 @@ export default function SetupContextProvider({
         return "User needs to be logged in to add a setup";
       }
 
+      formData.append("triggerIds", JSON.stringify(setup.triggerIds))
+
       const newSetup = await createSetup(formData, user.id);
       if (newSetup?.errors) {
         const { name } = newSetup.errors;
