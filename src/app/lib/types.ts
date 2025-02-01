@@ -1,11 +1,13 @@
 import { Dispatch, SetStateAction } from "react";
 
+// User
 export type User = {
   id: number;
   email: string;
   first_name: string;
 };
 
+// Trigger
 export type Trigger = {
   id: number;
   name: string;
@@ -22,6 +24,7 @@ export type TriggerModalProps = {
   setModalType: Dispatch<SetStateAction<"delete" | "edit" | undefined>>;
 };
 
+// Trade
 export type Trade = {
   id: number | undefined
   date: string;
@@ -35,6 +38,7 @@ export type Trade = {
   pnl: number;
 };
 
+// Setup
 export type Setup = {
   id: number | undefined
   name: string;

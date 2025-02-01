@@ -27,7 +27,7 @@ type TriggerContext = {
   setNewTriggerName: Dispatch<SetStateAction<string>>;
   addNewTrigger: (prevState: any, formData: FormData) => void;
   deleteTriggerFromUser: (triggerId: number) => void;
-  postAndSaveUpdatedTriggerToTriggers: (
+  patchAndSaveUpdatedTriggerToTriggers: (
     updatedTrigger: TriggerWithWinRate
   ) => void;
 };
@@ -114,7 +114,7 @@ export default function TriggerContextProvider({
     }
   };
 
-  const postAndSaveUpdatedTriggerToTriggers = async (
+  const patchAndSaveUpdatedTriggerToTriggers = async (
     updatedTrigger: TriggerWithWinRate
   ) => {
     try {
@@ -148,7 +148,7 @@ export default function TriggerContextProvider({
         setNewTriggerName,
         addNewTrigger,
         deleteTriggerFromUser,
-        postAndSaveUpdatedTriggerToTriggers,
+        patchAndSaveUpdatedTriggerToTriggers,
       }}
     >
       {children}

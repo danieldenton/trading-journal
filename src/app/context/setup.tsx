@@ -11,6 +11,7 @@ import React, {
 } from "react";
 
 import { Setup, SetupWithWinRate } from "../lib/types";
+import { calculateWinRate } from "../lib/utils";
 import { useUserContext } from "./user";
 
 type SetupContext = {
