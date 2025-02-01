@@ -68,6 +68,7 @@ export default function SetupContextProvider({
 
   useEffect(() => {
     if (user?.id) {
+        fetchSetups();
     }
   }, [user?.id]);
 
