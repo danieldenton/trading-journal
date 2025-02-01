@@ -32,6 +32,8 @@ export default function SetupContextProvider({
     id: undefined,
     name: "",
     triggerIds: [],
+    successCount: 0,
+    failureCount: 0,
   });
 
   const { user } = useUserContext();

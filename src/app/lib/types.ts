@@ -41,5 +41,8 @@ export type Setup = {
   triggerIds: number[];
   successCount: number;
   failureCount: number;
+};
+
+export type SteupWithWinRate = Setup & {
   winRate: number | undefined;
 };
