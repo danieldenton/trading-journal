@@ -34,3 +34,9 @@ export type Trade = {
   success: boolean;
   pnl: number;
 };
+
+export type Setup = {
+  id: number | undefined
+  name: string;
+  triggerIds: number[];
+};
