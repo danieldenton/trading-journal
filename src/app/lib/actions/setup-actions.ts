@@ -6,8 +6,7 @@ import { SetupWithWinRate, Setup } from "../types";
 
 export async function getSetups(userId: number | undefined) {
   try {
-    const response =
-      await sql`SELECT * FROM setups WHERE user_id = ${userId}`;
+    const response = await sql`SELECT * FROM setups WHERE user_id = ${userId}`;
 
     const setups = response.rows.map((row) => ({
       id: row.id,
@@ -75,49 +74,50 @@ export async function createSetup(
   }
 }
 
-// export async function updateTrigger(trigger: TriggerWithWinRate) {
-//   try {
-//     const result = updateTriggerSchema.safeParse(trigger);
+export async function updateSetup(setup: SetupWithWinRate) {
+  try {
+    const result = updateSetupSchema.safeParse(setup);
 
-//     if (!result.success) {
-//       console.log(result.error.flatten().fieldErrors);
-//       return { errors: result.error.flatten().fieldErrors };
-//     }
+    if (!result.success) {
+      console.log(result.error.flatten().fieldErrors);
+      return { errors: result.error.flatten().fieldErrors };
+    }
 
-//     const { id, name, successCount, failureCount } = result.data;
+    const { id, name, triggerIds, successCount, failureCount } = result.data;
 
-//     const response = await sql`
-//         UPDATE triggers
-//         SET
-//           name = ${name},
-//           success_count = ${successCount},
-//           failure_count = ${failureCount}
-//         WHERE id = ${id}
-//         RETURNING id, name, success_count, failure_count;
-//       `;
+    const formattedTriggerIds = `{${triggerIds.join(",")}}`;
 
-//     if (response.rowCount === 0) {
-//       console.log("Failed to update trigger");
-//       return { errors: { name: ["Failed to update trigger"] } };
-//     }
+    const response = await sql`
+        UPDATE setups
+        SET
+          name = ${name},
+            trigger_ids = ${formattedTriggerIds},
+          success_count = ${successCount},
+          failure_count = ${failureCount}
+        WHERE id = ${id}
+        RETURNING id, name, success_count, failure_count;
+      `;
 
-//     const updatedTrigger: Trigger = {
-//       id: response.rows[0].id,
-//       name: response.rows[0].name,
-//       successCount: response.rows[0].success_count,
-//       failureCount: response.rows[0].failure_count,
-//     };
+    if (response.rowCount === 0) {
+      console.log("Failed to update setup");
+      return { errors: { name: ["Failed to update setup"] } };
+    }
 
-//     return updatedTrigger;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// }
+    const updatedSetup: Setup = {
+      id: response.rows[0].id,
+      name: response.rows[0].name,
+      triggerIds: response.rows[0].trigger_ids,
+      successCount: response.rows[0].success_count,
+      failureCount: response.rows[0].failure_count,
+    };
 
-export async function deleteSetup(
-  setupId: number,
-  userId: number | undefined
-) {
+    return updatedSetup;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function deleteSetup(setupId: number, userId: number | undefined) {
   try {
     const response = await sql`
         DELETE FROM setups WHERE id = ${setupId} AND user_id = ${userId}
