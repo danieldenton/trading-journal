@@ -100,7 +100,6 @@ export default function TriggerContextProvider({
       console.error(error);
     }
   };
-
  
   const patchAndSaveUpdatedTriggerToTriggers = async (
     updatedTrigger: TriggerWithWinRate
@@ -139,7 +138,6 @@ export default function TriggerContextProvider({
       console.error(error);
     }
   };
-
 
   return (
     <TriggerContext.Provider

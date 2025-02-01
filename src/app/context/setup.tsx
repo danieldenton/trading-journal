@@ -26,6 +26,7 @@ type SetupContext = {
   setup: Setup;
   setSetup: Dispatch<SetStateAction<Setup>>;
   addNewSetup: (prevState: any, formData: FormData) => void;
+  patchAndSaveUpdatedSetupToSetups: (updatedSetup: SetupWithWinRate) => void;
 };
 
 export const SetupContext = createContext<SetupContext | undefined>(undefined);
@@ -104,6 +105,31 @@ export default function SetupContextProvider({
     }
   };
 
+  const patchAndSaveUpdatedSetupToSetups = async (
+      updatedSetup: SetupWithWinRate
+    ) => {
+      try {
+        const returnedSetup = await updateSetup(updatedSetup);
+        if (typeof returnedSetup === "object" && "id" in returnedSetup) {
+          const triggerWithWinRate = {
+            ...returnedSetup,
+            winRate: calculateWinRate(
+              returnedSetup.successCount,
+              returnedSetup.failureCount
+            ),
+          };
+  
+          setSetups((prevTriggers) =>
+            prevTriggers.map((trigger) =>
+              trigger.id === triggerWithWinRate.id ? triggerWithWinRate : trigger
+            )
+          );
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
   return (
     <SetupContext.Provider
       value={{
@@ -112,6 +138,7 @@ export default function SetupContextProvider({
         setup,
         setSetup,
         addNewSetup,
+        patchAndSaveUpdatedSetupToSetups
       }}
     >
       {children}
