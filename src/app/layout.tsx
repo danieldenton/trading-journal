@@ -4,7 +4,7 @@ import "./globals.css";
 import TradeContextProvider from "./context/trade";
 import TriggerContextProvider from "./context/trigger";
 import UserContextProvider from "./context/user";
-import Navbar from "./navbar";
+import Navbar from "./components/navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

@@ -3,8 +3,8 @@
 import { useActionState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { login } from "./lib/actions/auth-actions";
-import { useUserContext } from "./context/user";
+import { login } from "../lib/actions/auth-actions";
+import { useUserContext } from "../context/user";
 
 export default function LoginForm() {
   const router = useRouter();

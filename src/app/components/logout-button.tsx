@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useUserContext } from "./context/user";
+import { useUserContext } from "../context/user";
 
 export default function LogoutButton() {
   const { handleLogout } = useUserContext()
