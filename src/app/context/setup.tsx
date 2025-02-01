@@ -93,7 +93,7 @@ export default function SetupContextProvider({
           {
             id: newSetup.id,
             name: newSetup.name,
-            triggerIds: newSetup.triggerIds,
+            triggerIds: newSetup.setupIds,
             successCount: 0,
             failureCount: 0,
             winRate: 0,
@@ -111,7 +111,7 @@ export default function SetupContextProvider({
       try {
         const returnedSetup = await updateSetup(updatedSetup);
         if (typeof returnedSetup === "object" && "id" in returnedSetup) {
-          const triggerWithWinRate = {
+          const setupWithWinRate = {
             ...returnedSetup,
             winRate: calculateWinRate(
               returnedSetup.successCount,
@@ -119,9 +119,9 @@ export default function SetupContextProvider({
             ),
           };
   
-          setSetups((prevTriggers) =>
-            prevTriggers.map((trigger) =>
-              trigger.id === triggerWithWinRate.id ? triggerWithWinRate : trigger
+          setSetups((prevsetups) =>
+            prevsetups.map((setup) =>
+              setup.id === setupWithWinRate.id ? setupWithWinRate : setup
             )
           );
         }
@@ -129,6 +129,20 @@ export default function SetupContextProvider({
         console.error(error);
       }
     };
+
+    const deleteSetupFromUser = async (setupId: number) => {
+        try {
+          if (!user?.id) {
+            console.error("User needs to be logged in to delete a setup");
+            return "User needs to be logged in to delete a setup";
+          }
+          await deleteSetup(setupId, user.id);
+          setSetups((prev) => prev.filter((setup) => setup.id !== setupId));
+        } catch (error) {
+          console.error(error);
+        }
+      };
+    
 
   return (
     <SetupContext.Provider
