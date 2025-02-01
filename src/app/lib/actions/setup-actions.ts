@@ -27,66 +27,48 @@ export async function getSetups(userId: number | undefined) {
   }
 }
 
-export async function createSetup(
-  formData: FormData,
-  userId: number | undefined
-) {
-  try {
-    if (!userId) {
-      console.error("User ID is missing");
-      return { errors: { name: ["User ID is missing"] } };
-    }
-
-    const formDataObject = Object.fromEntries(formData);
-    const triggerIds = formDataObject.triggerIds
-      ? JSON.parse(formDataObject.triggerIds as string)
-      : [];
-    if (triggerIds.length >= 2) {
-      console.log(
-        "You need to have at least 2 triggers selected to create a setup"
-      );
-      return {
-        errors: {
-          triggerIds: [
-            "You need to have at least 2 triggers selected to create a setup",
-          ],
-        },
-      };
-    }
-
-    const result = newSetupSchema.safeParse({
-      name: formDataObject.name,
-      triggerIds,
-    });
-
-    if (!result.success) {
-      console.log(result.error.flatten().fieldErrors);
-      return { errors: result.error.flatten().fieldErrors };
-    }
-
-    const { name, triggerIds: validatedTriggerIds } = result.data;
-
-    const existingSetup = await sql`
-      SELECT 1 FROM setups WHERE name = ${name} AND user_id = ${userId};
-    `;
-
-    if (existingSetup.rows.length > 0) {
-      console.log("Setup already exists");
-      return { errors: { name: ["Setup already exists"] } };
-    }
-
-    const response = await sql`
-      INSERT INTO setups (name, trigger_ids, user_id)
-      VALUES (${name}, ${triggerIds}, ${userId})
-      RETURNING id, name, trigger_ids;
-    `;
-
-    const setup = response.rows[0];
-    return setup;
-  } catch (error) {
-    console.error(error);
+export async function createSetup(formData: FormData, userId: number | undefined) {
+  if (!userId) {
+    console.error("User ID is missing");
+    return { errors: { name: ["User ID is missing"] } };
   }
+
+  const formDataObject = Object.fromEntries(formData);
+  const triggerIds = formDataObject.triggerIds
+    ? JSON.parse(formDataObject.triggerIds as string)
+    : [];
+  const result = newSetupSchema.safeParse({
+    name: formDataObject.name,
+    triggerIds, 
+  });
+
+  if (!result.success) {
+    console.log(result.error.flatten().fieldErrors);
+    return { errors: result.error.flatten().fieldErrors };
+  }
+
+  const { name, triggerIds: validTriggerIds } = result.data;
+
+  const existingSetup = await sql`
+    SELECT 1 FROM setups WHERE name = ${name} AND user_id = ${userId};
+  `;
+
+  if (existingSetup.rows.length > 0) {
+    console.log("Setup already exists");
+    return { errors: { name: ["Setup already exists"] } };
+  }
+
+    const formattedTriggerIds = `{${validTriggerIds.join(",")}}`
+
+  const response = await sql`
+    INSERT INTO setups (name, trigger_ids, user_id)
+    VALUES (${name}, ${formattedTriggerIds}, ${userId})
+    RETURNING id, name, trigger_ids;
+  `;
+
+  return response.rows[0];
 }
+
 
 export async function updateSetup(setup: SetupWithWinRate) {
   try {

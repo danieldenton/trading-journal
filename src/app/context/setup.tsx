@@ -83,12 +83,12 @@ export default function SetupContextProvider({
         return "User needs to be logged in to add a setup";
       }
 
-      formData.append("triggerIds", JSON.stringify(setup.triggerIds))
+      formData.append("triggerIds", JSON.stringify(setup.triggerIds));
 
       const newSetup = await createSetup(formData, user.id);
       if (newSetup?.errors) {
         const { name } = newSetup.errors;
-        return name[0];
+        return name;
       }
 
       if (typeof newSetup?.name === "string") {
@@ -103,6 +103,13 @@ export default function SetupContextProvider({
             winRate: 0,
           },
         ]);
+        setSetup({
+          id: undefined,
+          name: "",
+          triggerIds: [],
+          successCount: 0,
+          failureCount: 0,
+        });
       }
     } catch (error) {
       console.error(error);
@@ -110,62 +117,60 @@ export default function SetupContextProvider({
   };
 
   const patchAndSaveUpdatedSetupToSetups = async (
-      updatedSetup: SetupWithWinRate
-    ) => {
-      try {
-        const returnedSetup = await updateSetup(updatedSetup);
-        if (typeof returnedSetup === "object" && "id" in returnedSetup) {
-          const setupWithWinRate = {
-            ...returnedSetup,
-            winRate: calculateWinRate(
-              returnedSetup.successCount,
-              returnedSetup.failureCount
-            ),
-          };
-  
-          setSetups((prevsetups) =>
-            prevsetups.map((setup) =>
-              setup.id === setupWithWinRate.id ? setupWithWinRate : setup
-            )
-          );
-        }
-      } catch (error) {
-        console.error(error);
+    updatedSetup: SetupWithWinRate
+  ) => {
+    try {
+      const returnedSetup = await updateSetup(updatedSetup);
+      if (typeof returnedSetup === "object" && "id" in returnedSetup) {
+        const setupWithWinRate = {
+          ...returnedSetup,
+          winRate: calculateWinRate(
+            returnedSetup.successCount,
+            returnedSetup.failureCount
+          ),
+        };
+
+        setSetups((prevsetups) =>
+          prevsetups.map((setup) =>
+            setup.id === setupWithWinRate.id ? setupWithWinRate : setup
+          )
+        );
       }
-    };
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-    const deleteSetupFromUser = async (setupId: number) => {
-        try {
-          if (!user?.id) {
-            console.error("User needs to be logged in to delete a setup");
-            return "User needs to be logged in to delete a setup";
-          }
-          await deleteSetup(setupId, user.id);
-          setSetups((prev) => prev.filter((setup) => setup.id !== setupId));
-        } catch (error) {
-          console.error(error);
-        }
-      };
-
-      const addOrRemoveTriggerFromSetup = (add: boolean, triggerId: number) => {
-        if (add) {
-          setSetup((prevState) => {
-            return {
-              ...prevState,
-              triggerIds: [...prevState.triggerIds, triggerId],
-            };
-          });
-        } else {
-          setSetup((prevState) => {
-            return {
-              ...prevState,
-              triggerIds: prevState.triggerIds.filter((id) => id !== triggerId),
-            };
-          });
-        }
+  const deleteSetupFromUser = async (setupId: number) => {
+    try {
+      if (!user?.id) {
+        console.error("User needs to be logged in to delete a setup");
+        return "User needs to be logged in to delete a setup";
       }
+      await deleteSetup(setupId, user.id);
+      setSetups((prev) => prev.filter((setup) => setup.id !== setupId));
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-    
+  const addOrRemoveTriggerFromSetup = (add: boolean, triggerId: number) => {
+    if (add) {
+      setSetup((prevState) => {
+        return {
+          ...prevState,
+          triggerIds: [...prevState.triggerIds, triggerId],
+        };
+      });
+    } else {
+      setSetup((prevState) => {
+        return {
+          ...prevState,
+          triggerIds: prevState.triggerIds.filter((id) => id !== triggerId),
+        };
+      });
+    }
+  };
 
   return (
     <SetupContext.Provider
