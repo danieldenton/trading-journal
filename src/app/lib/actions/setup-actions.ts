@@ -2,7 +2,7 @@
 
 import { sql } from "@vercel/postgres";
 import { newSetupSchema, updateSetupSchema } from "../schema/setup-schema";
-import { TriggerWithWinRate, Trigger } from "../types";
+import { SetupWithWinRate, Setup } from "../types";
 
 // export async function getTriggers(userId: number | undefined) {
 //   try {
@@ -57,18 +57,18 @@ export async function createSetup(
     const formattedTriggerIds = `{${triggerIds.join(",")}}`;
 
     const response = await sql`
-  INSERT INTO triggers (name, trigger_ids, user_id)
-  VALUES (${name}, ${formattedTriggerIds}, ${userId})
-  RETURNING id,trigger_ids, name;
-`;
+        INSERT INTO triggers (name, trigger_ids, user_id)
+        VALUES (${name}, ${formattedTriggerIds}, ${userId})
+        RETURNING id,trigger_ids, name;
+        `;
     const setup = response.rows[0];
 
     if (!setup) {
       console.log("Failed to create setup");
-      return { errors: { name: ["Failed to create setup"] } };
+      return { errors: { name: ["Failed to create setup "] } };
     }
 
-    return setup
+    return setup;
   } catch (error) {
     console.error(error);
   }
@@ -113,22 +113,22 @@ export async function createSetup(
 //   }
 // }
 
-// export async function deleteTrigger(
-//   triggerId: number,
-//   userId: number | undefined
-// ) {
-//   try {
-//     const response = await sql`
-//         DELETE FROM triggers WHERE id = ${triggerId} AND user_id = ${userId}
-//       `;
+export async function deleteSetup(
+  setupId: number,
+  userId: number | undefined
+) {
+  try {
+    const response = await sql`
+        DELETE FROM setups WHERE id = ${setupId} AND user_id = ${userId}
+      `;
 
-//     if (response.rowCount === 0) {
-//       console.log("Failed to delete trigger");
-//       return { errors: { name: ["Failed to delete trigger"] } };
-//     }
+    if (response.rowCount === 0) {
+      console.log("Failed to delete setup");
+      return { errors: { name: ["Failed to delete setup"] } };
+    }
 
-//     return { success: true, message: "Trigger deleted" };
-//   } catch (error) {
-//     console.error(error);
-//   }
-// }
+    return { success: true, message: "Setup deleted" };
+  } catch (error) {
+    console.error(error);
+  }
+}
