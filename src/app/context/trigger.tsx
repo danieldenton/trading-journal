@@ -31,7 +31,7 @@ type TriggerContext = {
   ) => void;
 };
 
-export const TriggerContext = createContext<TriggerContext | null>(null);
+export const TriggerContext = createContext<TriggerContext | undefined>(undefined);
 
 export default function TriggerContextProvider({
   children,

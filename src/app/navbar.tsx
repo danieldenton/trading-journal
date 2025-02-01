@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import LogoutButton from "./dashboard/logout-button";
+import LogoutButton from "./logout-button";
 
 export default function Navbar() {
   return (

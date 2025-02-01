@@ -6,6 +6,6 @@ export default function UserName() {
   const { user } = useUserContext();
 
   return (
-    <h1 className="text-2xl font-bold">{`Hello ${user?.first_name}`}</h1>
+    <h1 className="text-2xl font-bold m-5">{`Hello ${user?.first_name}`}</h1>
   );
 };

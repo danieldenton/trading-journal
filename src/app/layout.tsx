@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import TradeContextProvider from "./context/trade";
 import TriggerContextProvider from "./context/trigger";
 import UserContextProvider from "./context/user";
 import Navbar from "./navbar";
@@ -32,8 +33,10 @@ export default function RootLayout({
       >
         <UserContextProvider>
           <TriggerContextProvider>
-            <Navbar />
-            {children}
+            <TradeContextProvider>
+              <Navbar />
+              {children}
+            </TradeContextProvider>
           </TriggerContextProvider>
         </UserContextProvider>
       </body>
