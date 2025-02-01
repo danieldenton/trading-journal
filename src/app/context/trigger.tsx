@@ -17,6 +17,7 @@ import {
   updateTrigger,
   deleteTrigger,
 } from "../lib/actions/trigger-actions";
+import { calculateWinRate } from "../lib/utils";
 import { useUserContext } from "./user";
 
 type TriggerContext = {
@@ -41,14 +42,6 @@ export default function TriggerContextProvider({
   const [triggers, setTriggers] = useState<TriggerWithWinRate[]>([]);
   const [newTriggerName, setNewTriggerName] = useState("");
   const { user } = useUserContext();
-
-  function calculateWinRate(
-    successCount: number,
-    failureCount: number
-  ): number {
-    const total = successCount + failureCount;
-    return total > 0 ? Math.round((successCount / total) * 100) : 0;
-  }
 
   function addWinRateToTriggers(
     triggersToUpdated: Trigger[] | undefined
