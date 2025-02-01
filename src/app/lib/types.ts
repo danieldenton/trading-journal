@@ -9,7 +9,7 @@ export type User = {
 
 // Trigger
 export type Trigger = {
-  id: number;
+  id: number | undefined;
   name: string;
   successCount: number;
   failureCount: number;
@@ -26,7 +26,7 @@ export type TriggerModalProps = {
 
 // Trade
 export type Trade = {
-  id: number | undefined
+  id: number | undefined;
   date: string;
   time: string;
   symbol: string;
@@ -40,7 +40,7 @@ export type Trade = {
 
 // Setup
 export type Setup = {
-  id: number | undefined
+  id: number | undefined;
   name: string;
   triggerIds: number[];
   successCount: number;

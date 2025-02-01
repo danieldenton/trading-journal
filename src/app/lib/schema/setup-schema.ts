@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export const newSetupSchema = z.object({
     name: z.string().trim().min(1, "Trigger needs a name"),
+    triggerIds: z.array(z.number().int()),
   });
 
   export const updateSetupSchema = z.object({
