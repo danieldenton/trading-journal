@@ -1,14 +1,9 @@
 "use client";
-import React, { ChangeEvent, Dispatch, SetStateAction } from "react";
+import React, { ChangeEvent } from "react";
 
 import { useTriggerContext } from "../context/trigger";
 import { useSetupContext } from "../context/setup";
 import { useTradeContext } from "../context/trade";
-import { Trade, Setup } from "../lib/types";
-
-type Props = {
-  forSetup: boolean;
-};
 
 export default function MiniTriggerTable({ forSetup }: { forSetup: boolean }) {
   const { triggers } = useTriggerContext();
