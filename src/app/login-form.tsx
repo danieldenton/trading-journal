@@ -16,7 +16,7 @@ export default function LoginForm() {
       setUser(state.user);
       router.push("/dashboard");
     }
-  }, [state?.user]);
+  }, [state?.user, isPending, setUser]);
 
   return (
     <form
