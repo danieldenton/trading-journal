@@ -9,7 +9,7 @@ export type User = {
 
 // Trigger
 export type Trigger = {
-  id: number | undefined;
+  id: number;
   name: string;
   successCount: number;
   failureCount: number;

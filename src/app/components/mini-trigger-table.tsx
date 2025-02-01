@@ -1,32 +1,57 @@
 "use client";
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, Dispatch, SetStateAction } from "react";
 
 import { useTriggerContext } from "../context/trigger";
+import { useSetupContext } from "../context/setup";
 import { useTradeContext } from "../context/trade";
-import { Trade } from "../lib/types";
+import { Trade, Setup } from "../lib/types";
 
-export default function MiniTriggerTable() {
+type Props = {
+  forSetup: boolean;
+};
+
+export default function MiniTriggerTable({ forSetup }: { forSetup: boolean }) {
   const { triggers } = useTriggerContext();
   const { setTrade, trade } = useTradeContext();
+  const { setSetup, setup } = useSetupContext();
+  const state = forSetup ? setup : trade;
 
   const handleAddTrigger = (
     e: ChangeEvent<HTMLInputElement>,
     triggerId: number
   ) => {
-    if (e.target.checked) {
-      setTrade((prevState: Trade) => {
-        return {
-          ...prevState,
-          triggerIds: [...prevState.triggerIds, triggerId],
-        };
-      });
+    if (forSetup) {
+      if (e.target.checked) {
+        setSetup((prevState) => {
+          return {
+            ...prevState,
+            triggerIds: [...prevState.triggerIds, triggerId],
+          };
+        });
+      } else {
+        setSetup((prevState) => {
+          return {
+            ...prevState,
+            triggerIds: prevState.triggerIds.filter((id) => id !== triggerId),
+          };
+        });
+      }
     } else {
-      setTrade((prevState: Trade) => {
-        return {
-          ...prevState,
-          triggerIds: prevState.triggerIds.filter((id) => id !== triggerId),
-        };
-      });
+      if (e.target.checked) {
+        setTrade((prevState) => {
+          return {
+            ...prevState,
+            triggerIds: [...prevState.triggerIds, triggerId],
+          };
+        });
+      } else {
+        setTrade((prevState) => {
+          return {
+            ...prevState,
+            triggerIds: prevState.triggerIds.filter((id) => id !== triggerId),
+          };
+        });
+      }
     }
   };
 
@@ -36,7 +61,7 @@ export default function MiniTriggerTable() {
         <td className="border border-gray-300 p-2 text-center">
           <input
             type="checkbox"
-            checked={trade?.triggerIds.includes(trigger.id)}
+            checked={state?.triggerIds.includes(trigger.id)}
             onChange={(e) => handleAddTrigger(e, trigger.id)}
           />
         </td>

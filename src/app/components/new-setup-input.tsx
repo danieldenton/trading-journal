@@ -3,7 +3,7 @@
 import React, { useActionState } from "react";
 import { useSetupContext } from "../context/setup";
 
-export default function NewTriggerInput() {
+export default function NewSetupInput() {
   const { addNewSetup } = useSetupContext()
   const [state, newSetupAction, isPending] = useActionState(
     addNewSetup,

@@ -28,6 +28,7 @@ type SetupContext = {
   addNewSetup: (prevState: any, formData: FormData) => void;
   patchAndSaveUpdatedSetupToSetups: (updatedSetup: SetupWithWinRate) => void;
   deleteSetupFromUser: (setupId: number) => void;
+  addOrRemoveTriggerFromSetup: (add: boolean, triggerId: number) => void;
 };
 
 export const SetupContext = createContext<SetupContext | undefined>(undefined);
@@ -143,6 +144,25 @@ export default function SetupContextProvider({
           console.error(error);
         }
       };
+
+      const addOrRemoveTriggerFromSetup = (add: boolean, triggerId: number) => {
+        if (add) {
+          setSetup((prevState) => {
+            return {
+              ...prevState,
+              triggerIds: [...prevState.triggerIds, triggerId],
+            };
+          });
+        } else {
+          setSetup((prevState) => {
+            return {
+              ...prevState,
+              triggerIds: prevState.triggerIds.filter((id) => id !== triggerId),
+            };
+          });
+        }
+      }
+
     
 
   return (
@@ -154,7 +174,8 @@ export default function SetupContextProvider({
         setSetup,
         addNewSetup,
         patchAndSaveUpdatedSetupToSetups,
-        deleteSetupFromUser
+        deleteSetupFromUser,
+        addOrRemoveTriggerFromSetup,
       }}
     >
       {children}
