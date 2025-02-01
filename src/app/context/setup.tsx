@@ -10,12 +10,12 @@ import React, {
   ReactNode,
 } from "react";
 
-import { Setup } from "../lib/types";
+import { Setup, SetupWithWinRate } from "../lib/types";
 import { useUserContext } from "./user";
 
 type SetupContext = {
-  setups: Setup[];
-  setSetups: Dispatch<SetStateAction<Setup[]>>;
+  setups: SetupWithWinRate[];
+  setSetups: Dispatch<SetStateAction<SetupWithWinRate[]>>;
   setup: Setup;
   setSetup: Dispatch<SetStateAction<Setup>>;
 };
@@ -27,7 +27,7 @@ export default function SetupContextProvider({
 }: {
   children: ReactNode;
 }) {
-  const [setups, setSetups] = useState<Setup[]>([]);
+  const [setups, setSetups] = useState<SetupWithWinRate[]>([]);
   const [setup, setSetup] = useState<Setup>({
     id: undefined,
     name: "",

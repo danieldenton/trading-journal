@@ -2,21 +2,21 @@
 
 import { useState } from "react";
 import { useSetupContext } from "../context/setup";
-import { Setup } from "../lib/types";
+import { SetupWithWinRate } from "../lib/types";
 
 export default function SetupsTable() {
   const [modalType, setModalType] = useState<"delete" | "edit" | undefined>();
   const [selectedSetup, setSelectedSetup] = useState<
-    Setup | undefined
+    SetupWithWinRate | undefined
   >();
   const { setups } = useSetupContext();
 
-  const handleEdit = (setup: Setup) => {
+  const handleEdit = (setup: SetupWithWinRate) => {
     setModalType("edit");
     setSelectedSetup(setup);
   };
 
-  const handleDelete = (setup: Setup) => {
+  const handleDelete = (setup: SetupWithWinRate) => {
     setModalType("delete");
     setSelectedSetup(setup);
   };

@@ -43,6 +43,6 @@ export type Setup = {
   failureCount: number;
 };
 
-export type SteupWithWinRate = Setup & {
+export type SetupWithWinRate = Setup & {
   winRate: number | undefined;
 };
