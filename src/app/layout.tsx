@@ -35,10 +35,10 @@ export default function RootLayout({
         <UserContextProvider>
           <TriggerContextProvider>
             <SetupContextProvider>
-            <TradeContextProvider>
-              <Navbar />
-              {children}
-            </TradeContextProvider>
+              <TradeContextProvider>
+                <Navbar />
+                {children}
+              </TradeContextProvider>
             </SetupContextProvider>
           </TriggerContextProvider>
         </UserContextProvider>

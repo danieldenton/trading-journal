@@ -39,4 +39,7 @@ export type Setup = {
   id: number | undefined
   name: string;
   triggerIds: number[];
+  successCount: number;
+  failureCount: number;
+  winRate: number | undefined;
 };
