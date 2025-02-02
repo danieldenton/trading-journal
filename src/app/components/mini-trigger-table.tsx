@@ -4,23 +4,19 @@ import React, { ChangeEvent } from "react";
 import { useTriggerContext } from "../context/trigger";
 import { useSetupContext } from "../context/setup";
 import { useTradeContext } from "../context/trade";
+import { Setup, SetupWithWinRate } from "../lib/types";
 
-type MiniTriggerTableProps = {
-  forSetup: boolean;
-  setupId: number | undefined;
-}
-
-export default function MiniTriggerTable({ forSetup, setupId }: MiniTriggerTableProps) {
+export default function MiniTriggerTable({ setup }: {setup: Setup | SetupWithWinRate | undefined} ){
   const { triggers } = useTriggerContext();
   const { addOrRemoveTriggerFromTrade, trade } = useTradeContext();
-  const { addOrRemoveTriggerFromSetup, setup } = useSetupContext();
-  const state = forSetup ? setup : trade;
+  const { addOrRemoveTriggerFromSetup } = useSetupContext();
+  const state = trade;
 
   const handleAddTrigger = (
     e: ChangeEvent<HTMLInputElement>,
     triggerId: number
   ) => {
-    if (forSetup) {
+    if (setup) {
       addOrRemoveTriggerFromSetup(e.target.checked, triggerId);
     } else {
       addOrRemoveTriggerFromTrade(e.target.checked, triggerId);

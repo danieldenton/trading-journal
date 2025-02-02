@@ -5,7 +5,7 @@ import { useSetupContext } from "../context/setup";
 import MiniTriggerTable from "./mini-trigger-table";
 
 export default function NewSetupInput() {
-  const { addNewSetup } = useSetupContext();
+  const { addNewSetup, setup } = useSetupContext();
   const [state, newSetupAction, isPending] = useActionState(
     addNewSetup,
     undefined
@@ -22,7 +22,7 @@ export default function NewSetupInput() {
         placeholder="Enter new setup name"
         className="p-2 rounded font-bold text-black placeholder-gray-500 text-center focus:outline-none"
       />
-      <MiniTriggerTable forSetup={true} setupId={undefined} />
+      <MiniTriggerTable setup={setup} />
 
       <button
         disabled={isPending}

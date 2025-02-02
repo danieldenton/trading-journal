@@ -6,7 +6,7 @@ export default function TradePageTriggers() {
     <div className="flex flex-col justify-center items-center w-1/4 border-white border-2">
       <h1 className="font-bold p-2 text-xl">Triggers</h1>
       <NewTriggerInput />
-      <MiniTriggerTable forSetup={false} setupId={undefined} />
+      <MiniTriggerTable setup={undefined} />
     </div>
   );
 }

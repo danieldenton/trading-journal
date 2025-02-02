@@ -34,7 +34,7 @@ export default function EditModal({ setup, setModalType }: SetupModalProps) {
           onChange={(e) => setNewSetupName(e.target.value)}
           className="p-2 rounded font-bold text-black placeholder-gray-500 w-[50%] text-center focus:outline-none border border-black mb-1"
         />
-        <MiniTriggerTable forSetup={true} setupId={setup.id} />
+        <MiniTriggerTable setup={setup} />
         <button
           onClick={() => handleCompleteEdit()}
           className="bg-red-500 text-white font-bold px-12 py-2 m-1 rounded"
