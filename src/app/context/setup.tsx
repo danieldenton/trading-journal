@@ -28,7 +28,11 @@ type SetupContext = {
   addNewSetup: (prevState: any, formData: FormData) => void;
   patchAndSaveUpdatedSetupToSetups: (updatedSetup: SetupWithWinRate) => void;
   deleteSetupFromUser: (setupId: number) => void;
-  addOrRemoveTriggerFromSetup: (add: boolean, triggerId: number) => void;
+  addOrRemoveTriggerFromSetup: (
+    add: boolean,
+    setupToNeEdited: Setup | SetupWithWinRate,
+    triggerId: number
+  ) => void;
 };
 
 export const SetupContext = createContext<SetupContext | undefined>(undefined);
@@ -154,7 +158,11 @@ export default function SetupContextProvider({
     }
   };
 
-  const addOrRemoveTriggerFromSetup = (add: boolean, triggerId: number) => {
+  const addOrRemoveTriggerFromSetup = (
+    add: boolean,
+    setupToBeEdited: Setup | SetupWithWinRate,
+    triggerId: number
+  ) => {
     if (add) {
       setSetup((prevState) => {
         return {

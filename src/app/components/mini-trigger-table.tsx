@@ -6,18 +6,22 @@ import { useSetupContext } from "../context/setup";
 import { useTradeContext } from "../context/trade";
 import { Setup, SetupWithWinRate } from "../lib/types";
 
-export default function MiniTriggerTable({ setup }: {setup: Setup | SetupWithWinRate | undefined} ){
+export default function MiniTriggerTable({
+  setup,
+}: {
+  setup: Setup | SetupWithWinRate | undefined;
+}) {
   const { triggers } = useTriggerContext();
   const { addOrRemoveTriggerFromTrade, trade } = useTradeContext();
   const { addOrRemoveTriggerFromSetup } = useSetupContext();
-  const state = trade;
+  const state = setup ? setup : trade;
 
   const handleAddTrigger = (
     e: ChangeEvent<HTMLInputElement>,
     triggerId: number
   ) => {
     if (setup) {
-      addOrRemoveTriggerFromSetup(e.target.checked, triggerId);
+      addOrRemoveTriggerFromSetup(e.target.checked, setup, triggerId);
     } else {
       addOrRemoveTriggerFromTrade(e.target.checked, triggerId);
     }
