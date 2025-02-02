@@ -5,7 +5,12 @@ import { useTriggerContext } from "../context/trigger";
 import { useSetupContext } from "../context/setup";
 import { useTradeContext } from "../context/trade";
 
-export default function MiniTriggerTable({ forSetup }: { forSetup: boolean }) {
+type MiniTriggerTableProps = {
+  forSetup: boolean;
+  setupId: number | undefined;
+}
+
+export default function MiniTriggerTable({ forSetup, setupId }: MiniTriggerTableProps) {
   const { triggers } = useTriggerContext();
   const { addOrRemoveTriggerFromTrade, trade } = useTradeContext();
   const { addOrRemoveTriggerFromSetup, setup } = useSetupContext();

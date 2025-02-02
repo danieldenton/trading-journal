@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { SetupModalProps } from "../lib/types";
 import { useSetupContext } from "../context/setup";
+import MiniTriggerTable from "../components/mini-trigger-table";
 
-export default function EditModal({
-  setup,
-  setModalType,
-}: SetupModalProps) {
+export default function EditModal({ setup, setModalType }: SetupModalProps) {
   const [newSetupName, setNewSetupName] = useState(setup.name);
   const { patchAndSaveUpdatedSetupToSetups } = useSetupContext();
 
@@ -25,7 +23,7 @@ export default function EditModal({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white h-[25%] w-[25%] flex items-center justify-center flex-col rounded shadow-lg">
+      <div className="bg-white flex items-center justify-center flex-col rounded shadow-lg">
         <p className="text-black font-bold text-lg px-2 text-center mb-1">
           Edit setup Name
         </p>
@@ -36,6 +34,7 @@ export default function EditModal({
           onChange={(e) => setNewSetupName(e.target.value)}
           className="p-2 rounded font-bold text-black placeholder-gray-500 w-[50%] text-center focus:outline-none border border-black mb-1"
         />
+        <MiniTriggerTable forSetup={true} setupId={setup.id} />
         <button
           onClick={() => handleCompleteEdit()}
           className="bg-red-500 text-white font-bold px-12 py-2 m-1 rounded"

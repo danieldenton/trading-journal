@@ -22,7 +22,7 @@ export default function NewSetupInput() {
         placeholder="Enter new setup name"
         className="p-2 rounded font-bold text-black placeholder-gray-500 text-center focus:outline-none"
       />
-      <MiniTriggerTable forSetup={true} />
+      <MiniTriggerTable forSetup={true} setupId={undefined} />
 
       <button
         disabled={isPending}
