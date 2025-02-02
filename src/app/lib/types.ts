@@ -50,3 +50,8 @@ export type Setup = {
 export type SetupWithWinRate = Setup & {
   winRate: number | undefined;
 };
+
+export type SetupModalProps = {
+  setup: SetupWithWinRate;
+  setModalType: Dispatch<SetStateAction<"delete" | "edit" | undefined>>;
+};

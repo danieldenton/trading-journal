@@ -24,20 +24,18 @@ export default function SetupsTable() {
   };
 
   const setupTable = setups.map((setup, index) => {
-    const triggerNames = setup.triggerIds.map(
-      (triggerId) => triggers.find((trigger) => trigger.id === triggerId)?.name
-    );
+    const triggerNames = setup.triggerIds.map((triggerId) => (
+      <span key={triggerId}>
+        {triggers.find((trigger) => trigger.id === triggerId)?.name}
+      </span>
+    ));
     return (
       <tr key={index}>
         <td className="border border-gray-300 py-2 text-center font-bold">
           {setup.name}
         </td>
         <td className="flex flex-col border border-gray-300 py-2 text-center font-bold">
-          {setup.triggerIds.map((triggerId, index) => (
-            <span key={index}>
-              {triggers.find((trigger) => trigger.id === triggerId)?.name}
-            </span>
-          ))}
+          {triggerNames}
         </td>
         <td className="border border-gray-300 py-2 text-center font-bold">
           {setup.failureCount + setup.successCount}
