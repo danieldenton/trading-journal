@@ -24,8 +24,8 @@ export default function SetupsTable() {
   };
 
   const setupTable = setups.map((setup, index) => {
-    const triggerNames = setup.triggerIds.map((triggerId) =>
-      triggers.find((trigger) => trigger.id === triggerId)?.name
+    const triggerNames = setup.triggerIds.map(
+      (triggerId) => triggers.find((trigger) => trigger.id === triggerId)?.name
     );
     return (
       <tr key={index}>
@@ -46,21 +46,21 @@ export default function SetupsTable() {
           {setup.winRate}%
         </td>
         <td className="border border-gray-300 py-2 text-center">
-  <div className="flex justify-center items-center gap-2">
-    <button
-      className=" text-red-500 font-bold px-4 py-1"
-      onClick={() => handleEdit(setup)}
-    >
-      Edit
-    </button>
-    <button
-      className="text-red-500 font-bold px-2 py-1"
-      onClick={() => handleDelete(setup)}
-    >
-      Delete
-    </button>
-  </div>
-</td>
+          <div className="flex justify-center items-center gap-2">
+            <button
+              className=" text-red-500 font-bold mx-1"
+              onClick={() => handleEdit(setup)}
+            >
+              Edit
+            </button>
+            <button
+              className="text-red-500 font-bold mx-1"
+              onClick={() => handleDelete(setup)}
+            >
+              Delete
+            </button>
+          </div>
+        </td>
       </tr>
     );
   });
