@@ -16,20 +16,17 @@ import {
   updateSetup,
   deleteSetup,
 } from "../lib/actions/setup-actions";
-import { Setup, SetupWithWinRateAndTriggers } from "../lib/types";
+import { Setup, SetupWithWinRate } from "../lib/types";
 import { calculateWinRate } from "../lib/utils";
 import { useUserContext } from "./user";
-import { useTriggerContext } from "./trigger";
 
 type SetupContext = {
-  setups: SetupWithWinRateAndTriggers[];
-  setSetups: Dispatch<SetStateAction<SetupWithWinRateAndTriggers[]>>;
+  setups: SetupWithWinRate[];
+  setSetups: Dispatch<SetStateAction<SetupWithWinRate[]>>;
   setup: Setup;
   setSetup: Dispatch<SetStateAction<Setup>>;
   addNewSetup: (prevState: any, formData: FormData) => void;
-  patchAndSaveUpdatedSetupToSetups: (
-    updatedSetup: SetupWithWinRateAndTriggers
-  ) => void;
+  patchAndSaveUpdatedSetupToSetups: (updatedSetup: SetupWithWinRate) => void;
   deleteSetupFromUser: (setupId: number) => void;
   addOrRemoveTriggerFromSetup: (add: boolean, triggerId: number) => void;
 };
@@ -41,7 +38,7 @@ export default function SetupContextProvider({
 }: {
   children: ReactNode;
 }) {
-  const [setups, setSetups] = useState<SetupWithWinRateAndTriggers[]>([]);
+  const [setups, setSetups] = useState<SetupWithWinRate[]>([]);
   const [setup, setSetup] = useState<Setup>({
     id: undefined,
     name: "",
@@ -50,43 +47,24 @@ export default function SetupContextProvider({
     failureCount: 0,
   });
   const { user } = useUserContext();
-  const { triggers } = useTriggerContext();
 
-  function getTriggerNames(triggerIds: number[]) {
-    const triggerNames = triggers.map((trigger) => {
-      if (triggerIds.includes(trigger.id)) {
-        return trigger.name;
-      }
-    });
-    return triggerNames;
-  }
-
-  function addWinRateAndTriggerNamesToSetups(
-    setupsToBeUpdated: Setup[]
-  ): SetupWithWinRateAndTriggers[] {
-    const setupsWithWinRateAndTriggerNames = setupsToBeUpdated?.map(
-      (setup) => ({
-        id: setup.id,
-        name: setup.name,
-        triggerNames: getTriggerNames(setup.triggerIds),
-        successCount: setup.successCount,
-        failureCount: setup.failureCount,
-        winRate: calculateWinRate(setup.successCount, setup.failureCount),
-      })
-    );
+  function addWinRateToSetups(
+    setupsToUpdated: Setup[] | undefined
+  ): SetupWithWinRate[] {
+    const setupsWithWinRate = setupsToUpdated?.map((setup) => ({
+      ...setup,
+      winRate: calculateWinRate(setup.successCount, setup.failureCount),
+    }));
     const sortedSetups =
-      setupsWithWinRateAndTriggerNames?.sort((a, b) => b.winRate - a.winRate) ||
-      [];
+      setupsWithWinRate?.sort((a, b) => b.winRate - a.winRate) || [];
     return sortedSetups;
   }
 
   const fetchSetups = async () => {
     try {
       const userSetups = await getSetups(user?.id);
-      if (userSetups) {
-        const setupsWithWinRate = addWinRateAndTriggerNamesToSetups(userSetups);
-        setSetups(setupsWithWinRate);
-      }
+      const setupsWithWinRate = addWinRateToSetups(userSetups);
+      setSetups(setupsWithWinRate);
     } catch (error) {
       console.error(error);
     }
@@ -119,7 +97,7 @@ export default function SetupContextProvider({
           {
             id: newSetup.id,
             name: newSetup.name,
-            triggerNames: newSetup.setupIds,
+            triggerIds: newSetup.setupIds,
             successCount: 0,
             failureCount: 0,
             winRate: 0,
@@ -139,17 +117,13 @@ export default function SetupContextProvider({
   };
 
   const patchAndSaveUpdatedSetupToSetups = async (
-    updatedSetup: SetupWithWinRateAndTriggers
+    updatedSetup: SetupWithWinRate
   ) => {
     try {
       const returnedSetup = await updateSetup(updatedSetup);
       if (typeof returnedSetup === "object" && "id" in returnedSetup) {
-        const formattedSetup = {
-          id: returnedSetup.id,
-          name: returnedSetup.name,
-          triggerNames: getTriggerNames(returnedSetup.triggerIds),
-          successCount: returnedSetup.successCount,
-          failureCount: returnedSetup.failureCount,
+        const setupWithWinRate = {
+          ...returnedSetup,
           winRate: calculateWinRate(
             returnedSetup.successCount,
             returnedSetup.failureCount
@@ -158,7 +132,7 @@ export default function SetupContextProvider({
 
         setSetups((prevsetups) =>
           prevsetups.map((setup) =>
-            setup.id === formattedSetup.id ? formattedSetup : setup
+            setup.id === setupWithWinRate.id ? setupWithWinRate : setup
           )
         );
       }

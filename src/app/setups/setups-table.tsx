@@ -2,56 +2,65 @@
 
 import { useState, useEffect } from "react";
 import { useSetupContext } from "../context/setup";
-import { useTradeContext } from "../context/trade";
-import { SetupWithWinRateAndTriggers } from "../lib/types";
+import { useTriggerContext } from "../context/trigger";
+import { SetupWithWinRate } from "../lib/types";
 
 export default function SetupsTable() {
   const [modalType, setModalType] = useState<"delete" | "edit" | undefined>();
   const [selectedSetup, setSelectedSetup] = useState<
-    SetupWithWinRateAndTriggers | undefined
+    SetupWithWinRate | undefined
   >();
   const { setups } = useSetupContext();
-  const { trades } = useTradeContext();
+  const { triggers } = useTriggerContext();
 
-  const handleEdit = (setup: SetupWithWinRateAndTriggers) => {
+  const handleEdit = (setup: SetupWithWinRate) => {
     setModalType("edit");
     setSelectedSetup(setup);
   };
 
-  const handleDelete = (setup: SetupWithWinRateAndTriggers) => {
+  const handleDelete = (setup: SetupWithWinRate) => {
     setModalType("delete");
     setSelectedSetup(setup);
   };
 
   const setupTable = setups.map((setup, index) => {
+    const triggerNames = setup.triggerIds.map((triggerId) =>
+      triggers.find((trigger) => trigger.id === triggerId)?.name
+    );
     return (
       <tr key={index}>
         <td className="border border-gray-300 py-2 text-center font-bold">
           {setup.name}
         </td>
+        <td className="flex flex-col border border-gray-300 py-2 text-center font-bold">
+          {setup.triggerIds.map((triggerId, index) => (
+            <span key={index}>
+              {triggers.find((trigger) => trigger.id === triggerId)?.name}
+            </span>
+          ))}
+        </td>
         <td className="border border-gray-300 py-2 text-center font-bold">
-          
-          <div className="flex items-center justify-center gap-2">
-            {setup.failureCount}
-          </div>
+          {setup.failureCount + setup.successCount}
         </td>
         <td className="border border-gray-300 py-2 text-center  font-bold">
           {setup.winRate}%
         </td>
-        <td className="border border-gray-300 py-2 flex items-center justify-center gap-2">
-          <button
-            className="bg-white rounded text-black font-bold px-4"
-            onClick={() => handleEdit(setup)}
-          >
-            Edit
-          </button>
-          <button
-            className="bg-white rounded text-black font-bold px-2"
-            onClick={() => handleDelete(setup)}
-          >
-            Delete
-          </button>
-        </td>
+        <td className="border border-gray-300 py-2 text-center">
+  <div className="flex justify-center items-center gap-2">
+    <button
+      className=" text-red-500 font-bold px-4 py-1"
+      onClick={() => handleEdit(setup)}
+    >
+      Edit
+    </button>
+    <button
+      className="text-red-500 font-bold px-2 py-1"
+      onClick={() => handleDelete(setup)}
+    >
+      Delete
+    </button>
+  </div>
+</td>
       </tr>
     );
   });
@@ -66,14 +75,12 @@ export default function SetupsTable() {
       <table className="table-auto w-full border-collapse border border-gray-300">
         <thead>
           <tr className="bg-white text-black">
+            <th className="border border-gray-300 py-2 text-center">Setup</th>
             <th className="border border-gray-300 py-2 text-center">
-              Setup
+              Triggers
             </th>
             <th className="border border-gray-300 py-2 text-center">
-              Success Count
-            </th>
-            <th className="border border-gray-300 py-2 text-center">
-              Failure Count
+              Total Count
             </th>
             <th className="border border-gray-300 py-2 text-center">
               Win Rate
