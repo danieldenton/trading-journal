@@ -47,6 +47,11 @@ export type Setup = {
   failureCount: number;
 };
 
-export type SetupWithWinRate = Setup & {
+export type SetupWithWinRateAndTriggers = {
+  id: number | undefined;
+  name: string;
+  triggerNames: (string | undefined)[]
+  successCount: number;
+  failureCount: number;
   winRate: number | undefined;
 };

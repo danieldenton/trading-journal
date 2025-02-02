@@ -1,22 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSetupContext } from "../context/setup";
-import { SetupWithWinRate } from "../lib/types";
+import { useTradeContext } from "../context/trade";
+import { SetupWithWinRateAndTriggers } from "../lib/types";
 
 export default function SetupsTable() {
   const [modalType, setModalType] = useState<"delete" | "edit" | undefined>();
   const [selectedSetup, setSelectedSetup] = useState<
-    SetupWithWinRate | undefined
+    SetupWithWinRateAndTriggers | undefined
   >();
   const { setups } = useSetupContext();
+  const { trades } = useTradeContext();
 
-  const handleEdit = (setup: SetupWithWinRate) => {
+  const handleEdit = (setup: SetupWithWinRateAndTriggers) => {
     setModalType("edit");
     setSelectedSetup(setup);
   };
 
-  const handleDelete = (setup: SetupWithWinRate) => {
+  const handleDelete = (setup: SetupWithWinRateAndTriggers) => {
     setModalType("delete");
     setSelectedSetup(setup);
   };
@@ -28,11 +30,7 @@ export default function SetupsTable() {
           {setup.name}
         </td>
         <td className="border border-gray-300 py-2 text-center font-bold">
-          <div className="flex items-center justify-center gap-2">
-            {setup.successCount}
-          </div>
-        </td>
-        <td className="border border-gray-300 py-2 text-center font-bold"  >
+          
           <div className="flex items-center justify-center gap-2">
             {setup.failureCount}
           </div>
