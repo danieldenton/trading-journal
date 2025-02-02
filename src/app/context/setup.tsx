@@ -28,11 +28,9 @@ type SetupContext = {
   addNewSetup: (prevState: any, formData: FormData) => void;
   patchAndSaveUpdatedSetupToSetups: (updatedSetup: SetupWithWinRate) => void;
   deleteSetupFromUser: (setupId: number) => void;
-  addOrRemoveTriggerFromSetup: (
-    add: boolean,
-    setupToNeEdited: Setup | SetupWithWinRate,
-    triggerId: number
-  ) => void;
+  addOrRemoveTriggerFromSetup: (add: boolean, triggerId: number) => void;
+  selectedTriggerIds: number[];
+  setSelectedTriggerIds: Dispatch<SetStateAction<number[]>>;
 };
 
 export const SetupContext = createContext<SetupContext | undefined>(undefined);
@@ -43,10 +41,11 @@ export default function SetupContextProvider({
   children: ReactNode;
 }) {
   const [setups, setSetups] = useState<SetupWithWinRate[]>([]);
+  const [selectedTriggerIds, setSelectedTriggerIds] = useState<number[]>([]);
   const [setup, setSetup] = useState<Setup>({
     id: undefined,
     name: "",
-    triggerIds: [],
+    triggerIds: selectedTriggerIds,
     successCount: 0,
     failureCount: 0,
   });
@@ -87,7 +86,7 @@ export default function SetupContextProvider({
         return "User needs to be logged in to add a setup";
       }
 
-      formData.append("triggerIds", JSON.stringify(setup.triggerIds));
+      formData.append("triggerIds", JSON.stringify(selectedTriggerIds));
 
       const newSetup = await createSetup(formData, user.id);
       if (newSetup?.errors) {
@@ -158,25 +157,13 @@ export default function SetupContextProvider({
     }
   };
 
-  const addOrRemoveTriggerFromSetup = (
-    add: boolean,
-    setupToBeEdited: Setup | SetupWithWinRate,
-    triggerId: number
-  ) => {
+  const addOrRemoveTriggerFromSetup = (add: boolean, triggerId: number) => {
     if (add) {
-      setSetup((prevState) => {
-        return {
-          ...prevState,
-          triggerIds: [...prevState.triggerIds, triggerId],
-        };
-      });
+      setSelectedTriggerIds((prevState) => [...prevState, triggerId]);
     } else {
-      setSetup((prevState) => {
-        return {
-          ...prevState,
-          triggerIds: prevState.triggerIds.filter((id) => id !== triggerId),
-        };
-      });
+      setSelectedTriggerIds((prevState) =>
+        prevState.filter((id) => id !== triggerId)
+      );
     }
   };
 
@@ -191,6 +178,8 @@ export default function SetupContextProvider({
         patchAndSaveUpdatedSetupToSetups,
         deleteSetupFromUser,
         addOrRemoveTriggerFromSetup,
+        selectedTriggerIds,
+        setSelectedTriggerIds
       }}
     >
       {children}

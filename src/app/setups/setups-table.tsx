@@ -12,11 +12,12 @@ export default function SetupsTable() {
   const [selectedSetup, setSelectedSetup] = useState<
     SetupWithWinRate | undefined
   >();
-  const { setups } = useSetupContext();
+  const { setups, setSelectedTriggerIds } = useSetupContext();
   const { triggers } = useTriggerContext();
 
   const handleEdit = (setup: SetupWithWinRate) => {
     setModalType("edit");
+    setSelectedTriggerIds(setup.triggerIds);
     setSelectedSetup(setup);
   };
 

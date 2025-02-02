@@ -2,15 +2,20 @@ import React, { useState } from "react";
 import { SetupModalProps } from "../lib/types";
 import { useSetupContext } from "../context/setup";
 import MiniTriggerTable from "../components/mini-trigger-table";
+import { set } from "zod";
 
 export default function EditModal({ setup, setModalType }: SetupModalProps) {
   const [newSetupName, setNewSetupName] = useState(setup.name);
-  const { patchAndSaveUpdatedSetupToSetups } = useSetupContext();
+  const {
+    patchAndSaveUpdatedSetupToSetups,
+    selectedTriggerIds,
+    setSelectedTriggerIds,
+  } = useSetupContext();
 
   const updatedSetup = {
     id: setup.id,
     name: newSetupName,
-    triggerIds: setup.triggerIds,
+    triggerIds: selectedTriggerIds,
     successCount: setup.successCount,
     failureCount: setup.failureCount,
     winRate: setup.winRate,
@@ -19,6 +24,7 @@ export default function EditModal({ setup, setModalType }: SetupModalProps) {
   const handleCompleteEdit = () => {
     patchAndSaveUpdatedSetupToSetups(updatedSetup);
     setModalType(undefined);
+    setSelectedTriggerIds([]);
   };
 
   return (
