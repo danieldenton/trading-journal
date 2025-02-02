@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { useSetupContext } from "../context/setup";
 import { useTriggerContext } from "../context/trigger";
 import { SetupWithWinRate } from "../lib/types";
+import DeleteModal from "./delete-modal";
+import EditModal from "./edit-modal";
 
 export default function SetupsTable() {
   const [modalType, setModalType] = useState<"delete" | "edit" | undefined>();
@@ -65,11 +67,11 @@ export default function SetupsTable() {
 
   return (
     <>
-      {/* {modalType === "delete" && selectedsetup ? (
-        <DeleteModal setup={selectedsetup} setModalType={setModalType} />
-      ) : modalType === "edit" && selectedsetup ? (
-        <EditModal setup={selectedsetup} setModalType={setModalType} />
-      ) : null} */}
+      {modalType === "delete" && selectedSetup ? (
+        <DeleteModal setup={selectedSetup} setModalType={setModalType} />
+      ) : modalType === "edit" && selectedSetup ? (
+        <EditModal setup={selectedSetup} setModalType={setModalType} />
+      ) : null}
       <table className="table-auto w-full border-collapse border border-gray-300">
         <thead>
           <tr className="bg-white text-black">

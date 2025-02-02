@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Setup, SetupModalProps } from "../lib/types";
+import { SetupModalProps } from "../lib/types";
 import { useSetupContext } from "../context/setup";
 
 export default function EditModal({
