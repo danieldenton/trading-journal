@@ -7,7 +7,7 @@ export default function EditModal({
   setModalType,
 }: TriggerModalProps) {
   const [newTriggerName, setNewTriggerName] = useState(trigger.name);
-  const { postAndSaveUpdatedTriggerToTriggers } = useTriggerContext();
+  const { patchAndSaveUpdatedTriggerToTriggers } = useTriggerContext();
 
   const updatedTigger = {
     id: trigger.id,
@@ -18,7 +18,7 @@ export default function EditModal({
   };
 
   const handleCompleteEdit = () => {
-    postAndSaveUpdatedTriggerToTriggers(updatedTigger);
+    patchAndSaveUpdatedTriggerToTriggers(updatedTigger);
     setModalType(undefined);
   };
 

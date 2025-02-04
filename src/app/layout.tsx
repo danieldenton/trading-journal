@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import TradeContextProvider from "./context/trade";
 import TriggerContextProvider from "./context/trigger";
+import SetupContextProvider from "./context/setup";
 import UserContextProvider from "./context/user";
 import Navbar from "./components/navbar";
 
@@ -29,14 +30,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black`}
       >
         <UserContextProvider>
           <TriggerContextProvider>
-            <TradeContextProvider>
-              <Navbar />
-              {children}
-            </TradeContextProvider>
+            <SetupContextProvider>
+              <TradeContextProvider>
+                <Navbar />
+                {children}
+              </TradeContextProvider>
+            </SetupContextProvider>
           </TriggerContextProvider>
         </UserContextProvider>
       </body>

@@ -1,18 +1,17 @@
 "use client";
 
 import React from "react";
-import { useTriggerContext } from "../context/trigger";
-import { TriggerModalProps } from "../lib/types";
+import { useSetupContext } from "../context/setup";
+import { SetupModalProps } from "../lib/types";
 
-export default function DeleteModal({
-  trigger,
-  setModalType,
-}: TriggerModalProps) {
-  const { deleteTriggerFromUser } = useTriggerContext();
+export default function DeleteModal({ setup, setModalType }: SetupModalProps) {
+  const { deleteSetupFromUser } = useSetupContext();
 
   const handleDelete = () => {
-    deleteTriggerFromUser(trigger.id);
-    setModalType(undefined);
+    if (setup.id) {
+      deleteSetupFromUser(setup.id);
+      setModalType(undefined);
+    }
   };
 
   return (
@@ -22,7 +21,7 @@ export default function DeleteModal({
           Are you sure you want to delete
         </p>
         <p className="text-black font-bold text-lg px-2 mb-2 text-center">
-          {trigger.name}?
+          {setup.name}?
         </p>
         <button
           onClick={() => handleDelete()}

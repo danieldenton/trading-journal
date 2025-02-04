@@ -34,7 +34,7 @@ export default function TriggersTable() {
             {trigger.successCount}
           </div>
         </td>
-        <td className="border border-gray-300 py-2 text-center font-bold"  >
+        <td className="border border-gray-300 py-2 text-center font-bold">
           <div className="flex items-center justify-center gap-2">
             {trigger.failureCount}
           </div>
@@ -44,13 +44,13 @@ export default function TriggersTable() {
         </td>
         <td className="border border-gray-300 py-2 flex items-center justify-center gap-2">
           <button
-            className="bg-white rounded text-black font-bold px-4"
+            className="text-red-500 font-bold mx-1"
             onClick={() => handleEdit(trigger)}
           >
             Edit
           </button>
           <button
-            className="bg-white rounded text-black font-bold px-2"
+            className="text-red-500 font-bold mx-1"
             onClick={() => handleDelete(trigger)}
           >
             Delete
@@ -70,9 +70,7 @@ export default function TriggersTable() {
       <table className="table-auto w-full border-collapse border border-gray-300">
         <thead>
           <tr className="bg-white text-black">
-            <th className="border border-gray-300 py-2 text-center">
-              Trigger Name
-            </th>
+            <th className="border border-gray-300 py-2 text-center">Trigger</th>
             <th className="border border-gray-300 py-2 text-center">
               Success Count
             </th>

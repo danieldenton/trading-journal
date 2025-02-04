@@ -18,6 +18,7 @@ type TradeContext = {
   setTrades: Dispatch<SetStateAction<Trade[]>>;
   trade: Trade
   setTrade: Dispatch<SetStateAction<Trade>>;
+  addOrRemoveTriggerFromTrade: (add: boolean, triggerId: number) => void;
 };
 
 export const TradeContext = createContext<TradeContext | undefined>(undefined);
@@ -48,6 +49,24 @@ export default function TradeContextProvider({
     }
   }, [user?.id]);
 
+  const addOrRemoveTriggerFromTrade = (add: boolean, triggerId: number) => {
+    if (add) {
+      setTrade((prevState) => {
+        return {
+          ...prevState,
+          triggerIds: [...prevState.triggerIds, triggerId],
+        };
+      });
+    } else {
+      setTrade((prevState) => {
+        return {
+          ...prevState,
+          triggerIds: prevState.triggerIds.filter((id) => id !== triggerId),
+        };
+      });
+    }
+  }
+
   return (
     <TradeContext.Provider
       value={{
@@ -55,6 +74,7 @@ export default function TradeContextProvider({
         setTrades,
         trade,
         setTrade,
+        addOrRemoveTriggerFromTrade
       }}
     >
       {children}

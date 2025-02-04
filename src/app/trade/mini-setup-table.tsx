@@ -1,51 +1,51 @@
 "use client";
 import React, { ChangeEvent } from "react";
 
-import { useTriggerContext } from "../context/trigger";
+import { useSetupContext } from "../context/setup";
 import { useTradeContext } from "../context/trade";
 import { Trade } from "../lib/types";
 
-export default function MiniTriggerTable() {
-  const { triggers } = useTriggerContext();
+export default function MiniSetupTable() {
+  const { setups } = useSetupContext();
   const { setTrade, trade } = useTradeContext();
 
-  const handleAddTrigger = (
+  const handleAddSetup = (
     e: ChangeEvent<HTMLInputElement>,
-    triggerId: number
+    setupId: number
   ) => {
     if (e.target.checked) {
       setTrade((prevState: Trade) => {
         return {
           ...prevState,
-          triggerIds: [...prevState.triggerIds, triggerId],
+          setupIds: [...prevState.setupIds, setupId],
         };
       });
     } else {
       setTrade((prevState: Trade) => {
         return {
           ...prevState,
-          triggerIds: prevState.triggerIds.filter((id) => id !== triggerId),
+          setupIds: prevState.triggerIds.filter((id) => id !== setupId),
         };
       });
     }
   };
 
-  const miniTriggerTable = triggers.map((trigger, index) => {
+  const miniSetupTable = setups.map((setup, index) => {
+    if (setup.id === undefined) return null;
     return (
       <tr key={index}>
         <td className="border border-gray-300 p-2 text-center">
           <input
             type="checkbox"
-            checked={trade?.triggerIds.includes(trigger.id)}
-            onChange={(e) => handleAddTrigger(e, trigger.id)}
+            checked={trade?.setupIds.includes(setup.id)}
+            onChange={(e) => handleAddSetup(e, setup.id)}
           />
         </td>
         <td className="border border-gray-300 p-2 text-center font-bold">
-          {trigger.name}
+          {setup.name}
         </td>
-
         <td className="border border-gray-300 p-2 text-center  font-bold">
-          {trigger.winRate}%
+          {setup.winRate}%
         </td>
       </tr>
     );
@@ -53,17 +53,15 @@ export default function MiniTriggerTable() {
 
   return (
     <div>
-      <table className="border border-gray-300">
+      <table className="border border-gray-300 mb-4">
         <thead>
           <tr className="bg-white text-black">
             <th className="border border-gray-300 p-2 text-center">Add</th>
-            <th className="border border-gray-300 p-2 text-center">
-              Trigger Name
-            </th>
+            <th className="border border-gray-300 p-2 text-center">Setup</th>
             <th className="border border-gray-300 p-2 text-center">Win Rate</th>
           </tr>
         </thead>
-        <tbody>{miniTriggerTable}</tbody>
+        <tbody>{miniSetupTable}</tbody>
       </table>
     </div>
   );
