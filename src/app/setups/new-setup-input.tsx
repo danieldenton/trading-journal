@@ -2,7 +2,7 @@
 
 import React, { useActionState } from "react";
 import { useSetupContext } from "../context/setup";
-import MiniTriggerTable from "./mini-trigger-table";
+import MiniTriggerTable from "../components/mini-trigger-table";
 
 export default function NewSetupInput() {
   const { addNewSetup, setup } = useSetupContext();

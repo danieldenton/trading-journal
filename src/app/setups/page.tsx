@@ -1,4 +1,4 @@
-import NewSetupInput from "../components/new-setup-input";
+import NewSetupInput from "./new-setup-input";
 import SetupsTable from "./setups-table";
 
 export default function SetupPage() {

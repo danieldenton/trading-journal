@@ -1,4 +1,4 @@
-import NewTriggerInput from "../components/new-trigger-input";
+import NewTriggerInput from "../triggers/new-trigger-input";
 import MiniTriggerTable from "../components/mini-trigger-table";
 
 export default function TradePageTriggers() {
