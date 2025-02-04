@@ -1,4 +1,3 @@
-import NewSetupInput from "../components/new-setup-input";
 import MiniSetupTable from "./mini-setup-table";
 
 export default function TradePageSetups() {
