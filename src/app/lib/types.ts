@@ -12,7 +12,13 @@ export type Trigger = {
   failureCount: number;
   winRate: number | undefined;
 };
-
+export type TriggerModalProps = {
+  setModalType: Dispatch<SetStateAction<"delete" | "edit" | undefined>>;
+};
 export type Mistake = {
   name: string;
+};
+
+export type MistakeModalProps = {
+  setModalType: Dispatch<SetStateAction<"delete" | "edit" | undefined>>;
 };

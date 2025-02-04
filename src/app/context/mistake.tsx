@@ -2,39 +2,39 @@
 
 import React, {
   createContext,
-  useState,
   useContext,
-  SetStateAction,
-  Dispatch,
-  ReactNode,
+  useState,
   useEffect,
+  Dispatch,
+  SetStateAction,
+  ReactNode,
 } from "react";
 
 import { Mistake } from "../lib/types";
 import {
   createMistake,
-  getMistake,
-  updateMistake,
+  getMistakes,
   deleteMistake,
 } from "../lib/actions/mistake-actions";
-import { UserContext, useUserContext } from "./user";
+import { useUserContext } from "./user";
 
 type MistakeContext = {
   mistakes: Mistake[];
   setMistakes: Dispatch<SetStateAction<Mistake[]>>;
   newMistakeName: string;
   setNewMistakeName: Dispatch<SetStateAction<string>>;
-  addMistake: (prevState: any, formData: FormData) => void;
+  addNewMistake: (prevState: any, formData: FormData) => void;
   deleteMistakeFromUser: (mistakeId: number) => void;
-  postAndSaveUpdatedMistakeToMistakes: (updatedMistake: Mistake) => void;
 };
 
-export const MistakeContext = createContext<MistakeContext | null>(null);
+export const MistakeContext = createContext<MistakeContext | undefined>(
+  undefined
+);
 
 export default function MistakeContextProvider({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const [mistakes, setMistakes] = useState<Mistake[]>([]);
   const [newMistakeName, setNewMistakeName] = useState("");
@@ -42,41 +42,49 @@ export default function MistakeContextProvider({
 
   const fetchMistakes = async () => {
     try {
-      const userMistakes = await getMistake(user?.id);
-      setMistakes(Mistake);
+      if (!user?.id) return;
+      const userMistakes = await getMistakes(user.id);
+      setMistakes(userMistakes || []);
     } catch (error) {
       console.error(error);
     }
   };
 
   useEffect(() => {
-    if (user?.id) {
-      fetchMistakes();
-    }
+    fetchMistakes();
   }, [user?.id]);
 
   const addNewMistake = async (prevState: any, formData: FormData) => {
     try {
       if (!user?.id) {
-        console.error("User need to be logged in to add a mistake");
+        console.error("User needs to be logged in to add a mistake");
         return "User needs to be logged in to add a mistake";
       }
 
       const newMistake = await createMistake(formData, user.id);
       if (newMistake?.errors) {
-        const { name } = newMistake.errors;
-        return name[0];
+        return newMistake.errors.name?.[0];
       }
 
       if (typeof newMistake?.name === "string") {
         setMistakes((prev) => [
           ...prev,
-          {
-            id: newMistake.id,
-            name: newMistake.name,
-          },
+          { id: newMistake.id, name: newMistake.name },
         ]);
       }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const deleteMistakeFromUser = async (mistakeId: number) => {
+    try {
+      if (!user?.id) {
+        console.error("User needs to be logged in to delete a mistake");
+        return "User needs to be logged in to delete a mistake";
+      }
+      await deleteMistake(mistakeId, user.id);
+      setMistakes((prev) => prev.filter((mistake) => mistake.id !== mistakeId));
     } catch (error) {
       console.error(error);
     }
@@ -89,10 +97,11 @@ export default function MistakeContextProvider({
         setMistakes,
         newMistakeName,
         setNewMistakeName,
-        addMistake,
+        addNewMistake,
+        deleteMistakeFromUser,
       }}
     >
-      {isLoaded ? children : null}
+      {children}
     </MistakeContext.Provider>
   );
 }
