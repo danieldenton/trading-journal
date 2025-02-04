@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSetupContext } from "../context/setup";
 import { useTriggerContext } from "../context/trigger";
 import { SetupWithWinRate } from "../lib/types";
@@ -49,7 +49,7 @@ export default function SetupsTable() {
         <td className="border border-gray-300 py-2 text-center">
           <div className="flex justify-center items-center gap-2">
             <button
-              className=" text-red-500 font-bold mx-1"
+              className="text-red-500 font-bold mx-1"
               onClick={() => handleEdit(setup)}
             >
               Edit

@@ -40,7 +40,7 @@ export type Trade = {
 
 // Setup
 export type Setup = {
-  id: number | undefined;
+  id: number 
   name: string;
   triggerIds: number[];
   successCount: number;

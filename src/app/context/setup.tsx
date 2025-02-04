@@ -43,7 +43,7 @@ export default function SetupContextProvider({
   const [setups, setSetups] = useState<SetupWithWinRate[]>([]);
   const [selectedTriggerIds, setSelectedTriggerIds] = useState<number[]>([]);
   const [setup, setSetup] = useState<Setup>({
-    id: undefined,
+    id: 0,
     name: "",
     triggerIds: selectedTriggerIds,
     successCount: 0,
@@ -94,7 +94,7 @@ export default function SetupContextProvider({
         return name;
       }
 
-      if (typeof newSetup?.name === "string") {
+      if (typeof newSetup?.id === "number" && newSetup.id > 0) {
         setSetups((prev) => [
           ...prev,
           {
@@ -107,7 +107,7 @@ export default function SetupContextProvider({
           },
         ]);
         setSetup({
-          id: undefined,
+          id: 0,
           name: "",
           triggerIds: [],
           successCount: 0,
@@ -179,7 +179,7 @@ export default function SetupContextProvider({
         deleteSetupFromUser,
         addOrRemoveTriggerFromSetup,
         selectedTriggerIds,
-        setSelectedTriggerIds
+        setSelectedTriggerIds,
       }}
     >
       {children}
