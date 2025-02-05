@@ -22,6 +22,7 @@ export default async function middleware(request: NextRequest) {
     const isPublicRoute = publicRoutes.includes(path);
     const cookieStore = await cookies();
     const cookie = cookieStore.get("session")?.value;
+    console.log(cookie, "COOKIE");
     const session = await decrypt(cookie);
 
     if (isProtectedRoute && !session?.userId) {
