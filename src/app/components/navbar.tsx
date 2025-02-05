@@ -9,7 +9,7 @@ export default function Navbar() {
   const { user } = useUserContext();
   return (
     <nav className="bg-white text-black font-bold py-4 px-8 flex justify-between items-center">
-      {user ? (
+      {user?.id ? (
         <>
           <Link href="/dashboard">Home</Link>
           <Link href="/today">Today</Link>
