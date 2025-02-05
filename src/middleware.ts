@@ -23,7 +23,7 @@ export default async function middleware(request: NextRequest) {
     const cookieStore = await cookies();
     const cookie = cookieStore.get("session")?.value;
     const session = await decrypt(cookie);
-    console.log("session", session);
+    console.log("session 2", session);
 
     if (isProtectedRoute && !session?.userId) {
       return NextResponse.redirect(new URL("/", request.nextUrl));

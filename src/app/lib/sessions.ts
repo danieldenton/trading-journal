@@ -37,6 +37,7 @@ export async function encrypt(payload: SessionPayload) {
 }
 
 export async function decrypt(session: string | undefined = "") {
+  console.log(session, "session");
   if (!session) {
     console.log("Session token is missing.");
     return 
