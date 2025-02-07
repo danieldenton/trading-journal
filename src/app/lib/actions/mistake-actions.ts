@@ -12,14 +12,16 @@ export async function getMistakes(userId: number | undefined) {
     const response =
       await sql`SELECT * FROM mistakes WHERE user_id = ${userId};`;
 
-    const mistakes = response.rows.map((row) => ({
+    const mistakes: Mistake[] = response.rows.map((row) => ({
       id: row.id,
       name: row.name,
+      onSuccessfulTrades: row.on_successful_trades,
+      onFailedTrades: row.on_failed_trades,
     }));
 
     if (!mistakes.length) {
       console.log("User has no mistakes");
-      return [];
+      return []
     }
 
     return mistakes;

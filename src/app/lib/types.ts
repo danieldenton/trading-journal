@@ -23,6 +23,7 @@ export type TriggerModalProps = {
   setModalType: Dispatch<SetStateAction<"delete" | "edit" | undefined>>;
   trigger: TriggerWithWinRate;
 };
+
 export type Mistake = {
   id: number;
   name: string;
