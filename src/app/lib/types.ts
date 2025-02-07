@@ -9,12 +9,14 @@ export type User = {
 
 // Trigger
 export type Trigger = {
+  id: number;
   name: string;
   successCount: number;
   failureCount: number;
 };
 
 export type TriggerWithWinRate = Trigger & {
+  id: number;
   winRate: number | undefined;
 };
 export type TriggerModalProps = {
