@@ -21,13 +21,18 @@ export type TriggerWithWinRate = Trigger & {
 };
 export type TriggerModalProps = {
   setModalType: Dispatch<SetStateAction<"delete" | "edit" | undefined>>;
+  trigger: TriggerWithWinRate;
 };
 export type Mistake = {
+  id: number;
   name: string;
+  onSuccessfulTrades: number;
+  onFailedTrades: number;
 };
 
 export type MistakeModalProps = {
   setModalType: Dispatch<SetStateAction<"delete" | "edit" | undefined>>;
+  mistake: Mistake;
 };
 
 // Trade

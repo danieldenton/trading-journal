@@ -13,7 +13,7 @@ const protectedRoutes = [
   "/mistakes",
   "/setups",
 ];
-const publicRoutes = ["/", "/register", "/mistakes"];
+const publicRoutes = ["/", "/register"];
 
 export default async function middleware(request: NextRequest) {
   try {

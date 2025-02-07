@@ -25,6 +25,7 @@ type MistakeContext = {
   setNewMistakeName: Dispatch<SetStateAction<string>>;
   addNewMistake: (prevState: any, formData: FormData) => void;
   deleteMistakeFromUser: (mistakeId: number) => void;
+  postAndSaveUpdatedMistakeToMistakes: (updatedMistake: Mistake) => void;
 };
 
 export const MistakeContext = createContext<MistakeContext | undefined>(
@@ -99,6 +100,7 @@ export default function MistakeContextProvider({
         setNewMistakeName,
         addNewMistake,
         deleteMistakeFromUser,
+        postAndSaveUpdatedMistakeToMistakes
       }}
     >
       {children}
