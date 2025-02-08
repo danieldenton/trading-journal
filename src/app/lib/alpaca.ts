@@ -1,0 +1,1 @@
+const alpacaEndpoint = 'https://paper-api.alpaca.markets/v2';
