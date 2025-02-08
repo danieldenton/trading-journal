@@ -1,6 +1,6 @@
 import DateTime from "./date-time";
 import LinkButton from "../components/link-button";
-import TradingViewChart from "./tradingview";
+import TradingViewChart from "./tradingview-chart";
 
 export default function TodayPage() {
   return (
