@@ -32,32 +32,32 @@ export default function TradingViewChart() {
   useEffect(() => {
     if (!scriptLoaded || !window.TradingView || !chartContainer.current) return;
 
-    const from = Math.floor(new Date("2024-02-04T14:30:00Z").getTime() / 1000);
-    const to = Math.floor(new Date("2024-02-04T15:00:00Z").getTime() / 1000);
+    const from = new Date().getDate();
+    const to = new Date().getDate() - 60;
 
     new window.TradingView.widget({
       container_id: chartContainer.current.id,
-      symbol: "NQ1!",
-      interval: "1",
-      range: "custom",
-      from: from,
-      to: to,
-      timezone: "Etc/UTC",
-      theme: "dark",
-      style: "1",
-      locale: "en",
-      enable_publishing: false,
-      allow_symbol_change: true,
-      autosize: true,
+      "autosize": true,
+          "symbol": "MNQ1!",
+          "timezone": "America/New_York",
+          "theme": "dark",
+          "style": "1",
+          "locale": "en",
+          "hide_top_toolbar": true,
+          "range": "D",
+          "allow_symbol_change": true,
+          "calendar": false,
+          "hide_volume": true,
+          "support_host": "https://www.tradingview.com"
     });
   }, [scriptLoaded]);
   //   }, [symbol, entryTime, exitTime]);
 
   return (
     <div
+    className="h-96 w-96"
       ref={chartContainer}
       id="tradingview-chart"
-      style={{ height: "500px" }}
     />
   );
 }

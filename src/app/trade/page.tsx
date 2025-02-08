@@ -4,7 +4,7 @@
 import React from "react";
 import TradePageTriggers from "./trade-page-triggers";
 import TradePageSetups from "./trade-page-setups";
-import TradingViewChart from "./tradingview";
+import ReplayChart from "./replay-chart";
 
 export default function TradePage() {
   return (
@@ -13,7 +13,7 @@ export default function TradePage() {
       <div className="flex justify-around">
         <TradePageSetups />
         <TradePageTriggers />
-        <TradingViewChart />
+        <ReplayChart />
       </div>
     </div>
   );
