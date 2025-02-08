@@ -1,57 +1,42 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, memo } from "react";
 
-// { symbol, entryTime, exitTime }
-
-export default function TradingViewChart() {
-  const chartContainer = useRef<HTMLDivElement | null>(null);
-  const [scriptLoaded, setScriptLoaded] = useState(false);
+function TradingViewWidget() {
+  const container = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    // If script is already loaded, don't load it again
-    if (window.TradingView) {
-      setScriptLoaded(true);
-      return;
-    }
+    if (!container.current) return;
 
-    // Check if script is already in the document
-    if (document.getElementById("tradingview-widget-script")) {
-      setScriptLoaded(true);
-      return;
-    }
+    // ✅ Prevent duplicate script insertion
+    if (container.current.querySelector("script")) return;
 
-    // Create and append the script
     const script = document.createElement("script");
-    script.id = "tradingview-widget-script";
-    script.src = "https://s3.tradingview.com/tv.js";
+    script.src =
+      "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+    script.type = "text/javascript";
     script.async = true;
-    script.onload = () => setScriptLoaded(true); // Mark script as loaded
-    document.body.appendChild(script);
+    script.innerHTML = `
+      {
+        "autosize": true,
+        "symbol": "MNQ1!",
+        "interval": "D",
+        "range": "2M",
+        "timezone": "America/New_York",
+        "theme": "dark",
+        "style": "1",
+        "locale": "en",
+        "hide_top_toolbar": true,
+        "allow_symbol_change": true,
+        "save_image": false,
+        "calendar": false,
+        "hide_volume": true,
+        "support_host": "https://www.tradingview.com"
+      }`;
+
+    container.current.appendChild(script);
   }, []);
 
-  useEffect(() => {
-    if (!scriptLoaded || !window.TradingView || !chartContainer.current) return;
-
-    new window.TradingView.widget({
-      container_id: chartContainer.current.id,
-      autosize: true,
-      symbol: "MNQ1!",
-      timezone: "America/New_York",
-      theme: "dark",
-      interval: "D",
-      style: "1",
-      locale: "en",
-      hide_top_toolbar: true,
-      range: "3M",
-      allow_symbol_change: true,
-      calendar: false,
-      hide_volume: true,
-      support_host: "https://www.tradingview.com",
-    });
-  }, [scriptLoaded]);
-  //   }, [symbol, entryTime, exitTime]);
-
-  return (
-    <div className="flex items-center h-96 w-96 border-white border-2 rounded" ref={chartContainer} id="tradingview-chart" />
-  );
+  return <div ref={container} id="tradingview_chart" className="w-96 h-96 border-2 rounded" />;
 }
+
+export default memo(TradingViewWidget);
