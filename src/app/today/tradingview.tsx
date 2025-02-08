@@ -36,7 +36,7 @@ function TradingViewWidget() {
     container.current.appendChild(script);
   }, []);
 
-  return <div ref={container} id="tradingview_chart" className="w-96 h-96 border-2 rounded" />;
+  return <div ref={container} id="tradingview_chart" className="w-1/3 h-96 border-2 rounded" />;
 }
 
 export default memo(TradingViewWidget);
