@@ -16,7 +16,7 @@ import { useUserContext } from "./user";
 type TradeContext = {
   trades: Trade[];
   setTrades: Dispatch<SetStateAction<Trade[]>>;
-  trade: Trade
+  trade: Trade;
   setTrade: Dispatch<SetStateAction<Trade>>;
   addOrRemoveTriggerFromTrade: (add: boolean, triggerId: number) => void;
 };
@@ -29,6 +29,23 @@ export default function TradeContextProvider({
   children: ReactNode;
 }) {
   const [trades, setTrades] = useState<Trade[]>([]);
+  const [entry, setEntry] = useState({
+    time: "",
+    price: undefined,
+    stop: undefined,
+    takeProfits: [],
+    numOfContracts: undefined,
+  });
+  const [takeProfit, setTakeProfit] = useState({
+    time: "",
+    price: undefined,
+    numOfContracts: undefined,
+  });
+  const [exit, setExit] = useState({
+    time: "",
+    price: undefined,
+    totalPnl: 0,
+  });
   const [trade, setTrade] = useState<Trade>({
     id: undefined,
     date: "",
@@ -65,7 +82,7 @@ export default function TradeContextProvider({
         };
       });
     }
-  }
+  };
 
   return (
     <TradeContext.Provider
@@ -74,7 +91,7 @@ export default function TradeContextProvider({
         setTrades,
         trade,
         setTrade,
-        addOrRemoveTriggerFromTrade
+        addOrRemoveTriggerFromTrade,
       }}
     >
       {children}
