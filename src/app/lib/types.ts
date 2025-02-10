@@ -33,11 +33,9 @@ export type Trade = {
   triggerIds: number[];
   entry: Entry;
   takeProfits: TakeProfit[];
-  exit: Exit; 
+  exit: Exit;
   mistakeIds: number[];
   notes: string;
-  success: boolean;
-  pnl: number;
 };
 
 export type Entry = {

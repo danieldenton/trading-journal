@@ -48,7 +48,7 @@ export default function TradeContextProvider({
   });
   const [trade, setTrade] = useState<Trade>({
     id: undefined,
-    date: "",
+    date: Date.now().toString(),
     symbol: "",
     setupIds: [],
     triggerIds: [],
@@ -57,8 +57,6 @@ export default function TradeContextProvider({
     exit: exit,
     mistakeIds: [],
     notes: "",
-    success: false,
-    pnl: 0,
   });
 
   const { user } = useUserContext();
