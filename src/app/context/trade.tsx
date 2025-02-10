@@ -49,10 +49,12 @@ export default function TradeContextProvider({
   const [trade, setTrade] = useState<Trade>({
     id: undefined,
     date: "",
-    time: "",
     symbol: "",
     setupIds: [],
     triggerIds: [],
+    entry: entry,
+    takeProfits: [],
+    exit: exit,
     mistakeIds: [],
     notes: "",
     success: false,

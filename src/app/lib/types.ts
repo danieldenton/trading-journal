@@ -31,15 +31,38 @@ export type Trade = {
   symbol: string;
   setupIds: number[];
   triggerIds: number[];
+  entry: Entry;
+  takeProfits: TakeProfit[];
+  exit: Exit; 
   mistakeIds: number[];
   notes: string;
   success: boolean;
   pnl: number;
 };
 
+export type Entry = {
+  time: string;
+  price: number | undefined;
+  stop: number | undefined;
+  takeProfits: number[];
+  numOfContracts: number | undefined;
+};
+
+export type TakeProfit = {
+  time: string;
+  price: number | undefined;
+  numOfContracts: number | undefined;
+};
+
+export type Exit = {
+  time: string;
+  price: number | undefined;
+  totalPnl: number;
+};
+
 // Setup
 export type Setup = {
-  id: number 
+  id: number;
   name: string;
   triggerIds: number[];
   successCount: number;
