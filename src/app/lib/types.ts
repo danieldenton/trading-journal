@@ -29,33 +29,33 @@ export type Trade = {
   id: number | undefined;
   date: string;
   symbol: string;
-  buy: boolean
+  buy: boolean;
   setupIds: number[];
   triggerIds: number[];
   entry: Entry;
   takeProfits: TakeProfit[];
   exit: Exit;
+  pAndL: number;
   mistakeIds: number[];
   notes: string;
 };
 
 export type Entry = {
   time: string;
-  price: number 
-  stop: number 
-  numOfContracts: number 
+  price: number;
+  stop: number;
+  numOfContracts: number;
 };
 
 export type TakeProfit = {
   time: string;
-  price: number | undefined;
-  numOfContracts: number | undefined;
+  price: number;
+  numOfContracts: number;
 };
 
 export type Exit = {
   time: string;
-  price: number | undefined;
-  totalPnl: number;
+  price: number
 };
 
 // Setup

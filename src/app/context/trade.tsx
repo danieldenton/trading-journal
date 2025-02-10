@@ -17,6 +17,8 @@ type TradeContext = {
   trades: Trade[];
   setTrades: Dispatch<SetStateAction<Trade[]>>;
   setEntry: Dispatch<SetStateAction<Entry>>;
+  setTakeProfit: Dispatch<SetStateAction<TakeProfit>>;
+  setExit: Dispatch<SetStateAction<Exit>>;
   trade: Trade;
   setTrade: Dispatch<SetStateAction<Trade>>;
   addOrRemoveTriggerFromTrade: (add: boolean, triggerId: number) => void;
@@ -38,13 +40,12 @@ export default function TradeContextProvider({
   });
   const [takeProfit, setTakeProfit] = useState({
     time: "",
-    price: undefined,
-    numOfContracts: undefined,
+    price: 0,
+    numOfContracts: 0,
   });
   const [exit, setExit] = useState({
     time: "",
-    price: undefined,
-    totalPnl: 0,
+    price: 0,
   });
   const [trade, setTrade] = useState<Trade>({
     id: undefined,
@@ -56,6 +57,7 @@ export default function TradeContextProvider({
     entry: entry,
     takeProfits: [],
     exit: exit,
+    pAndL: 0,
     mistakeIds: [],
     notes: "",
   });
@@ -91,6 +93,8 @@ export default function TradeContextProvider({
         trades,
         setTrades,
         setEntry,
+        setTakeProfit,
+        setExit,
         trade,
         setTrade,
         addOrRemoveTriggerFromTrade,
