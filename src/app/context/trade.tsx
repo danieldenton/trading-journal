@@ -10,12 +10,13 @@ import React, {
   ReactNode,
 } from "react";
 
-import { Trade } from "../lib/types";
+import { Trade, Entry, TakeProfit, Exit } from "../lib/types";
 import { useUserContext } from "./user";
 
 type TradeContext = {
   trades: Trade[];
   setTrades: Dispatch<SetStateAction<Trade[]>>;
+  setEntry: Dispatch<SetStateAction<Entry>>;
   trade: Trade;
   setTrade: Dispatch<SetStateAction<Trade>>;
   addOrRemoveTriggerFromTrade: (add: boolean, triggerId: number) => void;
@@ -31,10 +32,9 @@ export default function TradeContextProvider({
   const [trades, setTrades] = useState<Trade[]>([]);
   const [entry, setEntry] = useState({
     time: "",
-    price: undefined,
-    stop: undefined,
-    takeProfits: [],
-    numOfContracts: undefined,
+    price: 0,
+    stop: 0,
+    numOfContracts: 0,
   });
   const [takeProfit, setTakeProfit] = useState({
     time: "",
@@ -50,6 +50,7 @@ export default function TradeContextProvider({
     id: undefined,
     date: Date.now().toString(),
     symbol: "",
+    buy: true,
     setupIds: [],
     triggerIds: [],
     entry: entry,
@@ -89,6 +90,7 @@ export default function TradeContextProvider({
       value={{
         trades,
         setTrades,
+        setEntry,
         trade,
         setTrade,
         addOrRemoveTriggerFromTrade,

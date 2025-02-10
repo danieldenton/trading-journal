@@ -29,6 +29,7 @@ export type Trade = {
   id: number | undefined;
   date: string;
   symbol: string;
+  buy: boolean
   setupIds: number[];
   triggerIds: number[];
   entry: Entry;
@@ -40,10 +41,9 @@ export type Trade = {
 
 export type Entry = {
   time: string;
-  price: number | undefined;
-  stop: number | undefined;
-  takeProfits: number[];
-  numOfContracts: number | undefined;
+  price: number 
+  stop: number 
+  numOfContracts: number 
 };
 
 export type TakeProfit = {
