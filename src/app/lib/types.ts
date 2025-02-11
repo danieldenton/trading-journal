@@ -27,8 +27,8 @@ export type TriggerModalProps = {
 export type Mistake = {
   id: number;
   name: string;
-  onSuccessfulTrades: number;
-  onFailedTrades: number;
+  onSuccessfulTrades: number[];
+  onFailedTrades: number[];
 };
 
 export type MistakeModalProps = {

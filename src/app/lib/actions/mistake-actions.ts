@@ -21,7 +21,7 @@ export async function getMistakes(userId: number | undefined) {
 
     if (!mistakes.length) {
       console.log("User has no mistakes");
-      return []
+      return [];
     }
 
     return mistakes;
@@ -33,7 +33,7 @@ export async function getMistakes(userId: number | undefined) {
 export async function createMistake(
   formData: FormData,
   userId: number | undefined
-) {
+): Promise<Mistake | { errors: { name: string[] } }> {
   try {
     if (!userId) {
       console.error("User ID is missing");
@@ -44,11 +44,14 @@ export async function createMistake(
 
     if (!result.success) {
       console.log(result.error.flatten().fieldErrors);
-      return { errors: result.error.flatten().fieldErrors };
+      return {
+        errors: { name: result.error.flatten().fieldErrors.name ?? [] },
+      };
     }
 
     const { name } = result.data;
 
+    // Check for existing mistake
     const existingMistake = await sql`
       SELECT 1 FROM mistakes WHERE name = ${name} AND user_id = ${userId};
     `;
@@ -58,10 +61,11 @@ export async function createMistake(
       return { errors: { name: ["Mistake already exists"] } };
     }
 
+    // Insert new mistake into the database
     const response = await sql`
       INSERT INTO mistakes (name, user_id)
       VALUES (${name}, ${userId})
-      RETURNING id, name;
+      RETURNING id, name, on_successful_trades, on_failed_trades;
     `;
 
     const mistake = response.rows[0];
@@ -71,9 +75,16 @@ export async function createMistake(
       return { errors: { name: ["Failed to create mistake"] } };
     }
 
-    return mistake;
+    // Ensure the returned object fully matches the Mistake type
+    return {
+      id: mistake.id,
+      name: mistake.name,
+      onSuccessfulTrades: mistake.on_successful_trades || [], // Default to empty array if null
+      onFailedTrades: mistake.on_failed_trades || [], // Default to empty array if null
+    };
   } catch (error) {
     console.error(error);
+    return { errors: { name: ["An unexpected error occurred"] } };
   }
 }
 

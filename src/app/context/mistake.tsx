@@ -23,7 +23,7 @@ type MistakeContext = {
   setMistakes: Dispatch<SetStateAction<Mistake[]>>;
   newMistakeName: string;
   setNewMistakeName: Dispatch<SetStateAction<string>>;
-  addNewMistake: (prevState: any, formData: FormData) => void;
+  addNewMistake: (prevState: Mistake[], formData: FormData) => void;
   deleteMistakeFromUser: (mistakeId: number) => void;
   // postAndSaveUpdatedMistakeToMistakes: (updatedMistake: Mistake) => void;
 };
@@ -56,36 +56,54 @@ export default function MistakeContextProvider({
     fetchMistakes();
   }, [user?.id]);
 
-  // const addNewMistake = async (prevState: any, formData: FormData) => {
-  //   try {
-  //     if (!user?.id) {
-  //       console.error("User needs to be logged in to add a mistake");
-  //       return "User needs to be logged in to add a mistake";
-  //     }
+  const addNewMistake = async (prevState: Mistake[], formData: FormData) => {
+    if (!user?.id) {
+      console.error("User needs to be logged in to add a mistake");
+      return "User needs to be logged in to add a mistake";
+    }
 
-  //     const newMistake = await createMistake(formData, user.id);
-  //     if (newMistake?.errors) {
-  //       return newMistake.errors.name?.[0];
-  //     }
+    try {
+      const newMistake = await createMistake(formData, user.id);
 
-  //     if (typeof newMistake?.name === "string") {
-  //       setMistakes((prev) => [
-  //         ...prev,
-  //         { id: newMistake.id, name: newMistake.name },
-  //       ]);
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+      // Check if it's an error object
+      if ("errors" in newMistake) {
+        return newMistake.errors.name?.[0] || "An unknown error occurred";
+      }
 
-  const postAndSaveUpdatedMistakeToMistakes = (updatedMistake: Mistake) => {
-    setMistakes((prev) =>
-      prev.map((mistake) =>
-        mistake.id === updatedMistake.id ? updatedMistake : mistake
+      // Ensure onSuccessfulTrades and onFailedTrades are valid number arrays
+      const validOnSuccessfulTrades: number[] = Array.isArray(
+        newMistake.onSuccessfulTrades
       )
-    );
+        ? newMistake.onSuccessfulTrades
+        : [];
+      const validOnFailedTrades: number[] = Array.isArray(
+        newMistake.onFailedTrades
+      )
+        ? newMistake.onFailedTrades
+        : [];
+
+      // Now update the state with proper typing
+      setMistakes((prev) => [
+        ...prev,
+        {
+          id: newMistake.id,
+          name: newMistake.name,
+          onSuccessfulTrades: validOnSuccessfulTrades,
+          onFailedTrades: validOnFailedTrades,
+        },
+      ]);
+    } catch (error) {
+      console.error("Error adding new mistake:", error);
+    }
   };
+
+  // const postAndSaveUpdatedMistakeToMistakes = (updatedMistake: Mistake) => {
+  //   setMistakes((prev) =>
+  //     prev.map((mistake) =>
+  //       mistake.id === updatedMistake.id ? updatedMistake : mistake
+  //     )
+  //   );
+  // };
 
   const deleteMistakeFromUser = async (mistakeId: number) => {
     try {
@@ -109,7 +127,7 @@ export default function MistakeContextProvider({
         setNewMistakeName,
         addNewMistake,
         deleteMistakeFromUser,
-        // postAndSaveUpdatedMistakeToMistakes
+        // postAndSaveUpdatedMistakeToMistakes,
       }}
     >
       {children}
