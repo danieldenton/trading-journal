@@ -57,7 +57,7 @@ export default function TradeContextProvider({
     entry: entry,
     takeProfits: [],
     exit: exit,
-    pAndL: 0,
+    pnl: 0,
     mistakeIds: [],
     notes: "",
   });

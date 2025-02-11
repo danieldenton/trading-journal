@@ -35,7 +35,7 @@ export type Trade = {
   entry: Entry;
   takeProfits: TakeProfit[];
   exit: Exit;
-  pAndL: number;
+  pnl: number;
   mistakeIds: number[];
   notes: string;
 };
