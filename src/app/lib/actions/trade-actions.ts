@@ -7,24 +7,26 @@ import {
 } from "../schema/trigger-schema";
 import { TriggerWithWinRate, Trigger } from "../types";
 
+// TODO: This was copied from trigger actions. Updatye this to be trade actions.s
+
 export async function getTrades(userId: number | undefined) {
   try {
     const response =
       await sql`SELECT * FROM trades WHERE user_id = ${userId}`;
-
-    const triggers = response.rows.map((row) => ({
-      id: row.id,
-      name: row.name,
-      successCount: row.success_count,
-      failureCount: row.failure_count,
+// TODO: finsh below
+    const trades = response.rows.map((row) => ({
+    //   id: row.id,
+    //   name: row.name,
+    //   successCount: row.success_count,
+    //   failureCount: row.failure_count,
     }));
 
-    if (!triggers) {
+    if (!trades) {
       console.log("User has no triggers");
       return;
     }
 
-    return triggers;
+    return trades;
   } catch (error) {
     console.error(error);
   }

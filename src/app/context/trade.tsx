@@ -29,6 +29,7 @@ export default function TradeContextProvider({
   children: ReactNode;
 }) {
   const [trades, setTrades] = useState<Trade[]>([]);
+  // TODO: Probably remove this state from here and relocate it to the trade form.
   const [takeProfit, setTakeProfit] = useState({
     price: 0,
     numOfContracts: 0,
