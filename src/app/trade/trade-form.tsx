@@ -19,13 +19,14 @@ export default function TradeForm() {
           placeholder="symbol"
           className="m-2 p-1 rounded-lg border-black border-2"
         />
+        <EntryForm />
 
         <button
           disabled={isPending}
           type="submit"
           className="m-2 p-1 bg-red-600  font-bold text-white rounded-lg border-black border-2"
         >
-          Create Acount
+          Post Trade
         </button>
       </form>
     </div>
