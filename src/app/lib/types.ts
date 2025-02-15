@@ -33,32 +33,22 @@ export type Trade = {
   long: boolean;
   setupIds: number[];
   triggerIds: number[];
-  entryTime: string
+  entryTime: string;
   entryPrice: number;
   numberOfContracts: number;
+  stop: number;
   takeProfits: TakeProfit[];
-  exit: Exit;
+  exitTime: string;
+  exitPrice: number;
   pnl: number;
   mistakeIds: number[];
   notes: string;
-};
-
-export type Entry = {
-  time: string;
-  price: number;
-  stop: number;
-  numOfContracts: number;
 };
 
 export type TakeProfit = {
   time: string;
   price: number;
   numOfContracts: number;
-};
-
-export type Exit = {
-  time: string;
-  price: number
 };
 
 // Setup
