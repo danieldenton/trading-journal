@@ -3,39 +3,41 @@
 import React from "react";
 
 export default function EntryForm() {
-  <>
-    <div className="flex items-center">
+  return (
+    <>
+      <div className="flex items-center">
+        <input
+          type="checkbox"
+          name="longOrShort"
+          // defaultChecked={false}
+          className="m-2"
+        />
+        <label htmlFor="longOrShort">Long or Short</label>
+      </div>
       <input
-        type="checkbox"
-        name="longOrShort"
-        defaultChecked={false}
-        className="m-2"
+        type="text"
+        name="time"
+        placeholder="time"
+        className="m-2 p-1 rounded-lg border-black border-2"
       />
-      <label htmlFor="longOrShort">Long or Short</label>
-    </div>
-    <input
-      type="text"
-      name="time"
-      placeholder="time"
-      className="m-2 p-1 rounded-lg border-black border-2"
-    />
-    <input
-      type="number"
-      name="price"
-      placeholder="Entry Price"
-      className="m-2 p-1 rounded-lg border-black border-2 focus:outline-none focus:ring-0 focus:border-black text-black"
-    />
-    <input
-      type="number"
-      name="stop"
-      placeholder="Stop Price"
-      className="m-2 p-1 rounded-lg border-black border-2 focus:outline-none focus:ring-0 focus:border-black text-black"
-    />
-    <input
-      type="number"
-      name="numOfContracts"
-      placeholder="Number of Contracts"
-      className="m-2 p-1 rounded-lg border-black border-2 focus:outline-none focus:ring-0 focus:border-black text-black"
-    />
-  </>;
+      <input
+        type="number"
+        name="price"
+        placeholder="Entry Price"
+        className="m-2 p-1 rounded-lg border-black border-2 focus:outline-none focus:ring-0 focus:border-black text-black"
+      />
+      <input
+        type="number"
+        name="stop"
+        placeholder="Stop Price"
+        className="m-2 p-1 rounded-lg border-black border-2 focus:outline-none focus:ring-0 focus:border-black text-black"
+      />
+      <input
+        type="number"
+        name="numOfContracts"
+        placeholder="Number of Contracts"
+        className="m-2 p-1 rounded-lg border-black border-2 focus:outline-none focus:ring-0 focus:border-black text-black"
+      />
+    </>
+  );
 }
