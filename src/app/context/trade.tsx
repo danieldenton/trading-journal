@@ -30,14 +30,11 @@ export default function TradeContextProvider({
 }) {
   const [trades, setTrades] = useState<Trade[]>([]);
   const [takeProfit, setTakeProfit] = useState({
-    time: "",
     price: 0,
     numOfContracts: 0,
+    targetReached: false,
   });
-  const [exit, setExit] = useState({
-    time: "",
-    price: 0,
-  });
+  
   const [trade, setTrade] = useState<Trade>({
     id: undefined,
     date: Date.now().toString(),

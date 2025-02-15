@@ -46,9 +46,9 @@ export type Trade = {
 };
 
 export type TakeProfit = {
-  time: string;
   price: number;
   numOfContracts: number;
+  targetReached: boolean;
 };
 
 // Setup
