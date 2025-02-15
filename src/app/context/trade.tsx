@@ -51,7 +51,7 @@ export default function TradeContextProvider({
     id: undefined,
     date: Date.now().toString(),
     symbol: "",
-    buy: true,
+    long: true,
     setupIds: [],
     triggerIds: [],
     entry: entry,
