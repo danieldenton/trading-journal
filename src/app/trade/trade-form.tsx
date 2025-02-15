@@ -2,6 +2,7 @@
 import React, { useActionState } from "react";
 import MiniSetupTable from "./mini-setup-table";
 import MiniTriggerTable from "../components/mini-trigger-table";
+import EntryForm from "./entry-form";
 
 export default function TradeForm() {
   const [state, tradeAction, isPending] = useActionState(undefined, undefined);

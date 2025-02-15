@@ -3,8 +3,16 @@
 import React from "react";
 
 export default function EntryForm() {
-  <form>
-    <input type="checkbox" name="longOrShort" checked={false} className="" />
+  <>
+    <div className="flex items-center">
+      <input
+        type="checkbox"
+        name="longOrShort"
+        defaultChecked={false}
+        className="m-2"
+      />
+      <label htmlFor="longOrShort">Long or Short</label>
+    </div>
     <input
       type="text"
       name="time"
@@ -29,5 +37,5 @@ export default function EntryForm() {
       placeholder="Number of Contracts"
       className="m-2 p-1 rounded-lg border-black border-2 focus:outline-none focus:ring-0 focus:border-black text-black"
     />
-  </form>;
+  </>;
 }
