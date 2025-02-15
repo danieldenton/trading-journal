@@ -1,15 +1,46 @@
 "use client";
 
-import React from "react";
+import React, { useState, ChangeEvent } from "react";
 
 export default function EntryForm() {
+  const [longOrShort, setLongOrShort] = useState<"long" | "short" | undefined>(
+    undefined
+  );
+
+  const handleLong = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      setLongOrShort("long");
+    } else {
+      setLongOrShort(undefined);
+    }
+  };
+
+  const handleShort = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      setLongOrShort("short");
+    } else {
+      setLongOrShort(undefined);
+    }
+  };
+
   return (
     <>
       <div className="flex items-center">
         <input
           type="checkbox"
-          name="longOrShort"
-          // defaultChecked={false}
+          name="long"
+          onChange={(e) => handleLong(e)}
+          checked={longOrShort === "long"}
+          className="m-2"
+        />
+        <label htmlFor="longOrShort">Long</label>
+      </div>
+      <div className="flex items-center">
+        <input
+          type="checkbox"
+          name="short"
+          onChange={(e) => handleShort(e)}
+          checked={longOrShort === "short"}
           className="m-2"
         />
         <label htmlFor="longOrShort">Long or Short</label>
