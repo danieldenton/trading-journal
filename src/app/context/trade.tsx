@@ -10,13 +10,12 @@ import React, {
   ReactNode,
 } from "react";
 
-import { Trade, Entry, TakeProfit, Exit } from "../lib/types";
+import { Trade, TakeProfit, Exit } from "../lib/types";
 import { useUserContext } from "./user";
 
 type TradeContext = {
   trades: Trade[];
   setTrades: Dispatch<SetStateAction<Trade[]>>;
-  setEntry: Dispatch<SetStateAction<Entry>>;
   setTakeProfit: Dispatch<SetStateAction<TakeProfit>>;
   setExit: Dispatch<SetStateAction<Exit>>;
   trade: Trade;
@@ -32,12 +31,6 @@ export default function TradeContextProvider({
   children: ReactNode;
 }) {
   const [trades, setTrades] = useState<Trade[]>([]);
-  const [entry, setEntry] = useState({
-    time: "",
-    price: 0,
-    stop: 0,
-    numOfContracts: 0,
-  });
   const [takeProfit, setTakeProfit] = useState({
     time: "",
     price: 0,
@@ -54,7 +47,10 @@ export default function TradeContextProvider({
     long: true,
     setupIds: [],
     triggerIds: [],
-    entry: entry,
+    entryTime: "",
+    entryPrice: 0,
+    numberOfContracts: 0,
+    stop: 0,
     takeProfits: [],
     exit: exit,
     pnl: 0,
@@ -92,7 +88,6 @@ export default function TradeContextProvider({
       value={{
         trades,
         setTrades,
-        setEntry,
         setTakeProfit,
         setExit,
         trade,

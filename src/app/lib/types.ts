@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
+import { number } from "zod";
 
 // User
 export type User = {
@@ -32,7 +33,9 @@ export type Trade = {
   long: boolean;
   setupIds: number[];
   triggerIds: number[];
-  entry: Entry;
+  entryTime: string
+  entryPrice: number;
+  numberOfContracts: number;
   takeProfits: TakeProfit[];
   exit: Exit;
   pnl: number;
