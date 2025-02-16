@@ -14,8 +14,6 @@ import { getTrades, createTrade } from "../lib/actions/trade-actions";
 import { Trade } from "../lib/types";
 import { useUserContext } from "./user";
 import { QueryResultRow } from "@vercel/postgres";
-import { format } from "path";
-import { set } from "zod";
 
 type TradeContext = {
   trades: Trade[];
@@ -113,26 +111,27 @@ export default function TradeContextProvider({
     return formattedTrade;
   };
 
-  const resetTrade = () => {  
-    setTrade({
-      id: undefined,
-      date: "",
-      symbol: "",
-      long: undefined,
-      setupIds: [],
-      triggerIds: [],
-      entryTime: "",
-      entryPrice: 0,
-      numberOfContracts: 0,
-      stop: 0,
-      takeProfits: [],
-      exitTime: "",
-      exitPrice: 0,
-      pnl: 0,
-      mistakeIds: [],
-      notes: "",
-    });
-  }
+  // TODO make sure a trade state is necessary at all.
+  // const resetTrade = () => {  
+  //   setTrade({
+  //     id: undefined,
+  //     date: "",
+  //     symbol: "",
+  //     long: undefined,
+  //     setupIds: [],
+  //     triggerIds: [],
+  //     entryTime: "",
+  //     entryPrice: 0,
+  //     numberOfContracts: 0,
+  //     stop: 0,
+  //     takeProfits: [],
+  //     exitTime: "",
+  //     exitPrice: 0,
+  //     pnl: 0,
+  //     mistakeIds: [],
+  //     notes: "",
+  //   });
+  // }
 
   const postTrade = async (prevState: any, formData: FormData) => {
     if (!user?.id) {
@@ -148,7 +147,7 @@ export default function TradeContextProvider({
       if (typeof newTrade?.id === "number") {
         const formattedTrade = formatTradeReturn(newTrade);
         setTrades((prev) => [...prev, formattedTrade]);
-        resetTrade();
+        // resetTrade();
       }
     } catch (error) {
       console.error(error);

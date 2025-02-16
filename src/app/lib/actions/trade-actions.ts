@@ -153,29 +153,12 @@ export async function updateTrade(trade: Trade) {
          RETURNING id, date, symbol, long, setup_ids, trigger_ids, entry_time, entry_price, number_of_contracts, stop, take_profits, exit_time, exit_price, pnl, mistake_ids, notes;
        `;
 
-    if (response.rowCount === 0) {
+    const updatedTrade = response.rows[0];
+
+    if (!updatedTrade) {
       console.log("Failed to update trade");
       return { errors: { name: ["Failed to update trade"] } };
     }
-
-    const updatedTrade = {
-      id: response.rows[0].id,
-      date: response.rows[0].date,
-      symbol: response.rows[0].symbol,
-      long: response.rows[0].long,
-      setupIds: response.rows[0].setup_ids,
-      triggerIds: response.rows[0].trigger_ids,
-      entryTime: response.rows[0].entry_time,
-      entryPrice: response.rows[0].entry_price,
-      numberOfContracts: response.rows[0].number_of_contracts,
-      stop: response.rows[0].stop,
-      takeProfits: response.rows[0].take_profits,
-      exitTime: response.rows[0].exit_time,
-      exitPrice: response.rows[0].exit_price,
-      pnl: response.rows[0].pnl,
-      mistakeIds: response.rows[0].mistake_ids,
-      notes: response.rows[0].notes,
-    };
 
     return updatedTrade;
   } catch (error) {
