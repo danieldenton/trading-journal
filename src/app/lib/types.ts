@@ -37,18 +37,12 @@ export type Trade = {
   entryPrice: number;
   numberOfContracts: number;
   stop: number;
-  takeProfits: TakeProfit[];
+  takeProfits: number[]
   exitTime: string;
   exitPrice: number;
   pnl: number;
   mistakeIds: number[];
   notes: string;
-};
-
-export type TakeProfit = {
-  price: number;
-  numOfContracts: number;
-  targetReached: boolean;
 };
 
 // Setup

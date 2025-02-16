@@ -10,12 +10,11 @@ import React, {
   ReactNode,
 } from "react";
 
-import { Trade, TakeProfit } from "../lib/types";
+import { Trade } from "../lib/types";
 import { useUserContext } from "./user";
 
 type TradeContext = {
   trades: Trade[];
-  setTakeProfit: Dispatch<SetStateAction<TakeProfit>>;
   trade: Trade;
   setTrade: Dispatch<SetStateAction<Trade>>;
   addOrRemoveTriggerFromTrade: (add: boolean, triggerId: number) => void;
@@ -30,17 +29,12 @@ export default function TradeContextProvider({
 }) {
   const [trades, setTrades] = useState<Trade[]>([]);
   // TODO: Probably remove this state from here and relocate it to the trade form.
-  const [takeProfit, setTakeProfit] = useState({
-    price: 0,
-    numOfContracts: 0,
-    targetReached: false,
-  });
   
   const [trade, setTrade] = useState<Trade>({
     id: undefined,
     date: "",
     symbol: "",
-    long: true,
+    long: undefined,
     setupIds: [],
     triggerIds: [],
     entryTime: "",
@@ -84,7 +78,6 @@ export default function TradeContextProvider({
     <TradeContext.Provider
       value={{
         trades,
-        setTakeProfit,
         trade,
         setTrade,
         addOrRemoveTriggerFromTrade,
