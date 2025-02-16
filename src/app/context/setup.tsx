@@ -40,7 +40,7 @@ export default function SetupContextProvider({
   children: ReactNode;
 }) {
   const [setups, setSetups] = useState<SetupWithWinRate[]>([]);
-  const [selectedTriggerIds, setSelectedTriggerIds] = useState<number[]>([])
+  const [selectedTriggerIds, setSelectedTriggerIds] = useState<number[]>([]);
   const { user } = useUserContext();
 
   const formatSetup = (setup: QueryResultRow): SetupWithWinRate => {
@@ -54,18 +54,6 @@ export default function SetupContextProvider({
     };
   };
 
-  function addWinRateToSetups(
-    setupsToUpdated: Setup[] | undefined
-  ): SetupWithWinRate[] {
-    const setupsWithWinRate = setupsToUpdated?.map((setup) => ({
-      ...setup,
-      winRate: calculateWinRate(setup.successCount, setup.failureCount),
-    }));
-    const sortedSetups =
-      setupsWithWinRate?.sort((a, b) => b.winRate - a.winRate) || [];
-    return sortedSetups;
-  }
-
   const fetchSetups = async () => {
     if (!user?.id) {
       return;
@@ -73,8 +61,10 @@ export default function SetupContextProvider({
     try {
       const userSetups = await getSetups(user.id);
       if (userSetups) {
-        const setupsWithWinRate = addWinRateToSetups(userSetups);
-        setSetups(setupsWithWinRate);
+        const formattedSetups = userSetups.map((setup) => formatSetup(setup));
+        const sortedSetups =
+          formattedSetups.sort((a, b) => b.winRate - a.winRate) || [];
+        setSetups(sortedSetups);
       }
     } catch (error) {
       console.error(error);

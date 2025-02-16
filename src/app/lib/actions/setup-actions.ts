@@ -8,13 +8,7 @@ export async function getSetups(userId: number | undefined) {
   try {
     const response = await sql`SELECT * FROM setups WHERE user_id = ${userId}`;
 
-    const setups = response.rows.map((row) => ({
-      id: row.id,
-      name: row.name,
-      triggerIds: row.trigger_ids,
-      successCount: row.success_count,
-      failureCount: row.failure_count,
-    }));
+    const setups = response.rows
 
     if (!setups) {
       console.log("User has no setups");
@@ -54,8 +48,8 @@ export async function createSetup(
 
   try {
     const existingSetup = await sql`
-    SELECT 1 FROM setups WHERE name = ${name} AND user_id = ${userId};
-  `;
+      SELECT 1 FROM setups WHERE name = ${name} AND user_id = ${userId};
+    `;
 
     if (existingSetup.rows.length > 0) {
       console.log("Setup already exists");
@@ -65,10 +59,10 @@ export async function createSetup(
     const formattedTriggerIds = `{${validTriggerIds.join(",")}}`;
 
     const response = await sql`
-    INSERT INTO setups (name, trigger_ids, user_id)
-    VALUES (${name}, ${formattedTriggerIds}, ${userId})
-    RETURNING id, name, trigger_ids;
-  `;
+      INSERT INTO setups (name, trigger_ids, user_id)
+      VALUES (${name}, ${formattedTriggerIds}, ${userId})
+      RETURNING id, name, trigger_ids;
+    `;
 
     const setup = response.rows[0];
     if (!setup) {

@@ -1,5 +1,4 @@
 import { Dispatch, SetStateAction } from "react";
-import { number } from "zod";
 
 // User
 export type User = {
@@ -37,7 +36,7 @@ export type Trade = {
   entryPrice: number;
   numberOfContracts: number;
   stop: number;
-  takeProfits: number[]
+  takeProfits: number[];
   exitTime: string;
   exitPrice: number;
   pnl: number;
@@ -55,7 +54,7 @@ export type Setup = {
 };
 
 export type SetupWithWinRate = Setup & {
-  winRate: number | undefined;
+  winRate: number;
 };
 
 export type SetupModalProps = {
