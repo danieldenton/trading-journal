@@ -131,20 +131,20 @@ export async function updateTrade(trade: Trade) {
 }
 
 export async function deleteTrade(
-  triggerId: number,
+  tradeId: number,
   userId: number | undefined
 ) {
   try {
     const response = await sql`
-        DELETE FROM triggers WHERE id = ${triggerId} AND user_id = ${userId}
+        DELETE FROM trades WHERE id = ${tradeId} AND user_id = ${userId}
       `;
 
     if (response.rowCount === 0) {
-      console.log("Failed to delete trigger");
-      return { errors: { name: ["Failed to delete trigger"] } };
+      console.log("Failed to delete trade");
+      return { errors: { name: ["Failed to delete trade"] } };
     }
 
-    return { success: true, message: "Trigger deleted" };
+    return { success: true, message: "Trade deleted" };
   } catch (error) {
     console.error(error);
   }
