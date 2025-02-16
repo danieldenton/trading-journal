@@ -74,6 +74,10 @@ export default function TriggerContextProvider({
     }
   };
 
+  useEffect(() => {
+    fetchTriggers();
+  }, [user?.id]);
+
   const formatTriggerReturn = (trigger: QueryResultRow): TriggerWithWinRate => {
     return {
       id: trigger.id,
@@ -83,10 +87,6 @@ export default function TriggerContextProvider({
       winRate: calculateWinRate(trigger.success_count, trigger.failure_count),
     };
   };
-
-  useEffect(() => {
-    fetchTriggers();
-  }, [user?.id]);
 
   const addNewTrigger = async (prevState: any, formData: FormData) => {
     if (!user?.id) {
