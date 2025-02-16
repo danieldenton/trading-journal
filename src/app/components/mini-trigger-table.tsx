@@ -1,44 +1,49 @@
 "use client";
-import React, { useEffect, ChangeEvent } from "react";
+import React from "react";
 
 import { useTriggerContext } from "../context/trigger";
 import { useSetupContext } from "../context/setup";
 import { useTradeContext } from "../context/trade";
-import { Setup, SetupWithWinRate } from "../lib/types";
+import { Setup } from "../lib/types";
 
 export default function MiniTriggerTable({
   setup,
 }: {
-  setup: Setup | SetupWithWinRate | undefined;
+  setup: Setup | undefined;
 }) {
   const { triggers } = useTriggerContext();
-  const { addOrRemoveTriggerFromTrade, trade } = useTradeContext();
+  const { setTriggerIds, triggerIds } = useTradeContext();
   const { addOrRemoveTriggerFromSetup, selectedTriggerIds } = useSetupContext();
 
+  const addOrRemoveTriggerFromTrade = (triggerId: number) => {
+      if (!triggerIds.includes(triggerId)) {
+        setTriggerIds((prevState) => [...prevState, triggerId]);
+      } else {
+        setTriggerIds((prevState) =>
+          prevState.filter((id) => id !== triggerId)
+        );
+      }
+    };
 
-
-  const handleAddTrigger = (
-    e: ChangeEvent<HTMLInputElement>,
-    triggerId: number
-  ) => {
+  const handleAddTrigger = (triggerId: number) => {
     if (setup) {
-      addOrRemoveTriggerFromSetup(e.target.checked, triggerId);
+      addOrRemoveTriggerFromSetup(triggerId);
     } else {
-      addOrRemoveTriggerFromTrade(e.target.checked, triggerId);
+      addOrRemoveTriggerFromTrade(triggerId);
     }
   };
 
   const miniTriggerTable = triggers.map((trigger, index) => {
     const checked = setup
       ? selectedTriggerIds.includes(trigger.id)
-      : trade.triggerIds.includes(trigger.id);
+      : triggerIds.includes(trigger.id);
     return (
       <tr key={index}>
         <td className="border border-gray-300 p-2 text-center">
           <input
             type="checkbox"
             checked={checked}
-            onChange={(e) => handleAddTrigger(e, trigger.id)}
+            onChange={() => handleAddTrigger(trigger.id)}
           />
         </td>
         <td className="border border-gray-300 p-2 text-center font-bold">

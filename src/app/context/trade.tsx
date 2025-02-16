@@ -17,11 +17,11 @@ import { QueryResultRow } from "@vercel/postgres";
 
 type TradeContext = {
   trades: Trade[];
-  setSelectedSetupIds: Dispatch<SetStateAction<number[]>>;
-  setSelectedTriggerIds: Dispatch<SetStateAction<number[]>>;
-  setSelectedMistakeIds: Dispatch<SetStateAction<number[]>>;
+  setSetupIds: Dispatch<SetStateAction<number[]>>;
+  triggerIds: number[];
+  setTriggerIds: Dispatch<SetStateAction<number[]>>;
+  setMistakeIds: Dispatch<SetStateAction<number[]>>;
   setTakeProfits: Dispatch<SetStateAction<number[]>>;
-  addOrRemoveTriggerFromTrade: (add: boolean, triggerId: number) => void;
   postTrade: (prevState: any, formData: FormData) => void;
 };
 
@@ -33,9 +33,9 @@ export default function TradeContextProvider({
   children: ReactNode;
 }) {
   const [trades, setTrades] = useState<Trade[]>([]);
-  const [selectedSetupIds, setSelectedSetupIds] = useState<number[]>([]);
-  const [selectedTriggerIds, setSelectedTriggerIds] = useState<number[]>([]);
-  const [selectedMistakeIds, setSelectedMistakeIds] = useState<number[]>([]);
+  const [setupIds, setSetupIds] = useState<number[]>([]);
+  const [triggerIds, setTriggerIds] = useState<number[]>([]);
+  const [mistakeIds, setMistakeIds] = useState<number[]>([]);
   const [takeProfits, setTakeProfits] = useState<number[]>([]);
 
   const { user } = useUserContext();
@@ -57,16 +57,6 @@ export default function TradeContextProvider({
   useEffect(() => {
     fetchTrades();
   }, [user?.id]);
-
-  const addOrRemoveTriggerFromTrade = (add: boolean, triggerId: number) => {
-    if (add) {
-      setSelectedTriggerIds((prevState) => [...prevState, triggerId]);
-    } else {
-      setSelectedTriggerIds((prevState) =>
-        prevState.filter((id) => id !== triggerId)
-      );
-    }
-  };
 
   const formatTradeReturn = (trade: QueryResultRow): Trade => {
     const formattedTrade = {
@@ -114,11 +104,11 @@ export default function TradeContextProvider({
     <TradeContext.Provider
       value={{
         trades,
-        setSelectedSetupIds,
-        setSelectedTriggerIds,
-        setSelectedMistakeIds,
+        setSetupIds,
+        triggerIds,
+        setTriggerIds,
+        setMistakeIds,
         setTakeProfits,
-        addOrRemoveTriggerFromTrade,
         postTrade,
       }}
     >
