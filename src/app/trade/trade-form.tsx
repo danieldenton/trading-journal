@@ -1,11 +1,13 @@
 "use client";
 import React, { useActionState } from "react";
+import { useTradeContext } from "../context/trade";
 import MiniSetupTable from "./mini-setup-table";
 import MiniTriggerTable from "../components/mini-trigger-table";
 import EntryForm from "./entry-form";
 
 export default function TradeForm() {
-  const [state, tradeAction, isPending] = useActionState(undefined, undefined);
+    const {  postTrade } = useTradeContext();
+  const [state, tradeAction, isPending] = useActionState(postTrade, undefined);
   return (
     <div>
       <h1>Trade Form</h1>

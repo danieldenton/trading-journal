@@ -59,12 +59,13 @@ export default function TriggerContextProvider({
   }
 
   const fetchTriggers = async () => {
+    if (!user?.id) {
+      return;
+    }
     try {
-      if (user?.id) {
-        const userTriggers = await getTriggers(user.id);
-        const triggersWithWinRate = addWinRateToTriggers(userTriggers);
-        setTriggers(triggersWithWinRate);
-      }
+      const userTriggers = await getTriggers(user.id);
+      const triggersWithWinRate = addWinRateToTriggers(userTriggers);
+      setTriggers(triggersWithWinRate);
     } catch (error) {
       console.error(error);
     }
@@ -75,12 +76,11 @@ export default function TriggerContextProvider({
   }, [user?.id]);
 
   const addNewTrigger = async (prevState: any, formData: FormData) => {
+    if (!user?.id) {
+      console.error("User needs to be logged in to add a trigger");
+      return;
+    }
     try {
-      if (!user?.id) {
-        console.error("User needs to be logged in to add a trigger");
-        return "User needs to be logged in to add a trigger";
-      }
-
       const newTrigger = await createTrigger(formData, user.id);
       if (newTrigger?.errors) {
         const { name } = newTrigger.errors;

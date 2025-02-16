@@ -10,7 +10,7 @@ import React, {
   ReactNode,
 } from "react";
 
-import { getTrades } from "../lib/actions/trade-actions";
+import { getTrades, createTrade } from "../lib/actions/trade-actions";
 import { Trade } from "../lib/types";
 import { useUserContext } from "./user";
 
@@ -19,6 +19,7 @@ type TradeContext = {
   trade: Trade;
   setTrade: Dispatch<SetStateAction<Trade>>;
   addOrRemoveTriggerFromTrade: (add: boolean, triggerId: number) => void;
+  postTrade: (prevState: any, formData: FormData) => void;
 };
 
 export const TradeContext = createContext<TradeContext | undefined>(undefined);
@@ -53,12 +54,13 @@ export default function TradeContextProvider({
   const { user } = useUserContext();
 
   const fetchTrades = async () => {
+    if (!user?.id) {
+      return;
+    }
     try {
-      if (user?.id) {
-        const trades = await getTrades(user.id);
-        if (trades) {
-          setTrades(trades);
-        }
+      const trades = await getTrades(user.id);
+      if (trades) {
+        setTrades(trades);
       }
     } catch (error) {
       console.error(error);
@@ -87,6 +89,18 @@ export default function TradeContextProvider({
     }
   };
 
+  const postTrade = async (prevState: any, formData: FormData) => {
+    if (!user?.id) {
+      console.error("User needs to be logged in to add a trade");
+      return;
+    }
+    try {
+      const newTrade = await createTrade(formData, user.id);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <TradeContext.Provider
       value={{
@@ -94,6 +108,7 @@ export default function TradeContextProvider({
         trade,
         setTrade,
         addOrRemoveTriggerFromTrade,
+        postTrade,
       }}
     >
       {children}

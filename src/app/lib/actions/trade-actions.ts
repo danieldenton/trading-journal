@@ -1,13 +1,9 @@
 "use server";
 
 import { sql } from "@vercel/postgres";
-import {
-  newTriggerSchema,
-  updateTriggerSchema,
-} from "../schema/trigger-schema";
 import { Trade } from "../types";
 
-// TODO: This was copied from trigger actions. Updatye this to be trade actions.
+// TODO: This was copied from trigger actions. Update this to be trade actions.
 
 export async function getTrades(userId: number | undefined) {
   try {
