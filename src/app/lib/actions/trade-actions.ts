@@ -34,7 +34,7 @@ export async function getTrades(userId: number | undefined) {
     }));
 
     if (!trades) {
-      console.log("User has no triggers");
+      console.log("User has no trades");
       return;
     }
 
