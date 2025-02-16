@@ -96,6 +96,51 @@ export default function TradeContextProvider({
     }
     try {
       const newTrade = await createTrade(formData, user.id);
+      if (newTrade?.errors) {
+        console.log(newTrade.errors);
+        return;
+      }
+      if (typeof newTrade?.id === "number") {
+        setTrades((prev) => [
+          ...prev,
+          {
+            id: newTrade.id,
+            date: newTrade.date,
+            symbol: newTrade.symbol,
+            long: newTrade.long,
+            setupIds: newTrade.setup_ids,
+            triggerIds: newTrade.trigger_ids,
+            entryTime: newTrade.entry_time,
+            entryPrice: newTrade.entry_price,
+            numberOfContracts: newTrade.number_of_contracts,
+            stop: newTrade.stop,
+            takeProfits: newTrade.take_profits,
+            exitTime: newTrade.exit_time,
+            exitPrice: newTrade.exit_price,
+            pnl: newTrade.pnl,
+            mistakeIds: newTrade.mistake_ids,
+            notes: newTrade.notes,
+          },
+        ]);
+        setTrade({
+          id: undefined,
+          date: "",
+          symbol: "",
+          long: undefined,
+          setupIds: [],
+          triggerIds: [],
+          entryTime: "",
+          entryPrice: 0,
+          numberOfContracts: 0,
+          stop: 0,
+          takeProfits: [],
+          exitTime: "",
+          exitPrice: 0,
+          pnl: 0,
+          mistakeIds: [],
+          notes: "",
+        });
+      }
     } catch (error) {
       console.error(error);
     }

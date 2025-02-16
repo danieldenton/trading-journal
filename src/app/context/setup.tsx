@@ -79,9 +79,7 @@ export default function SetupContextProvider({
   };
 
   useEffect(() => {
-    if (user?.id) {
-      fetchSetups();
-    }
+    fetchSetups();
   }, [user?.id]);
 
   const addNewSetup = async (prevState: any, formData: FormData) => {
