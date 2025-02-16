@@ -30,7 +30,7 @@ export type Trade = {
   id: number | undefined;
   date: string;
   symbol: string;
-  long: boolean;
+  long: boolean | undefined;
   setupIds: number[];
   triggerIds: number[];
   entryTime: string;

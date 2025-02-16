@@ -6,19 +6,31 @@ import {
   updateTriggerSchema,
 } from "../schema/trigger-schema";
 import { TriggerWithWinRate, Trigger } from "../types";
+import { number } from "zod";
 
-// TODO: This was copied from trigger actions. Updatye this to be trade actions.s
+// TODO: This was copied from trigger actions. Updatye this to be trade actions.
 
 export async function getTrades(userId: number | undefined) {
   try {
-    const response =
-      await sql`SELECT * FROM trades WHERE user_id = ${userId}`;
-// TODO: finsh below
+    const response = await sql`SELECT * FROM trades WHERE user_id = ${userId}`;
+    
     const trades = response.rows.map((row) => ({
-    //   id: row.id,
-    //   name: row.name,
-    //   successCount: row.success_count,
-    //   failureCount: row.failure_count,
+      id: row.id,
+      name: row.date,
+      symbol: row.symbol,
+      long: row.long,
+      setupIds: row.setup_ids,
+      triggerIds: row.trigger_ids,
+      entryTime: row.entry_time,
+      entryPrice: row.entry_price,
+      numberOfContracts: row.number_of_contracts,
+      stop: row.stop,
+      takeProfits: row.take_profits,
+      exitTime: row.exit_time,
+      exitPrice: row.exit_price,
+      pnl: row.pnl,
+      mistakeIds: row.mistake_ids,
+      notes: row.notes,
     }));
 
     if (!trades) {

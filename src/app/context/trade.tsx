@@ -38,7 +38,7 @@ export default function TradeContextProvider({
   
   const [trade, setTrade] = useState<Trade>({
     id: undefined,
-    date: Date.now().toString(),
+    date: "",
     symbol: "",
     long: true,
     setupIds: [],
