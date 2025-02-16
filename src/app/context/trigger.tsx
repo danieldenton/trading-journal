@@ -118,17 +118,10 @@ export default function TriggerContextProvider({
     try {
       const returnedTrigger = await updateTrigger(updatedTrigger);
       if (typeof returnedTrigger === "object" && "id" in returnedTrigger) {
-        const triggerWithWinRate = {
-          ...returnedTrigger,
-          winRate: calculateWinRate(
-            returnedTrigger.successCount,
-            returnedTrigger.failureCount
-          ),
-        };
-
+        const formattedTrigger = formatTriggerReturn(returnedTrigger);
         setTriggers((prevTriggers) =>
           prevTriggers.map((trigger) =>
-            trigger.id === triggerWithWinRate.id ? triggerWithWinRate : trigger
+            trigger.id === formattedTrigger.id ? formattedTrigger : trigger
           )
         );
       }

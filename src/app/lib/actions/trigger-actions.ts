@@ -98,17 +98,11 @@ export async function updateTrigger(trigger: TriggerWithWinRate) {
         RETURNING id, name, success_count, failure_count;
       `;
 
-    if (response.rowCount === 0) {
+    const updatedTrigger = response.rows[0];
+    if (!updatedTrigger) {
       console.log("Failed to update trigger");
       return { errors: { name: ["Failed to update trigger"] } };
     }
-
-    const updatedTrigger = {
-      id: response.rows[0].id,
-      name: response.rows[0].name,
-      successCount: response.rows[0].success_count,
-      failureCount: response.rows[0].failure_count,
-    };
 
     return updatedTrigger;
   } catch (error) {
