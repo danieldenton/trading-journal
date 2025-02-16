@@ -40,26 +40,8 @@ export default function TradeContextProvider({
 
   const { user } = useUserContext();
 
-  const fetchTrades = async () => {
-    if (!user?.id) {
-      return;
-    }
-    try {
-      const trades = await getTrades(user.id);
-      if (trades) {
-        setTrades(trades);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchTrades();
-  }, [user?.id]);
-
   const formatTradeReturn = (trade: QueryResultRow): Trade => {
-    const formattedTrade = {
+    return {
       id: trade.id,
       date: trade.date,
       symbol: trade.symbol,
@@ -77,8 +59,26 @@ export default function TradeContextProvider({
       mistakeIds: trade.mistakeIds,
       notes: trade.notes,
     };
-    return formattedTrade;
   };
+
+  const fetchTrades = async () => {
+    if (!user?.id) {
+      return;
+    }
+    try {
+      const trades = await getTrades(user.id);
+      if (trades) {
+        const formattedTrades = trades.map((trade) => formatTradeReturn(trade));
+        setTrades(formattedTrades);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchTrades();
+  }, [user?.id]);
 
   const postTrade = async (prevState: any, formData: FormData) => {
     if (!user?.id) {
