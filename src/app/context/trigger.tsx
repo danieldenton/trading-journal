@@ -19,6 +19,7 @@ import {
 } from "../lib/actions/trigger-actions";
 import { calculateWinRate } from "../lib/utils";
 import { useUserContext } from "./user";
+import { QueryResultRow } from "@vercel/postgres";
 
 type TriggerContext = {
   triggers: TriggerWithWinRate[];
@@ -73,6 +74,19 @@ export default function TriggerContextProvider({
     }
   };
 
+  const formatTriggerReturn = (trigger: QueryResultRow): TriggerWithWinRate => {
+    return {
+      id: trigger.id,
+      name: trigger.name,
+      successCount: trigger.success_count ? trigger.success_count : 0,
+      failureCount: trigger.failure_count ? trigger.failure_count : 0,
+      winRate:
+        trigger.success_count || trigger.failure_count
+          ? calculateWinRate(trigger.success_count, trigger.failure_count)
+          : 0,
+    };
+  };
+
   useEffect(() => {
     fetchTriggers();
   }, [user?.id]);
@@ -89,17 +103,9 @@ export default function TriggerContextProvider({
         return name[0];
       }
 
-      if (typeof newTrigger?.name === "string") {
-        setTriggers((prev) => [
-          ...prev,
-          {
-            id: newTrigger.id,
-            name: newTrigger.name,
-            successCount: 0,
-            failureCount: 0,
-            winRate: 0,
-          },
-        ]);
+      if (typeof newTrigger?.id === "number") {
+        const formattedTrigger = formatTriggerReturn(newTrigger);
+        setTriggers((prev) => [...prev, formattedTrigger]);
       }
     } catch (error) {
       console.error(error);
