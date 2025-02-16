@@ -17,8 +17,10 @@ import { QueryResultRow } from "@vercel/postgres";
 
 type TradeContext = {
   trades: Trade[];
-  trade: Trade;
-  setTrade: Dispatch<SetStateAction<Trade>>;
+  setSelectedSetupIds: Dispatch<SetStateAction<number[]>>;
+  setSelectedTriggerIds: Dispatch<SetStateAction<number[]>>;
+  setSelectedMistakeIds: Dispatch<SetStateAction<number[]>>;
+  setTakeProfits: Dispatch<SetStateAction<number[]>>;
   addOrRemoveTriggerFromTrade: (add: boolean, triggerId: number) => void;
   postTrade: (prevState: any, formData: FormData) => void;
 };
@@ -31,25 +33,10 @@ export default function TradeContextProvider({
   children: ReactNode;
 }) {
   const [trades, setTrades] = useState<Trade[]>([]);
-
-  const [trade, setTrade] = useState<Trade>({
-    id: undefined,
-    date: "",
-    symbol: "",
-    long: undefined,
-    setupIds: [],
-    triggerIds: [],
-    entryTime: "",
-    entryPrice: 0,
-    numberOfContracts: 0,
-    stop: 0,
-    takeProfits: [],
-    exitTime: "",
-    exitPrice: 0,
-    pnl: 0,
-    mistakeIds: [],
-    notes: "",
-  });
+  const [selectedSetupIds, setSelectedSetupIds] = useState<number[]>([]);
+  const [selectedTriggerIds, setSelectedTriggerIds] = useState<number[]>([]);
+  const [selectedMistakeIds, setSelectedMistakeIds] = useState<number[]>([]);
+  const [takeProfits, setTakeProfits] = useState<number[]>([]);
 
   const { user } = useUserContext();
 
@@ -73,19 +60,11 @@ export default function TradeContextProvider({
 
   const addOrRemoveTriggerFromTrade = (add: boolean, triggerId: number) => {
     if (add) {
-      setTrade((prevState) => {
-        return {
-          ...prevState,
-          triggerIds: [...prevState.triggerIds, triggerId],
-        };
-      });
+      setSelectedTriggerIds((prevState) => [...prevState, triggerId]);
     } else {
-      setTrade((prevState) => {
-        return {
-          ...prevState,
-          triggerIds: prevState.triggerIds.filter((id) => id !== triggerId),
-        };
-      });
+      setSelectedTriggerIds((prevState) =>
+        prevState.filter((id) => id !== triggerId)
+      );
     }
   };
 
@@ -111,28 +90,6 @@ export default function TradeContextProvider({
     return formattedTrade;
   };
 
-  // TODO make sure a trade state is necessary at all.
-  // const resetTrade = () => {
-  //   setTrade({
-  //     id: undefined,
-  //     date: "",
-  //     symbol: "",
-  //     long: undefined,
-  //     setupIds: [],
-  //     triggerIds: [],
-  //     entryTime: "",
-  //     entryPrice: 0,
-  //     numberOfContracts: 0,
-  //     stop: 0,
-  //     takeProfits: [],
-  //     exitTime: "",
-  //     exitPrice: 0,
-  //     pnl: 0,
-  //     mistakeIds: [],
-  //     notes: "",
-  //   });
-  // }
-
   const postTrade = async (prevState: any, formData: FormData) => {
     if (!user?.id) {
       console.error("User needs to be logged in to add a trade");
@@ -147,7 +104,6 @@ export default function TradeContextProvider({
       if (typeof newTrade === "object" && "id" in newTrade) {
         const formattedTrade = formatTradeReturn(newTrade);
         setTrades((prev) => [...prev, formattedTrade]);
-        // resetTrade();
       }
     } catch (error) {
       console.error(error);
@@ -158,8 +114,10 @@ export default function TradeContextProvider({
     <TradeContext.Provider
       value={{
         trades,
-        trade,
-        setTrade,
+        setSelectedSetupIds,
+        setSelectedTriggerIds,
+        setSelectedMistakeIds,
+        setTakeProfits,
         addOrRemoveTriggerFromTrade,
         postTrade,
       }}
