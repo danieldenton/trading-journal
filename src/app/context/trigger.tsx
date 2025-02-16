@@ -64,8 +64,10 @@ export default function TriggerContextProvider({
     }
     try {
       const userTriggers = await getTriggers(user.id);
-      const triggersWithWinRate = addWinRateToTriggers(userTriggers);
-      setTriggers(triggersWithWinRate);
+      if (userTriggers) {
+        const triggersWithWinRate = addWinRateToTriggers(userTriggers);
+        setTriggers(triggersWithWinRate);
+      }
     } catch (error) {
       console.error(error);
     }

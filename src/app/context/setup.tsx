@@ -64,10 +64,15 @@ export default function SetupContextProvider({
   }
 
   const fetchSetups = async () => {
+    if (!user?.id) {
+      return;
+    }
     try {
-      const userSetups = await getSetups(user?.id);
-      const setupsWithWinRate = addWinRateToSetups(userSetups);
-      setSetups(setupsWithWinRate);
+      const userSetups = await getSetups(user.id);
+      if (userSetups) {
+        const setupsWithWinRate = addWinRateToSetups(userSetups);
+        setSetups(setupsWithWinRate);
+      }
     } catch (error) {
       console.error(error);
     }
