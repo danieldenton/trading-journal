@@ -112,7 +112,7 @@ export default function TradeContextProvider({
   };
 
   // TODO make sure a trade state is necessary at all.
-  // const resetTrade = () => {  
+  // const resetTrade = () => {
   //   setTrade({
   //     id: undefined,
   //     date: "",
@@ -144,7 +144,7 @@ export default function TradeContextProvider({
         console.log(newTrade.errors);
         return;
       }
-      if (typeof newTrade?.id === "number") {
+      if (typeof newTrade === "object" && "id" in newTrade) {
         const formattedTrade = formatTradeReturn(newTrade);
         setTrades((prev) => [...prev, formattedTrade]);
         // resetTrade();
