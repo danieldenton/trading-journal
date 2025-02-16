@@ -100,7 +100,7 @@ export default function TriggerContextProvider({
         return name[0];
       }
 
-      if (typeof newTrigger?.id === "number") {
+      if (typeof newTrigger === "object" && "id" in newTrigger) {
         const formattedTrigger = formatTriggerReturn(newTrigger);
         setTriggers((prev) => [...prev, formattedTrigger]);
       }

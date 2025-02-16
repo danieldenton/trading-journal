@@ -5,7 +5,7 @@ import {
   newTriggerSchema,
   updateTriggerSchema,
 } from "../schema/trigger-schema";
-import { TriggerWithWinRate, Trigger } from "../types";
+import { TriggerWithWinRate } from "../types";
 
 export async function getTriggers(userId: number | undefined) {
   try {
