@@ -33,7 +33,9 @@ type TriggerContext = {
   deleteTriggerFromUser: (triggerId: number) => void;
 };
 
-export const TriggerContext = createContext<TriggerContext | undefined>(undefined);
+export const TriggerContext = createContext<TriggerContext | undefined>(
+  undefined
+);
 
 export default function TriggerContextProvider({
   children,
@@ -58,18 +60,18 @@ export default function TriggerContextProvider({
 
   const fetchTriggers = async () => {
     try {
-      const userTriggers = await getTriggers(user?.id);
-      const triggersWithWinRate = addWinRateToTriggers(userTriggers);
-      setTriggers(triggersWithWinRate);
+      if (user?.id) {
+        const userTriggers = await getTriggers(user.id);
+        const triggersWithWinRate = addWinRateToTriggers(userTriggers);
+        setTriggers(triggersWithWinRate);
+      }
     } catch (error) {
       console.error(error);
     }
   };
 
   useEffect(() => {
-    if (user?.id) {
-      fetchTriggers();
-    }
+    fetchTriggers();
   }, [user?.id]);
 
   const addNewTrigger = async (prevState: any, formData: FormData) => {
@@ -101,7 +103,7 @@ export default function TriggerContextProvider({
       console.error(error);
     }
   };
- 
+
   const patchAndSaveUpdatedTriggerToTriggers = async (
     updatedTrigger: TriggerWithWinRate
   ) => {

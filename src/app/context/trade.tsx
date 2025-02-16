@@ -10,6 +10,7 @@ import React, {
   ReactNode,
 } from "react";
 
+import { getTrades } from "../lib/actions/trade-actions";
 import { Trade } from "../lib/types";
 import { useUserContext } from "./user";
 
@@ -29,7 +30,7 @@ export default function TradeContextProvider({
 }) {
   const [trades, setTrades] = useState<Trade[]>([]);
   // TODO: Probably remove this state from here and relocate it to the trade form.
-  
+
   const [trade, setTrade] = useState<Trade>({
     id: undefined,
     date: "",
@@ -51,9 +52,21 @@ export default function TradeContextProvider({
 
   const { user } = useUserContext();
 
-  useEffect(() => {
-    if (user?.id) {
+  const fetchTrades = async () => {
+    try {
+      if (user?.id) {
+        const trades = await getTrades(user.id);
+        if (trades) {
+          setTrades(trades);
+        }
+      }
+    } catch (error) {
+      console.error(error);
     }
+  };
+
+  useEffect(() => {
+    fetchTrades();
   }, [user?.id]);
 
   const addOrRemoveTriggerFromTrade = (add: boolean, triggerId: number) => {
