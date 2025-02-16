@@ -158,7 +158,7 @@ export async function updateTrade(trade: Trade) {
       return { errors: { name: ["Failed to update trade"] } };
     }
 
-    const updatedTrade: Trade = {
+    const updatedTrade = {
       id: response.rows[0].id,
       date: response.rows[0].date,
       symbol: response.rows[0].symbol,

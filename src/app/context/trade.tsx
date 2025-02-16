@@ -13,6 +13,9 @@ import React, {
 import { getTrades, createTrade } from "../lib/actions/trade-actions";
 import { Trade } from "../lib/types";
 import { useUserContext } from "./user";
+import { QueryResultRow } from "@vercel/postgres";
+import { format } from "path";
+import { set } from "zod";
 
 type TradeContext = {
   trades: Trade[];
@@ -30,7 +33,6 @@ export default function TradeContextProvider({
   children: ReactNode;
 }) {
   const [trades, setTrades] = useState<Trade[]>([]);
-  // TODO: Probably remove this state from here and relocate it to the trade form.
 
   const [trade, setTrade] = useState<Trade>({
     id: undefined,
@@ -89,6 +91,49 @@ export default function TradeContextProvider({
     }
   };
 
+  const formatTradeReturn = (trade: QueryResultRow): Trade => {
+    const formattedTrade = {
+      id: trade.id,
+      date: trade.date,
+      symbol: trade.symbol,
+      long: trade.long,
+      setupIds: trade.setupIds,
+      triggerIds: trade.triggerIds,
+      entryTime: trade.entryTime,
+      entryPrice: trade.entryPrice,
+      numberOfContracts: trade.numberOfContracts,
+      stop: trade.stop,
+      takeProfits: trade.takeProfits,
+      exitTime: trade.exitTime,
+      exitPrice: trade.exitPrice,
+      pnl: trade.pnl,
+      mistakeIds: trade.mistakeIds,
+      notes: trade.notes,
+    };
+    return formattedTrade;
+  };
+
+  const resetTrade = () => {  
+    setTrade({
+      id: undefined,
+      date: "",
+      symbol: "",
+      long: undefined,
+      setupIds: [],
+      triggerIds: [],
+      entryTime: "",
+      entryPrice: 0,
+      numberOfContracts: 0,
+      stop: 0,
+      takeProfits: [],
+      exitTime: "",
+      exitPrice: 0,
+      pnl: 0,
+      mistakeIds: [],
+      notes: "",
+    });
+  }
+
   const postTrade = async (prevState: any, formData: FormData) => {
     if (!user?.id) {
       console.error("User needs to be logged in to add a trade");
@@ -101,45 +146,9 @@ export default function TradeContextProvider({
         return;
       }
       if (typeof newTrade?.id === "number") {
-        setTrades((prev) => [
-          ...prev,
-          {
-            id: newTrade.id,
-            date: newTrade.date,
-            symbol: newTrade.symbol,
-            long: newTrade.long,
-            setupIds: newTrade.setup_ids,
-            triggerIds: newTrade.trigger_ids,
-            entryTime: newTrade.entry_time,
-            entryPrice: newTrade.entry_price,
-            numberOfContracts: newTrade.number_of_contracts,
-            stop: newTrade.stop,
-            takeProfits: newTrade.take_profits,
-            exitTime: newTrade.exit_time,
-            exitPrice: newTrade.exit_price,
-            pnl: newTrade.pnl,
-            mistakeIds: newTrade.mistake_ids,
-            notes: newTrade.notes,
-          },
-        ]);
-        setTrade({
-          id: undefined,
-          date: "",
-          symbol: "",
-          long: undefined,
-          setupIds: [],
-          triggerIds: [],
-          entryTime: "",
-          entryPrice: 0,
-          numberOfContracts: 0,
-          stop: 0,
-          takeProfits: [],
-          exitTime: "",
-          exitPrice: 0,
-          pnl: 0,
-          mistakeIds: [],
-          notes: "",
-        });
+        const formattedTrade = formatTradeReturn(newTrade);
+        setTrades((prev) => [...prev, formattedTrade]);
+        resetTrade();
       }
     } catch (error) {
       console.error(error);
