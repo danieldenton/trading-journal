@@ -106,18 +106,12 @@ export async function updateSetup(setup: SetupWithWinRate) {
         RETURNING id, name, trigger_ids, success_count, failure_count;
       `;
 
-    if (response.rowCount === 0) {
+      const updatedSetup = response.rows[0];
+
+    if (!updatedSetup) {
       console.log("Failed to update setup");
       return { errors: { name: ["Failed to update setup"] } };
     }
-
-    const updatedSetup: Setup = {
-      id: response.rows[0].id,
-      name: response.rows[0].name,
-      triggerIds: response.rows[0].trigger_ids,
-      successCount: response.rows[0].success_count,
-      failureCount: response.rows[0].failure_count,
-    };
 
     return updatedSetup;
   } catch (error) {

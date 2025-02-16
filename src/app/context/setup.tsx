@@ -19,12 +19,11 @@ import {
 import { Setup, SetupWithWinRate } from "../lib/types";
 import { calculateWinRate } from "../lib/utils";
 import { useUserContext } from "./user";
+import { QueryResultRow } from "@vercel/postgres";
 
 type SetupContext = {
   setups: SetupWithWinRate[];
   setSetups: Dispatch<SetStateAction<SetupWithWinRate[]>>;
-  setup: Setup;
-  setSetup: Dispatch<SetStateAction<Setup>>;
   addNewSetup: (prevState: any, formData: FormData) => void;
   patchAndSaveUpdatedSetupToSetups: (updatedSetup: SetupWithWinRate) => void;
   deleteSetupFromUser: (setupId: number) => void;
@@ -41,15 +40,19 @@ export default function SetupContextProvider({
   children: ReactNode;
 }) {
   const [setups, setSetups] = useState<SetupWithWinRate[]>([]);
-  const [selectedTriggerIds, setSelectedTriggerIds] = useState<number[]>([]);
-  const [setup, setSetup] = useState<Setup>({
-    id: 0,
-    name: "",
-    triggerIds: selectedTriggerIds,
-    successCount: 0,
-    failureCount: 0,
-  });
+  const [selectedTriggerIds, setSelectedTriggerIds] = useState<number[]>([])
   const { user } = useUserContext();
+
+  const formatSetup = (setup: QueryResultRow): SetupWithWinRate => {
+    return {
+      id: setup.id,
+      name: setup.name,
+      triggerIds: setup.trigger_ids,
+      successCount: setup.success_count,
+      failureCount: setup.failure_count,
+      winRate: calculateWinRate(setup.success_count, setup.failure_count),
+    };
+  };
 
   function addWinRateToSetups(
     setupsToUpdated: Setup[] | undefined
@@ -86,7 +89,7 @@ export default function SetupContextProvider({
     try {
       if (!user?.id) {
         console.error("User needs to be logged in to add a setup");
-        return "User needs to be logged in to add a setup";
+        return;
       }
 
       formData.append("triggerIds", JSON.stringify(selectedTriggerIds));
@@ -98,24 +101,8 @@ export default function SetupContextProvider({
       }
 
       if (typeof newSetup?.id === "number" && newSetup.id > 0) {
-        setSetups((prev) => [
-          ...prev,
-          {
-            id: newSetup.id,
-            name: newSetup.name,
-            triggerIds: newSetup.setupIds,
-            successCount: 0,
-            failureCount: 0,
-            winRate: 0,
-          },
-        ]);
-        setSetup({
-          id: 0,
-          name: "",
-          triggerIds: [],
-          successCount: 0,
-          failureCount: 0,
-        });
+        const formattedSetup = formatSetup(newSetup);
+        setSetups((prev) => [...prev, formattedSetup]);
       }
     } catch (error) {
       console.error(error);
@@ -128,17 +115,11 @@ export default function SetupContextProvider({
     try {
       const returnedSetup = await updateSetup(updatedSetup);
       if (typeof returnedSetup === "object" && "id" in returnedSetup) {
-        const setupWithWinRate = {
-          ...returnedSetup,
-          winRate: calculateWinRate(
-            returnedSetup.successCount,
-            returnedSetup.failureCount
-          ),
-        };
+        const formattedSetup = formatSetup(returnedSetup);
 
         setSetups((prevsetups) =>
           prevsetups.map((setup) =>
-            setup.id === setupWithWinRate.id ? setupWithWinRate : setup
+            setup.id === formattedSetup.id ? formattedSetup : setup
           )
         );
       }
@@ -151,7 +132,7 @@ export default function SetupContextProvider({
     try {
       if (!user?.id) {
         console.error("User needs to be logged in to delete a setup");
-        return "User needs to be logged in to delete a setup";
+        return;
       }
       await deleteSetup(setupId, user.id);
       setSetups((prev) => prev.filter((setup) => setup.id !== setupId));
@@ -175,8 +156,6 @@ export default function SetupContextProvider({
       value={{
         setups,
         setSetups,
-        setup,
-        setSetup,
         addNewSetup,
         patchAndSaveUpdatedSetupToSetups,
         deleteSetupFromUser,
