@@ -26,7 +26,7 @@ type SetupContext = {
   setSetups: Dispatch<SetStateAction<Setup[]>>;
   addNewSetup: (prevState: any, formData: FormData) => void;
   patchAndSaveUpdatedSetupToSetups: (updatedSetup: Setup) => void;
-  deleteSetupFromUser: (setupId: number) => void;
+  deleteSetupFromDb: (setupId: number) => void;
   addOrRemoveTriggerFromSetup: (add: boolean, triggerId: number) => void;
   selectedTriggerIds: number[];
   setSelectedTriggerIds: Dispatch<SetStateAction<number[]>>;
@@ -118,7 +118,7 @@ export default function SetupContextProvider({
     }
   };
 
-  const deleteSetupFromUser = async (setupId: number) => {
+  const deleteSetupFromDb = async (setupId: number) => {
     try {
       if (!user?.id) {
         console.error("User needs to be logged in to delete a setup");
@@ -148,7 +148,7 @@ export default function SetupContextProvider({
         setSetups,
         addNewSetup,
         patchAndSaveUpdatedSetupToSetups,
-        deleteSetupFromUser,
+        deleteSetupFromDb,
         addOrRemoveTriggerFromSetup,
         selectedTriggerIds,
         setSelectedTriggerIds,

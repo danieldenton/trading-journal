@@ -8,10 +8,10 @@ export default function DeleteModal({
   trigger,
   setModalType,
 }: TriggerModalProps) {
-  const { deleteTriggerFromUser } = useTriggerContext();
+  const { deleteTriggerFromDb } = useTriggerContext();
 
   const handleDelete = () => {
-    deleteTriggerFromUser(trigger.id);
+    deleteTriggerFromDb(trigger.id);
     setModalType(undefined);
   };
 

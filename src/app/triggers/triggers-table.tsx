@@ -89,17 +89,4 @@ export default function TriggersTable() {
       </table>
     </>
   );
-
-  //   <button
-  //   className="bg-gray-300 rounded text-black px-4"
-  //   onClick={() => deleteTriggerFromUser(trigger.name)}
-  // >
-  //   Edit
-  // </button>
-  // <button
-  //   className="bg-gray-300 rounded text-black px-2"
-  //   onClick={() => deleteTriggerFromUser(trigger.name)}
-  // >
-  //   Delete
-  // </button>
 }

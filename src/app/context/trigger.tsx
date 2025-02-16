@@ -31,7 +31,7 @@ type TriggerContext = {
   patchAndSaveUpdatedTriggerToTriggers: (
     updatedTrigger: TriggerWithWinRate
   ) => void;
-  deleteTriggerFromUser: (triggerId: number) => void;
+  deleteTriggerFromDb: (triggerId: number) => void;
 };
 
 export const TriggerContext = createContext<TriggerContext | undefined>(
@@ -127,7 +127,7 @@ export default function TriggerContextProvider({
     }
   };
 
-  const deleteTriggerFromUser = async (triggerId: number) => {
+  const deleteTriggerFromDb = async (triggerId: number) => {
     try {
       if (!user?.id) {
         console.error("User needs to be logged in to delete a trigger");
@@ -149,7 +149,7 @@ export default function TriggerContextProvider({
         setNewTriggerName,
         addNewTrigger,
         patchAndSaveUpdatedTriggerToTriggers,
-        deleteTriggerFromUser,
+        deleteTriggerFromDb,
       }}
     >
       {children}
