@@ -78,9 +78,9 @@ export default function TriggerContextProvider({
     return {
       id: trigger.id,
       name: trigger.name,
-      successCount: trigger.success_count, 
+      successCount: trigger.success_count,
       failureCount: trigger.failure_count,
-      winRate:calculateWinRate(trigger.success_count, trigger.failure_count)
+      winRate: calculateWinRate(trigger.success_count, trigger.failure_count),
     };
   };
 
