@@ -2,13 +2,14 @@
 
 import { sql } from "@vercel/postgres";
 import { Trade } from "../types";
+import { newTradeSchema, updateTradeSchema } from "../schema/trade-schema";
 
 // TODO: This was copied from trigger actions. Update this to be trade actions.
 
 export async function getTrades(userId: number | undefined) {
   try {
     const response = await sql`SELECT * FROM trades WHERE user_id = ${userId}`;
-    
+
     const trades = response.rows.map((row) => ({
       id: row.id,
       date: row.date,
@@ -45,43 +46,55 @@ export async function createTrade(
   userId: number | undefined
 ) {
   try {
-//     if (!userId) {
-//       console.error("User ID is missing");
-//       return { errors: { name: ["User ID is missing"] } };
-//     }
+    if (!userId) {
+      console.error("User ID is missing");
+      return { errors: { name: ["User ID is missing"] } };
+    }
 
-//     const result = newTriggerSchema.safeParse(Object.fromEntries(formData));
+    const result = newTradeSchema.safeParse(Object.fromEntries(formData));
 
-//     if (!result.success) {
-//       console.log(result.error.flatten().fieldErrors);
-//       return { errors: result.error.flatten().fieldErrors };
-//     }
+    if (!result.success) {
+      console.log(result.error.flatten().fieldErrors);
+      return { errors: result.error.flatten().fieldErrors };
+    }
 
-//     const { name } = result.data;
+    const {
+      date,
+      symbol,
+      long,
+      setupIds,
+      triggerIds,
+      entryTime,
+      entryPrice,
+      numberOfContracts,
+      stop,
+      takeProfits,
+      exitTime,
+      exitPrice,
+      pnl,
+      mistakeIds,
+      notes,
+    } = result.data;
 
-//     const existingTrigger = await sql`
-//         SELECT 1 FROM triggers WHERE name= ${name} AND user_id = ${userId};
-//       `;
+    const formattedSetupIds = `{${setupIds.join(",")}}`;
+    const formattedTriggerIds = `{${triggerIds.join(",")}}`;
+    const formattedTakeProfits = `{${takeProfits.join(",")}}`;
+    const formattedMistakeIds = `{${mistakeIds.join(",")}}`;
 
-//     if (existingTrigger.rows.length > 0) {
-//       console.log("Trigger already exists");
-//       return { errors: { name: ["Trigger already exists"] } };
-//     }
+    const response = await sql`
+            INSERT INTO trades (date, symbol, long, setup_ids, trigger_ids, entry_time, entry_price, number_of_contracts, stop, take_profits, exit_time, exit_price, pnl, mistake_ids, notes, user_id)
+            VALUES (${date}, ${symbol}, ${long}, ${formattedSetupIds}, ${formattedTriggerIds}, ${entryTime}, ${entryPrice}, ${numberOfContracts}, ${stop}, ${formattedTakeProfits}, ${exitTime}, ${exitPrice}, ${pnl}, ${formattedMistakeIds}, ${notes}, ${userId})
+             RETURNING id, date, symbol, long, setup_ids, trigger_ids, entry_time, entry_price, number_of_contracts, stop, take_profits, exit_time, exit_price, pnl, mistake_ids, notes;
+          `;
 
-//     const response = await sql`
-//             INSERT INTO triggers (name, user_id)
-//             VALUES (${name}, ${userId})
-//              RETURNING id, name
-//           `;
+    const trade = response.rows[0];
 
-//     const trigger = response.rows[0];
+    if (!trade) {
+      console.log("Failed to create trade");
+      return { errors: { name: ["Failed to create trade"] } };
+    }
 
-//     if (!trigger) {
-//       console.log("Failed to create trigger");
-//       return { errors: { name: ["Failed to create trigger"] } };
-//     }
-
-//     return trigger;
+    return trade;
   } catch (error) {
     console.error(error);
   }
@@ -90,46 +103,37 @@ export async function createTrade(
 export async function updateTrade(trade: Trade) {
   try {
     // const result = updateTriggerSchema.safeParse(trigger);
-
     // if (!result.success) {
     //   console.log(result.error.flatten().fieldErrors);
     //   return { errors: result.error.flatten().fieldErrors };
     // }
-
     // const { id, name, successCount, failureCount } = result.data;
-
     // const response = await sql`
     //     UPDATE triggers
-    //     SET 
+    //     SET
     //       name = ${name},
     //       success_count = ${successCount},
     //       failure_count = ${failureCount}
     //     WHERE id = ${id}
     //     RETURNING id, name, success_count, failure_count;
     //   `;
-
     // if (response.rowCount === 0) {
     //   console.log("Failed to update trigger");
     //   return { errors: { name: ["Failed to update trigger"] } };
     // }
-
     // const updatedTrigger: Trigger = {
     //   id: response.rows[0].id,
     //   name: response.rows[0].name,
     //   successCount: response.rows[0].success_count,
     //   failureCount: response.rows[0].failure_count,
     // };
-
     // return updatedTrigger;
   } catch (error) {
     console.error(error);
   }
 }
 
-export async function deleteTrade(
-  tradeId: number,
-  userId: number | undefined
-) {
+export async function deleteTrade(tradeId: number, userId: number | undefined) {
   try {
     const response = await sql`
         DELETE FROM trades WHERE id = ${tradeId} AND user_id = ${userId}

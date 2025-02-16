@@ -27,7 +27,10 @@ export async function getSetups(userId: number | undefined) {
   }
 }
 
-export async function createSetup(formData: FormData, userId: number | undefined) {
+export async function createSetup(
+  formData: FormData,
+  userId: number | undefined
+) {
   if (!userId) {
     console.error("User ID is missing");
     return { errors: { name: ["User ID is missing"] } };
@@ -39,7 +42,7 @@ export async function createSetup(formData: FormData, userId: number | undefined
     : [];
   const result = newSetupSchema.safeParse({
     name: formDataObject.name,
-    triggerIds, 
+    triggerIds,
   });
 
   if (!result.success) {
@@ -58,7 +61,7 @@ export async function createSetup(formData: FormData, userId: number | undefined
     return { errors: { name: ["Setup already exists"] } };
   }
 
-    const formattedTriggerIds = `{${validTriggerIds.join(",")}}`
+  const formattedTriggerIds = `{${validTriggerIds.join(",")}}`;
 
   const response = await sql`
     INSERT INTO setups (name, trigger_ids, user_id)
@@ -66,9 +69,14 @@ export async function createSetup(formData: FormData, userId: number | undefined
     RETURNING id, name, trigger_ids;
   `;
 
-  return response.rows[0];
-}
+  const setup = response.rows[0];
+  if (!setup) {
+    console.log("Failed to create setup");
+    return { errors: { name: ["Failed to create setup"] } };
+  }
 
+  return setup;
+}
 
 export async function updateSetup(setup: SetupWithWinRate) {
   try {
