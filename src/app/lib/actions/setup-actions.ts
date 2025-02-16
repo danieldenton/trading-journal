@@ -52,30 +52,34 @@ export async function createSetup(
 
   const { name, triggerIds: validTriggerIds } = result.data;
 
-  const existingSetup = await sql`
+  try {
+    const existingSetup = await sql`
     SELECT 1 FROM setups WHERE name = ${name} AND user_id = ${userId};
   `;
 
-  if (existingSetup.rows.length > 0) {
-    console.log("Setup already exists");
-    return { errors: { name: ["Setup already exists"] } };
-  }
+    if (existingSetup.rows.length > 0) {
+      console.log("Setup already exists");
+      return { errors: { name: ["Setup already exists"] } };
+    }
 
-  const formattedTriggerIds = `{${validTriggerIds.join(",")}}`;
+    const formattedTriggerIds = `{${validTriggerIds.join(",")}}`;
 
-  const response = await sql`
+    const response = await sql`
     INSERT INTO setups (name, trigger_ids, user_id)
     VALUES (${name}, ${formattedTriggerIds}, ${userId})
     RETURNING id, name, trigger_ids;
   `;
 
-  const setup = response.rows[0];
-  if (!setup) {
-    console.log("Failed to create setup");
-    return { errors: { name: ["Failed to create setup"] } };
-  }
+    const setup = response.rows[0];
+    if (!setup) {
+      console.log("Failed to create setup");
+      return { errors: { name: ["Failed to create setup"] } };
+    }
 
-  return setup;
+    return setup;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 export async function updateSetup(setup: SetupWithWinRate) {

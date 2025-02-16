@@ -34,21 +34,21 @@ export async function createTrigger(
   formData: FormData,
   userId: number | undefined
 ) {
+  if (!userId) {
+    console.error("User ID is missing");
+    return { errors: { name: ["User ID is missing"] } };
+  }
+
+  const result = newTriggerSchema.safeParse(Object.fromEntries(formData));
+
+  if (!result.success) {
+    console.log(result.error.flatten().fieldErrors);
+    return { errors: result.error.flatten().fieldErrors };
+  }
+
+  const { name } = result.data;
+
   try {
-    if (!userId) {
-      console.error("User ID is missing");
-      return { errors: { name: ["User ID is missing"] } };
-    }
-
-    const result = newTriggerSchema.safeParse(Object.fromEntries(formData));
-
-    if (!result.success) {
-      console.log(result.error.flatten().fieldErrors);
-      return { errors: result.error.flatten().fieldErrors };
-    }
-
-    const { name } = result.data;
-
     const existingTrigger = await sql`
         SELECT 1 FROM triggers WHERE name= ${name} AND user_id = ${userId};
       `;

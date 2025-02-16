@@ -57,30 +57,30 @@ export async function createTrade(
     return { errors: result.error.flatten().fieldErrors };
   }
 
+  const {
+    date,
+    symbol,
+    long,
+    setupIds,
+    triggerIds,
+    entryTime,
+    entryPrice,
+    numberOfContracts,
+    stop,
+    takeProfits,
+    exitTime,
+    exitPrice,
+    pnl,
+    mistakeIds,
+    notes,
+  } = result.data;
+
+  const formattedSetupIds = `{${setupIds.join(",")}}`;
+  const formattedTriggerIds = `{${triggerIds.join(",")}}`;
+  const formattedTakeProfits = `{${takeProfits.join(",")}}`;
+  const formattedMistakeIds = `{${mistakeIds.join(",")}}`;
+
   try {
-    const {
-      date,
-      symbol,
-      long,
-      setupIds,
-      triggerIds,
-      entryTime,
-      entryPrice,
-      numberOfContracts,
-      stop,
-      takeProfits,
-      exitTime,
-      exitPrice,
-      pnl,
-      mistakeIds,
-      notes,
-    } = result.data;
-
-    const formattedSetupIds = `{${setupIds.join(",")}}`;
-    const formattedTriggerIds = `{${triggerIds.join(",")}}`;
-    const formattedTakeProfits = `{${takeProfits.join(",")}}`;
-    const formattedMistakeIds = `{${mistakeIds.join(",")}}`;
-
     const response = await sql`
             INSERT INTO trades (date, symbol, long, setup_ids, trigger_ids, entry_time, entry_price, number_of_contracts, stop, take_profits, exit_time, exit_price, pnl, mistake_ids, notes, user_id)
             VALUES (${date}, ${symbol}, ${long}, ${formattedSetupIds}, ${formattedTriggerIds}, ${entryTime}, ${entryPrice}, ${numberOfContracts}, ${stop}, ${formattedTakeProfits}, ${exitTime}, ${exitPrice}, ${pnl}, ${formattedMistakeIds}, ${notes}, ${userId})
