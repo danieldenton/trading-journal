@@ -101,33 +101,83 @@ export async function createTrade(
 }
 
 export async function updateTrade(trade: Trade) {
+  const result = updateTradeSchema.safeParse(trade);
+  if (!result.success) {
+    console.log(result.error.flatten().fieldErrors);
+    return { errors: result.error.flatten().fieldErrors };
+  }
+  const {
+    id,
+    date,
+    symbol,
+    long,
+    setupIds,
+    triggerIds,
+    entryTime,
+    entryPrice,
+    numberOfContracts,
+    stop,
+    takeProfits,
+    exitTime,
+    exitPrice,
+    pnl,
+    mistakeIds,
+    notes,
+  } = result.data;
+
+  const formattedSetupIds = `{${setupIds.join(",")}}`;
+  const formattedTriggerIds = `{${triggerIds.join(",")}}`;
+  const formattedTakeProfits = `{${takeProfits.join(",")}}`;
+  const formattedMistakeIds = `{${mistakeIds.join(",")}}`;
+
   try {
-    // const result = updateTriggerSchema.safeParse(trigger);
-    // if (!result.success) {
-    //   console.log(result.error.flatten().fieldErrors);
-    //   return { errors: result.error.flatten().fieldErrors };
-    // }
-    // const { id, name, successCount, failureCount } = result.data;
-    // const response = await sql`
-    //     UPDATE triggers
-    //     SET
-    //       name = ${name},
-    //       success_count = ${successCount},
-    //       failure_count = ${failureCount}
-    //     WHERE id = ${id}
-    //     RETURNING id, name, success_count, failure_count;
-    //   `;
-    // if (response.rowCount === 0) {
-    //   console.log("Failed to update trigger");
-    //   return { errors: { name: ["Failed to update trigger"] } };
-    // }
-    // const updatedTrigger: Trigger = {
-    //   id: response.rows[0].id,
-    //   name: response.rows[0].name,
-    //   successCount: response.rows[0].success_count,
-    //   failureCount: response.rows[0].failure_count,
-    // };
-    // return updatedTrigger;
+    const response = await sql`
+        UPDATE trades
+         SET
+            date = ${date},
+            symbol = ${symbol},
+            long = ${long},
+            setup_ids = ${formattedSetupIds},
+            trigger_ids = ${formattedTriggerIds},
+            entry_time = ${entryTime},
+            entry_price = ${entryPrice},
+            number_of_contracts = ${numberOfContracts},
+            stop = ${stop},
+            take_profits = ${formattedTakeProfits},
+            exit_time = ${exitTime},
+            exit_price = ${exitPrice},
+            pnl = ${pnl},
+            mistake_ids = ${formattedMistakeIds},
+            notes = ${notes}
+         WHERE id = ${id}
+         RETURNING id, date, symbol, long, setup_ids, trigger_ids, entry_time, entry_price, number_of_contracts, stop, take_profits, exit_time, exit_price, pnl, mistake_ids, notes;
+       `;
+
+    if (response.rowCount === 0) {
+      console.log("Failed to update trade");
+      return { errors: { name: ["Failed to update trade"] } };
+    }
+
+    const updatedTrade: Trade = {
+      id: response.rows[0].id,
+      date: response.rows[0].date,
+      symbol: response.rows[0].symbol,
+      long: response.rows[0].long,
+      setupIds: response.rows[0].setup_ids,
+      triggerIds: response.rows[0].trigger_ids,
+      entryTime: response.rows[0].entry_time,
+      entryPrice: response.rows[0].entry_price,
+      numberOfContracts: response.rows[0].number_of_contracts,
+      stop: response.rows[0].stop,
+      takeProfits: response.rows[0].take_profits,
+      exitTime: response.rows[0].exit_time,
+      exitPrice: response.rows[0].exit_price,
+      pnl: response.rows[0].pnl,
+      mistakeIds: response.rows[0].mistake_ids,
+      notes: response.rows[0].notes,
+    };
+
+    return updatedTrade;
   } catch (error) {
     console.error(error);
   }
