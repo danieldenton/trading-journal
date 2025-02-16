@@ -16,16 +16,16 @@ import {
   updateSetup,
   deleteSetup,
 } from "../lib/actions/setup-actions";
-import { Setup, SetupWithWinRate } from "../lib/types";
+import { Setup } from "../lib/types";
 import { calculateWinRate } from "../lib/utils";
 import { useUserContext } from "./user";
 import { QueryResultRow } from "@vercel/postgres";
 
 type SetupContext = {
-  setups: SetupWithWinRate[];
-  setSetups: Dispatch<SetStateAction<SetupWithWinRate[]>>;
+  setups: Setup[];
+  setSetups: Dispatch<SetStateAction<Setup[]>>;
   addNewSetup: (prevState: any, formData: FormData) => void;
-  patchAndSaveUpdatedSetupToSetups: (updatedSetup: SetupWithWinRate) => void;
+  patchAndSaveUpdatedSetupToSetups: (updatedSetup: Setup) => void;
   deleteSetupFromUser: (setupId: number) => void;
   addOrRemoveTriggerFromSetup: (add: boolean, triggerId: number) => void;
   selectedTriggerIds: number[];
@@ -39,11 +39,11 @@ export default function SetupContextProvider({
 }: {
   children: ReactNode;
 }) {
-  const [setups, setSetups] = useState<SetupWithWinRate[]>([]);
+  const [setups, setSetups] = useState<Setup[]>([]);
   const [selectedTriggerIds, setSelectedTriggerIds] = useState<number[]>([]);
   const { user } = useUserContext();
 
-  const formatSetup = (setup: QueryResultRow): SetupWithWinRate => {
+  const formatSetup = (setup: QueryResultRow): Setup => {
     return {
       id: setup.id,
       name: setup.name,
@@ -100,7 +100,7 @@ export default function SetupContextProvider({
   };
 
   const patchAndSaveUpdatedSetupToSetups = async (
-    updatedSetup: SetupWithWinRate
+    updatedSetup: Setup
   ) => {
     try {
       const returnedSetup = await updateSetup(updatedSetup);

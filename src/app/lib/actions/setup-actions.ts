@@ -2,7 +2,7 @@
 
 import { sql } from "@vercel/postgres";
 import { newSetupSchema, updateSetupSchema } from "../schema/setup-schema";
-import { SetupWithWinRate, Setup } from "../types";
+import { Setup } from "../types";
 
 export async function getSetups(userId: number | undefined) {
   try {
@@ -76,7 +76,7 @@ export async function createSetup(
   }
 }
 
-export async function updateSetup(setup: SetupWithWinRate) {
+export async function updateSetup(setup: Setup) {
   try {
     const result = updateSetupSchema.safeParse(setup);
 

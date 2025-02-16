@@ -51,13 +51,10 @@ export type Setup = {
   triggerIds: number[];
   successCount: number;
   failureCount: number;
-};
-
-export type SetupWithWinRate = Setup & {
   winRate: number;
 };
 
 export type SetupModalProps = {
-  setup: SetupWithWinRate;
+  setup: Setup;
   setModalType: Dispatch<SetStateAction<"delete" | "edit" | undefined>>;
 };
