@@ -13,17 +13,25 @@ export default function MiniTriggerTable({
 }) {
   const { triggers } = useTriggerContext();
   const { setTriggerIds, triggerIds } = useTradeContext();
-  const { addOrRemoveTriggerFromSetup, selectedTriggerIds } = useSetupContext();
+  const { setSelectedTriggerIds, selectedTriggerIds } = useSetupContext();
 
   const addOrRemoveTriggerFromTrade = (triggerId: number) => {
-      if (!triggerIds.includes(triggerId)) {
-        setTriggerIds((prevState) => [...prevState, triggerId]);
-      } else {
-        setTriggerIds((prevState) =>
-          prevState.filter((id) => id !== triggerId)
-        );
-      }
-    };
+    if (!triggerIds.includes(triggerId)) {
+      setTriggerIds((prevState) => [...prevState, triggerId]);
+    } else {
+      setTriggerIds((prevState) => prevState.filter((id) => id !== triggerId));
+    }
+  };
+
+  const addOrRemoveTriggerFromSetup = (triggerId: number) => {
+    if (!selectedTriggerIds.includes(triggerId)) {
+      setSelectedTriggerIds((prevState) => [...prevState, triggerId]);
+    } else {
+      setSelectedTriggerIds((prevState) =>
+        prevState.filter((id) => id !== triggerId)
+      );
+    }
+  };
 
   const handleAddTrigger = (triggerId: number) => {
     if (setup) {

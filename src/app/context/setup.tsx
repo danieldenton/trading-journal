@@ -27,7 +27,6 @@ type SetupContext = {
   addNewSetup: (prevState: any, formData: FormData) => void;
   patchAndSaveUpdatedSetupToSetups: (updatedSetup: Setup) => void;
   deleteSetupFromDb: (setupId: number) => void;
-  addOrRemoveTriggerFromSetup: (triggerId: number) => void;
   selectedTriggerIds: number[];
   setSelectedTriggerIds: Dispatch<SetStateAction<number[]>>;
 };
@@ -131,16 +130,6 @@ export default function SetupContextProvider({
     }
   };
 
-  const addOrRemoveTriggerFromSetup = (triggerId: number) => {
-    if (!selectedTriggerIds.includes(triggerId)) {
-      setSelectedTriggerIds((prevState) => [...prevState, triggerId]);
-    } else {
-      setSelectedTriggerIds((prevState) =>
-        prevState.filter((id) => id !== triggerId)
-      );
-    }
-  };
-
   return (
     <SetupContext.Provider
       value={{
@@ -149,7 +138,6 @@ export default function SetupContextProvider({
         addNewSetup,
         patchAndSaveUpdatedSetupToSetups,
         deleteSetupFromDb,
-        addOrRemoveTriggerFromSetup,
         selectedTriggerIds,
         setSelectedTriggerIds,
       }}
