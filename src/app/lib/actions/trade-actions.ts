@@ -45,19 +45,19 @@ export async function createTrade(
   formData: FormData,
   userId: number | undefined
 ) {
+  if (!userId) {
+    console.error("User ID is missing");
+    return { errors: { name: ["User ID is missing"] } };
+  }
+
+  const result = newTradeSchema.safeParse(Object.fromEntries(formData));
+
+  if (!result.success) {
+    console.log(result.error.flatten().fieldErrors);
+    return { errors: result.error.flatten().fieldErrors };
+  }
+
   try {
-    if (!userId) {
-      console.error("User ID is missing");
-      return { errors: { name: ["User ID is missing"] } };
-    }
-
-    const result = newTradeSchema.safeParse(Object.fromEntries(formData));
-
-    if (!result.success) {
-      console.log(result.error.flatten().fieldErrors);
-      return { errors: result.error.flatten().fieldErrors };
-    }
-
     const {
       date,
       symbol,
