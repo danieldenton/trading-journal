@@ -1,21 +1,29 @@
 "use client";
-import React from "react";
+
+import React, { useEffect } from "react";
 
 import { useSetupContext } from "../context/setup";
 import { useTradeContext } from "../context/trade";
+import { Setup } from "../lib/types";
 
 export default function MiniSetupTable() {
   const { setups } = useSetupContext();
-  const { setSetupIds, setupIds } = useTradeContext();
+  const { setSetupIds, setupIds, setTriggerIds, triggerIds } =
+    useTradeContext();
 
-  const handleAddSetup = (setupId: number) => {
-    if (!setupIds.includes(setupId)) {
+  const handleAddSetup = (setup: Setup) => {
+    if (!setupIds.includes(setup.id)) {
       setSetupIds((prevState) => {
-        return [...prevState, setupId];
+        return [...prevState, setup.id];
+      });
+      setup.triggerIds.forEach((triggerId) => {
+        if (!triggerIds.includes(triggerId)) {
+          setTriggerIds((prevState) => [...prevState, triggerId]);
+        }
       });
     } else {
       setSetupIds((prevState) => {
-        return prevState.filter((id) => id !== setupId);
+        return prevState.filter((id) => id !== setup.id);
       });
     }
   };
@@ -28,7 +36,7 @@ export default function MiniSetupTable() {
           <input
             type="checkbox"
             checked={setupIds.includes(setup.id)}
-            onChange={() => handleAddSetup(setup.id)}
+            onChange={() => handleAddSetup(setup)}
           />
         </td>
         <td className="border border-gray-300 p-2 text-center font-bold">
