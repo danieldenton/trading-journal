@@ -8,7 +8,7 @@ export async function getSetups(userId: number | undefined) {
   try {
     const response = await sql`SELECT * FROM setups WHERE user_id = ${userId}`;
 
-    const setups = response.rows
+    const setups = response.rows;
 
     if (!setups) {
       console.log("User has no setups");
@@ -100,7 +100,7 @@ export async function updateSetup(setup: Setup) {
         RETURNING id, name, trigger_ids, success_count, failure_count;
       `;
 
-      const updatedSetup = response.rows[0];
+    const updatedSetup = response.rows[0];
 
     if (!updatedSetup) {
       console.log("Failed to update setup");
@@ -113,10 +113,10 @@ export async function updateSetup(setup: Setup) {
   }
 }
 
-export async function deleteSetup(setupId: number, userId: number | undefined) {
+export async function deleteSetup(setupId: number) {
   try {
     const response = await sql`
-        DELETE FROM setups WHERE id = ${setupId} AND user_id = ${userId}
+        DELETE FROM setups WHERE id = ${setupId} 
       `;
 
     if (response.rowCount === 0) {

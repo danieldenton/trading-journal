@@ -119,11 +119,7 @@ export default function SetupContextProvider({
 
   const deleteSetupFromDb = async (setupId: number) => {
     try {
-      if (!user?.id) {
-        console.error("User needs to be logged in to delete a setup");
-        return;
-      }
-      await deleteSetup(setupId, user.id);
+      await deleteSetup(setupId);
       setSetups((prev) => prev.filter((setup) => setup.id !== setupId));
     } catch (error) {
       console.error(error);
