@@ -4,8 +4,6 @@ import { sql } from "@vercel/postgres";
 import { Trade } from "../types";
 import { newTradeSchema, updateTradeSchema } from "../schema/trade-schema";
 
-// TODO: This was copied from trigger actions. Update this to be trade actions.
-
 export async function getTrades(userId: number | undefined) {
   if (!userId) {
     console.log("User ID is missing");
