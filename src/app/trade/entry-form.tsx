@@ -2,7 +2,7 @@
 
 import React, { useState, ChangeEvent } from "react";
 
-export default function EntryInputs() {
+export default function EntryForm() {
   const [longOrShort, setLongOrShort] = useState<"long" | "short" | undefined>(
     undefined
   );
@@ -25,13 +25,6 @@ export default function EntryInputs() {
 
   return (
     <>
-      <input
-        type="text"
-        name="symbol"
-        placeholder="symbol"
-        className="m-2 p-1 rounded-lg border-black border-2"
-      />
-      <div className="flex flex-row justify-center items-center w-full">
       <div className="flex items-center">
         <input
           type="checkbox"
@@ -40,7 +33,7 @@ export default function EntryInputs() {
           checked={longOrShort === "long"}
           className="m-2"
         />
-        <label htmlFor="long">Long</label>
+        <label htmlFor="longOrShort">Long</label>
       </div>
       <div className="flex items-center">
         <input
@@ -50,8 +43,7 @@ export default function EntryInputs() {
           checked={longOrShort === "short"}
           className="m-2"
         />
-        <label htmlFor="short">Short</label>
-      </div>
+        <label htmlFor="longOrShort">Long or Short</label>
       </div>
       <input
         type="text"

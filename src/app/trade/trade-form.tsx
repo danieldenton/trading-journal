@@ -4,6 +4,7 @@ import { useTradeContext } from "../context/trade";
 import MiniSetupTable from "./mini-setup-table";
 import MiniTriggerTable from "../components/mini-trigger-table";
 import EntryInputs from "./entry-inputs";
+import TakeProfit from "./take-profit";
 
 export default function TradeForm() {
   const { triggerIds, setTriggerIds, postTrade } = useTradeContext();
@@ -14,6 +15,7 @@ export default function TradeForm() {
       className="flex flex-col items-center justify-center p-10 rounded-lg border-4 border-red-600"
     >
       <EntryInputs />
+      <TakeProfit />
       <div className="flex flex-row justify-center items-center w-full">
         <MiniSetupTable />
         <div className="flex flex-col justify-center items-center border-white border-2">
@@ -23,6 +25,10 @@ export default function TradeForm() {
             setTriggerState={setTriggerIds}
           />
         </div>
+      </div>
+      <div>
+        <label htmlFor="notes">Notes:</label>
+        <textarea  name="notes" />
       </div>
 
       <button
