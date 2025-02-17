@@ -26,6 +26,8 @@ type TradeContext = {
   setSetupIds: Dispatch<SetStateAction<number[]>>;
   triggerIds: number[];
   setTriggerIds: Dispatch<SetStateAction<number[]>>;
+  independentTriggerIds: number[];
+  setIndependentTriggerIds: Dispatch<SetStateAction<number[]>>;
   setMistakeIds: Dispatch<SetStateAction<number[]>>;
   setTakeProfits: Dispatch<SetStateAction<number[]>>;
   postTrade: (prevState: any, formData: FormData) => void;
@@ -43,6 +45,7 @@ export default function TradeContextProvider({
   const [trades, setTrades] = useState<Trade[]>([]);
   const [setupIds, setSetupIds] = useState<number[]>([]);
   const [triggerIds, setTriggerIds] = useState<number[]>([]);
+  const [independentTriggerIds, setIndependentTriggerIds] = useState<number[]>([]);
   const [mistakeIds, setMistakeIds] = useState<number[]>([]);
   const [takeProfits, setTakeProfits] = useState<number[]>([]);
 
@@ -144,6 +147,8 @@ export default function TradeContextProvider({
         setSetupIds,
         triggerIds,
         setTriggerIds,
+        independentTriggerIds,
+        setIndependentTriggerIds,
         setMistakeIds,
         setTakeProfits,
         postTrade,
