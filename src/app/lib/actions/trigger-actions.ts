@@ -110,13 +110,10 @@ export async function updateTrigger(trigger: TriggerWithWinRate) {
   }
 }
 
-export async function deleteTrigger(
-  triggerId: number,
-  userId: number | undefined
-) {
+export async function deleteTrigger(triggerId: number) {
   try {
     const response = await sql`
-        DELETE FROM triggers WHERE id = ${triggerId} AND user_id = ${userId}
+        DELETE FROM triggers WHERE id = ${triggerId} 
       `;
 
     if (response.rowCount === 0) {

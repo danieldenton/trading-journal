@@ -129,11 +129,7 @@ export default function TriggerContextProvider({
 
   const deleteTriggerFromDb = async (triggerId: number) => {
     try {
-      if (!user?.id) {
-        console.error("User needs to be logged in to delete a trigger");
-        return "User needs to be logged in to delete a trigger";
-      }
-      await deleteTrigger(triggerId, user.id);
+      await deleteTrigger(triggerId);
       setTriggers((prev) => prev.filter((trigger) => trigger.id !== triggerId));
     } catch (error) {
       console.error(error);
