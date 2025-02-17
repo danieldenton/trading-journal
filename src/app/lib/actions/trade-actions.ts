@@ -10,25 +10,7 @@ export async function getTrades(userId: number | undefined) {
   try {
     const response = await sql`SELECT * FROM trades WHERE user_id = ${userId}`;
 
-    const trades = response.rows.map((row) => ({
-      id: row.id,
-      date: row.date,
-      name: row.date,
-      symbol: row.symbol,
-      long: row.long,
-      setupIds: row.setup_ids,
-      triggerIds: row.trigger_ids,
-      entryTime: row.entry_time,
-      entryPrice: row.entry_price,
-      numberOfContracts: row.number_of_contracts,
-      stop: row.stop,
-      takeProfits: row.take_profits,
-      exitTime: row.exit_time,
-      exitPrice: row.exit_price,
-      pnl: row.pnl,
-      mistakeIds: row.mistake_ids,
-      notes: row.notes,
-    }));
+    const trades = response.rows;
 
     if (!trades) {
       console.log("User has no trades");
@@ -166,10 +148,10 @@ export async function updateTrade(trade: Trade) {
   }
 }
 
-export async function deleteTrade(tradeId: number, userId: number | undefined) {
+export async function deleteTrade(tradeId: number) {
   try {
     const response = await sql`
-        DELETE FROM trades WHERE id = ${tradeId} AND user_id = ${userId}
+        DELETE FROM trades WHERE id = ${tradeId} 
       `;
 
     if (response.rowCount === 0) {
