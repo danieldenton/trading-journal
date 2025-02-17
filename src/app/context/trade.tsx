@@ -22,6 +22,7 @@ import { QueryResultRow } from "@vercel/postgres";
 
 type TradeContext = {
   trades: Trade[];
+  setupIds: number[];
   setSetupIds: Dispatch<SetStateAction<number[]>>;
   triggerIds: number[];
   setTriggerIds: Dispatch<SetStateAction<number[]>>;
@@ -139,6 +140,7 @@ export default function TradeContextProvider({
     <TradeContext.Provider
       value={{
         trades,
+        setupIds,
         setSetupIds,
         triggerIds,
         setTriggerIds,
