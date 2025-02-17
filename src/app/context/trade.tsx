@@ -92,6 +92,9 @@ export default function TradeContextProvider({
       console.error("User needs to be logged in to add a trade");
       return;
     }
+    formData.append("setupIds", JSON.stringify(setupIds));
+    formData.append("triggerIds", JSON.stringify(triggerIds));
+    formData.append("mistakeIds", JSON.stringify(mistakeIds));
     try {
       const newTrade = await createTrade(formData, user.id);
       if (newTrade?.errors) {

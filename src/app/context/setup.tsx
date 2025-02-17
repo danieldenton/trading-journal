@@ -42,7 +42,7 @@ export default function SetupContextProvider({
   const [selectedTriggerIds, setSelectedTriggerIds] = useState<number[]>([]);
   const { user } = useUserContext();
 
-  const formatSetup = (setup: QueryResultRow): Setup => {
+  const formatSetupReturn = (setup: QueryResultRow): Setup => {
     return {
       id: setup.id,
       name: setup.name,
@@ -60,7 +60,9 @@ export default function SetupContextProvider({
     try {
       const userSetups = await getSetups(user.id);
       if (userSetups) {
-        const formattedSetups = userSetups.map((setup) => formatSetup(setup));
+        const formattedSetups = userSetups.map((setup) =>
+          formatSetupReturn(setup)
+        );
         const sortedSetups =
           formattedSetups.sort((a, b) => b.winRate - a.winRate) || [];
         setSetups(sortedSetups);
@@ -75,14 +77,12 @@ export default function SetupContextProvider({
   }, [user?.id]);
 
   const addNewSetup = async (prevState: any, formData: FormData) => {
+    if (!user?.id) {
+      console.error("User needs to be logged in to add a setup");
+      return;
+    }
+    formData.append("triggerIds", JSON.stringify(selectedTriggerIds));
     try {
-      if (!user?.id) {
-        console.error("User needs to be logged in to add a setup");
-        return;
-      }
-
-      formData.append("triggerIds", JSON.stringify(selectedTriggerIds));
-
       const newSetup = await createSetup(formData, user.id);
       if (newSetup?.errors) {
         const { name } = newSetup.errors;
@@ -90,7 +90,7 @@ export default function SetupContextProvider({
       }
 
       if (typeof newSetup?.id === "number" && newSetup.id > 0) {
-        const formattedSetup = formatSetup(newSetup);
+        const formattedSetup = formatSetupReturn(newSetup);
         setSetups((prev) => [...prev, formattedSetup]);
       }
     } catch (error) {
@@ -98,13 +98,11 @@ export default function SetupContextProvider({
     }
   };
 
-  const patchAndSaveUpdatedSetupToSetups = async (
-    updatedSetup: Setup
-  ) => {
+  const patchAndSaveUpdatedSetupToSetups = async (updatedSetup: Setup) => {
     try {
       const returnedSetup = await updateSetup(updatedSetup);
       if (typeof returnedSetup === "object" && "id" in returnedSetup) {
-        const formattedSetup = formatSetup(returnedSetup);
+        const formattedSetup = formatSetupReturn(returnedSetup);
 
         setSetups((prevsetups) =>
           prevsetups.map((setup) =>
