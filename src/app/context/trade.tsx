@@ -10,7 +10,12 @@ import React, {
   ReactNode,
 } from "react";
 
-import { getTrades, createTrade, updateTrade, deleteTrade } from "../lib/actions/trade-actions";
+import {
+  getTrades,
+  createTrade,
+  updateTrade,
+  deleteTrade,
+} from "../lib/actions/trade-actions";
 import { Trade } from "../lib/types";
 import { useUserContext } from "./user";
 import { QueryResultRow } from "@vercel/postgres";
@@ -23,6 +28,8 @@ type TradeContext = {
   setMistakeIds: Dispatch<SetStateAction<number[]>>;
   setTakeProfits: Dispatch<SetStateAction<number[]>>;
   postTrade: (prevState: any, formData: FormData) => void;
+  patchAndSaveUpdatedTradeToTrades: (updatedTrade: Trade) => void;
+  deleteTradeFromDb: (tradeId: number) => void;
 };
 
 export const TradeContext = createContext<TradeContext | undefined>(undefined);
@@ -99,33 +106,31 @@ export default function TradeContextProvider({
       console.error(error);
     }
   };
-  
-   const patchAndSaveUpdatedTradeToTrades = async (
-      updatedTrade: Trade
-    ) => {
-      try {
-        const returnedTrade = await updateTrade(updatedTrade);
-        if (typeof returnedTrade === "object" && "id" in returnedTrade) {
-          const formattedTrade = formatTradeReturn(returnedTrade);
-          setTrades((prevTrades) =>
-            prevTrades.map((trade) =>
-              trade.id === formattedTrade.id ? formattedTrade : trade
-            )
-          );
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
 
-    const deleteTradeFromDb = async (tradeId: number) => {
-        try {
-          await deleteTrade(tradeId);
-          setTrades((prev) => prev.filter((trade) => trade.id !== tradeId));
-        } catch (error) {
-          console.error(error);
-        }
-      };
+  const patchAndSaveUpdatedTradeToTrades = async (updatedTrade: Trade) => {
+    try {
+      const returnedTrade = await updateTrade(updatedTrade);
+      if (typeof returnedTrade === "object" && "id" in returnedTrade) {
+        const formattedTrade = formatTradeReturn(returnedTrade);
+        setTrades((prevTrades) =>
+          prevTrades.map((trade) =>
+            trade.id === formattedTrade.id ? formattedTrade : trade
+          )
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const deleteTradeFromDb = async (tradeId: number) => {
+    try {
+      await deleteTrade(tradeId);
+      setTrades((prev) => prev.filter((trade) => trade.id !== tradeId));
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <TradeContext.Provider
@@ -137,6 +142,8 @@ export default function TradeContextProvider({
         setMistakeIds,
         setTakeProfits,
         postTrade,
+        patchAndSaveUpdatedTradeToTrades,
+        deleteTradeFromDb,
       }}
     >
       {children}
