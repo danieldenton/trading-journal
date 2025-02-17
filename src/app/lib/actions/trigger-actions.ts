@@ -5,7 +5,7 @@ import {
   newTriggerSchema,
   updateTriggerSchema,
 } from "../schema/trigger-schema";
-import { TriggerWithWinRate } from "../types";
+import { Trigger } from "../types";
 
 export async function getTriggers(userId: number | undefined) {
   if (!userId) {
@@ -76,7 +76,7 @@ export async function createTrigger(
   }
 }
 
-export async function updateTrigger(trigger: TriggerWithWinRate) {
+export async function updateTrigger(trigger: Trigger) {
   try {
     const result = updateTriggerSchema.safeParse(trigger);
 

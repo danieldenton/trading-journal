@@ -10,7 +10,7 @@ import React, {
   ReactNode,
 } from "react";
 
-import { Trigger, TriggerWithWinRate } from "../lib/types";
+import { Trigger } from "../lib/types";
 import {
   createTrigger,
   getTriggers,
@@ -22,14 +22,14 @@ import { useUserContext } from "./user";
 import { QueryResultRow } from "@vercel/postgres";
 
 type TriggerContext = {
-  triggers: TriggerWithWinRate[];
-  setTriggers: Dispatch<SetStateAction<TriggerWithWinRate[]>>;
+  triggers: Trigger[];
+  setTriggers: Dispatch<SetStateAction<Trigger[]>>;
   newTriggerName: string;
   setNewTriggerName: Dispatch<SetStateAction<string>>;
   addNewTrigger: (prevState: any, formData: FormData) => void;
 
   patchAndSaveUpdatedTriggerToTriggers: (
-    updatedTrigger: TriggerWithWinRate
+    updatedTrigger: Trigger
   ) => void;
   deleteTriggerFromDb: (triggerId: number) => void;
 };
@@ -43,21 +43,9 @@ export default function TriggerContextProvider({
 }: {
   children: ReactNode;
 }) {
-  const [triggers, setTriggers] = useState<TriggerWithWinRate[]>([]);
+  const [triggers, setTriggers] = useState<Trigger[]>([]);
   const [newTriggerName, setNewTriggerName] = useState("");
   const { user } = useUserContext();
-
-  function addWinRateToTriggers(
-    triggersToUpdated: Trigger[] | undefined
-  ): TriggerWithWinRate[] {
-    const triggersWithWinRate = triggersToUpdated?.map((trigger) => ({
-      ...trigger,
-      winRate: calculateWinRate(trigger.successCount, trigger.failureCount),
-    }));
-    const sortedTriggers =
-      triggersWithWinRate?.sort((a, b) => b.winRate - a.winRate) || [];
-    return sortedTriggers;
-  }
 
   const fetchTriggers = async () => {
     if (!user?.id) {
@@ -66,9 +54,11 @@ export default function TriggerContextProvider({
     try {
       const userTriggers = await getTriggers(user.id);
       if (userTriggers) {
-        const formattedTriggers = formatTriggerReturn(userTriggers);
+        const formattedTriggers = userTriggers.map((trigger) => {
+          return formatTriggerReturn(trigger);
+        });
         const sortedTriggers =
-        formattedTriggers?.sort((a, b) => b.winRate - a.winRate) || [];
+          formattedTriggers?.sort((a, b) => b.winRate - a.winRate) || [];
         setTriggers(sortedTriggers);
       }
     } catch (error) {
@@ -80,7 +70,7 @@ export default function TriggerContextProvider({
     fetchTriggers();
   }, [user?.id]);
 
-  const formatTriggerReturn = (trigger: QueryResultRow): TriggerWithWinRate => {
+  const formatTriggerReturn = (trigger: QueryResultRow): Trigger => {
     return {
       id: trigger.id,
       name: trigger.name,
@@ -112,7 +102,7 @@ export default function TriggerContextProvider({
   };
 
   const patchAndSaveUpdatedTriggerToTriggers = async (
-    updatedTrigger: TriggerWithWinRate
+    updatedTrigger: Trigger
   ) => {
     try {
       const returnedTrigger = await updateTrigger(updatedTrigger);

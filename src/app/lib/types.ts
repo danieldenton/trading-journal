@@ -13,20 +13,17 @@ export type Trigger = {
   name: string;
   successCount: number;
   failureCount: number;
-};
-
-export type TriggerWithWinRate = Trigger & {
-  winRate: number | undefined;
+  winRate: number;
 };
 
 export type TriggerModalProps = {
-  trigger: TriggerWithWinRate;
+  trigger: Trigger;
   setModalType: Dispatch<SetStateAction<"delete" | "edit" | undefined>>;
 };
 
 // Trade
 export type Trade = {
-  id: number | undefined;
+  id: number;
   date: string;
   symbol: string;
   long: boolean | undefined;

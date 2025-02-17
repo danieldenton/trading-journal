@@ -2,23 +2,23 @@
 
 import { useState } from "react";
 import { useTriggerContext } from "../context/trigger";
-import { TriggerWithWinRate } from "../lib/types";
+import { Trigge } from "../lib/types";
 import DeleteModal from "./delete-modal";
 import EditModal from "./edit-modal";
 
 export default function TriggersTable() {
   const [modalType, setModalType] = useState<"delete" | "edit" | undefined>();
   const [selectedTrigger, setSelectedTrigger] = useState<
-    TriggerWithWinRate | undefined
+    Trigge | undefined
   >();
   const { triggers } = useTriggerContext();
 
-  const handleEdit = (trigger: TriggerWithWinRate) => {
+  const handleEdit = (trigger: Trigge) => {
     setModalType("edit");
     setSelectedTrigger(trigger);
   };
 
-  const handleDelete = (trigger: TriggerWithWinRate) => {
+  const handleDelete = (trigger: Trigge) => {
     setModalType("delete");
     setSelectedTrigger(trigger);
   };
