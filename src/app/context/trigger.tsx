@@ -66,8 +66,10 @@ export default function TriggerContextProvider({
     try {
       const userTriggers = await getTriggers(user.id);
       if (userTriggers) {
-        const triggersWithWinRate = addWinRateToTriggers(userTriggers);
-        setTriggers(triggersWithWinRate);
+        const formattedTriggers = formatTriggerReturn(userTriggers);
+        const sortedTriggers =
+        formattedTriggers?.sort((a, b) => b.winRate - a.winRate) || [];
+        setTriggers(sortedTriggers);
       }
     } catch (error) {
       console.error(error);

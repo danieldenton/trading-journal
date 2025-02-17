@@ -8,16 +8,15 @@ import {
 import { TriggerWithWinRate } from "../types";
 
 export async function getTriggers(userId: number | undefined) {
+  if (!userId) {
+    console.log("User ID is missing");
+    return 
+  }
   try {
     const response =
       await sql`SELECT * FROM triggers WHERE user_id = ${userId}`;
 
-    const triggers = response.rows.map((row) => ({
-      id: row.id,
-      name: row.name,
-      successCount: row.success_count,
-      failureCount: row.failure_count,
-    }));
+    const triggers = response.rows
 
     if (!triggers) {
       console.log("User has no triggers");
