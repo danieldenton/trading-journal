@@ -10,7 +10,7 @@ import React, {
   ReactNode,
 } from "react";
 
-import { getTrades, createTrade } from "../lib/actions/trade-actions";
+import { getTrades, createTrade, updateTrade } from "../lib/actions/trade-actions";
 import { Trade } from "../lib/types";
 import { useUserContext } from "./user";
 import { QueryResultRow } from "@vercel/postgres";
@@ -99,6 +99,24 @@ export default function TradeContextProvider({
       console.error(error);
     }
   };
+  
+   const patchAndSaveUpdatedTradeToTrades = async (
+      updatedTrade: Trade
+    ) => {
+      try {
+        const returnedTrade = await updateTrade(updatedTrade);
+        if (typeof returnedTrade === "object" && "id" in returnedTrade) {
+          const formattedTrade = formatTradeReturn(returnedTrade);
+          setTrades((prevTrades) =>
+            prevTrades.map((trade) =>
+              trade.id === formattedTrade.id ? formattedTrade : trade
+            )
+          );
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
   return (
     <TradeContext.Provider
