@@ -10,7 +10,7 @@ import React, {
   ReactNode,
 } from "react";
 
-import { getTrades, createTrade, updateTrade } from "../lib/actions/trade-actions";
+import { getTrades, createTrade, updateTrade, deleteTrade } from "../lib/actions/trade-actions";
 import { Trade } from "../lib/types";
 import { useUserContext } from "./user";
 import { QueryResultRow } from "@vercel/postgres";
@@ -117,6 +117,15 @@ export default function TradeContextProvider({
         console.error(error);
       }
     };
+
+    const deleteTradeFromDb = async (tradeId: number) => {
+        try {
+          await deleteTrade(tradeId);
+          setTrades((prev) => prev.filter((trade) => trade.id !== tradeId));
+        } catch (error) {
+          console.error(error);
+        }
+      };
 
   return (
     <TradeContext.Provider
