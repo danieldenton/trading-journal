@@ -2,23 +2,23 @@
 
 import { useState } from "react";
 import { useTriggerContext } from "../context/trigger";
-import { Trigge } from "../lib/types";
+import { Trigger } from "../lib/types";
 import DeleteModal from "./delete-modal";
 import EditModal from "./edit-modal";
 
 export default function TriggersTable() {
   const [modalType, setModalType] = useState<"delete" | "edit" | undefined>();
   const [selectedTrigger, setSelectedTrigger] = useState<
-    Trigge | undefined
+    Trigger | undefined
   >();
   const { triggers } = useTriggerContext();
 
-  const handleEdit = (trigger: Trigge) => {
+  const handleEdit = (trigger: Trigger) => {
     setModalType("edit");
     setSelectedTrigger(trigger);
   };
 
-  const handleDelete = (trigger: Trigge) => {
+  const handleDelete = (trigger: Trigger) => {
     setModalType("delete");
     setSelectedTrigger(trigger);
   };
