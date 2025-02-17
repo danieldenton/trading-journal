@@ -5,6 +5,10 @@ import { newSetupSchema, updateSetupSchema } from "../schema/setup-schema";
 import { Setup } from "../types";
 
 export async function getSetups(userId: number | undefined) {
+  if (!userId) {
+    console.log("User ID is missing");
+    return;
+  }
   try {
     const response = await sql`SELECT * FROM setups WHERE user_id = ${userId}`;
 

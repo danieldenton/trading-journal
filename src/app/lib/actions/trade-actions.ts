@@ -7,6 +7,10 @@ import { newTradeSchema, updateTradeSchema } from "../schema/trade-schema";
 // TODO: This was copied from trigger actions. Update this to be trade actions.
 
 export async function getTrades(userId: number | undefined) {
+  if (!userId) {
+    console.log("User ID is missing");
+    return;
+  }
   try {
     const response = await sql`SELECT * FROM trades WHERE user_id = ${userId}`;
 
