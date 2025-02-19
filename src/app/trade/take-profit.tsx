@@ -5,7 +5,7 @@ import { useTradeContext } from "../context/trade";
 
 export default function TakeProfit() {
   const [takeProfit, setTakeProfit] = useState<number | undefined>(undefined);
-  const { setTakeProfits } = useTradeContext();
+  const { setTakeProfits, takeProfits } = useTradeContext();
 
   const handleAddTakeProfitToTakeProfits = (tp: number) => {
     if (!isNaN(tp)) {
@@ -20,6 +20,7 @@ export default function TakeProfit() {
     <div>
       <input
         type="number"
+        className="m-2 p-1 rounded-lg text-black border-black border-2"
         onChange={(e) => setTakeProfit(Number(e.target.value))}
         value={takeProfit}
       />
@@ -30,6 +31,7 @@ export default function TakeProfit() {
           }
         }}
         disabled={takeProfit === undefined}
+        className="m-2 p-1 rounded-lg bg-red-600 text-white font-bold"
       >
         Add Take Profit
       </button>

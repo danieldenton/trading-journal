@@ -27,6 +27,7 @@ type TradeContext = {
   triggerIds: number[];
   setTriggerIds: Dispatch<SetStateAction<number[]>>;
   setMistakeIds: Dispatch<SetStateAction<number[]>>;
+  takeProfits: number[];
   setTakeProfits: Dispatch<SetStateAction<number[]>>;
   postTrade: (prevState: any, formData: FormData) => void;
   patchAndSaveUpdatedTradeToTrades: (updatedTrade: Trade) => void;
@@ -145,6 +146,7 @@ export default function TradeContextProvider({
         triggerIds,
         setTriggerIds,
         setMistakeIds,
+        takeProfits,
         setTakeProfits,
         postTrade,
         patchAndSaveUpdatedTradeToTrades,
