@@ -29,7 +29,7 @@ export default function EntryInputs() {
         type="text"
         name="symbol"
         placeholder="symbol"
-        className="m-2 p-1 rounded-lg border-black border-2"
+        className="m-2 p-1 rounded-lg text-black border-black border-2"
       />
       <div className="flex flex-row justify-center items-center w-full">
       <div className="flex items-center">
@@ -57,7 +57,7 @@ export default function EntryInputs() {
         type="text"
         name="time"
         placeholder="time"
-        className="m-2 p-1 rounded-lg border-black border-2"
+        className="m-2 p-1 rounded-lg text-black border-black border-2"
       />
       <input
         type="number"
