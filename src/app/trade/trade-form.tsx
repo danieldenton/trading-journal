@@ -5,6 +5,7 @@ import MiniSetupTable from "./mini-setup-table";
 import MiniTriggerTable from "../components/mini-trigger-table";
 import EntryInputs from "./entry-inputs";
 import TakeProfit from "./take-profit";
+import ExitInputs from "./exit-inputs";
 
 export default function TradeForm() {
   const { triggerIds, setTriggerIds, postTrade } = useTradeContext();
@@ -26,6 +27,7 @@ export default function TradeForm() {
           />
         </div>
       </div>
+      <ExitInputs />
       <div>
         <label htmlFor="notes">Notes:</label>
         <textarea className="text-black" name="notes" />
