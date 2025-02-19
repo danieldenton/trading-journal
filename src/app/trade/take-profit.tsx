@@ -16,25 +16,36 @@ export default function TakeProfit() {
     }
   };
 
+  const takeProfiltList = takeProfits.map((tp, index) => {
+    return (
+      <div key={index}>
+        <p>{tp}</p>
+      </div>
+    );
+  });
+
   return (
-    <div>
-      <input
-        type="number"
-        className="m-2 p-1 rounded-lg text-black border-black border-2"
-        onChange={(e) => setTakeProfit(Number(e.target.value))}
-        value={takeProfit}
-      />
-      <button
-        onClick={() => {
-          if (takeProfit !== undefined) {
-            handleAddTakeProfitToTakeProfits(takeProfit);
-          }
-        }}
-        disabled={takeProfit === undefined}
-        className="m-2 p-1 rounded-lg bg-red-600 text-white font-bold"
-      >
-        Add Take Profit
-      </button>
-    </div>
+    <>
+      <div className="flex">
+        <input
+          type="number"
+          className="m-2 p-1 rounded-lg text-black border-black border-2"
+          onChange={(e) => setTakeProfit(Number(e.target.value))}
+          value={takeProfit}
+        />
+        <button
+          onClick={() => {
+            if (takeProfit !== undefined) {
+              handleAddTakeProfitToTakeProfits(takeProfit);
+            }
+          }}
+          disabled={takeProfit === undefined}
+          className="m-2 p-1 rounded-lg bg-red-600 text-white font-bold"
+        >
+          Add Take Profit
+        </button>
+      </div>
+      {takeProfiltList}
+    </>
   );
 }

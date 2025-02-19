@@ -28,7 +28,7 @@ export default function TradeForm() {
       </div>
       <div>
         <label htmlFor="notes">Notes:</label>
-        <textarea  name="notes" />
+        <textarea className="text-black" name="notes" />
       </div>
 
       <button
