@@ -94,6 +94,7 @@ export default function TradeContextProvider({
       console.error("User needs to be logged in to add a trade");
       return;
     }
+    console.log
     formData.append("userId", user.id.toString());
     formData.append("date", new Date().toISOString());
     formData.append("setupIds", JSON.stringify(setupIds));
