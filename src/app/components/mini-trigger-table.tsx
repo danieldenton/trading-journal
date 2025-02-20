@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, ChangeEvent } from "react";
+import React, { ChangeEvent } from "react";
 
 import { useTriggerContext } from "../context/trigger";
 import { useSetupContext } from "../context/setup";
@@ -14,8 +14,6 @@ export default function MiniTriggerTable({
   const { triggers } = useTriggerContext();
   const { addOrRemoveTriggerFromTrade, trade } = useTradeContext();
   const { addOrRemoveTriggerFromSetup, selectedTriggerIds } = useSetupContext();
-
-
 
   const handleAddTrigger = (
     e: ChangeEvent<HTMLInputElement>,

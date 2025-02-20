@@ -1,32 +1,35 @@
 "use client";
 
-import React from "react";
+import React, { useActionState } from "react";
 import { useMistakeContext } from "../context/mistake";
 
 export default function NewMistakeInput() {
-  const { newMistakeName, setNewMistakeName, addMistake } = useMistakeContext();
+  const { addNewMistake } = useMistakeContext();
+  const [state, newMistakeName, isPending] = useActionState(
+    addNewMistake,
+    undefined
+  );
 
   return (
-    <div className="mb-4 flex gap-2">
+    <form
+      action={newMistakeName}
+      className="mb-4 flex flex-col justify-center items-center gap-2"
+    >
       <input
         type="text"
-        value={newMistakeName}
-        onChange={(e) => setNewMistakeName(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            addMistake();
-          }
-        }}
+        name="name"
         placeholder="Enter new mistake name"
-        classname="border p-2 rounded w-full font-bold text-gray-700 placeholder-gray-500"
+        className="p-2 rounded font-bold text-black placeholder-gray-500 text-center focus:outline-none"
       />
 
       <button
-        onClick={addMistake}
-        classname="bg-blue-500 text-white px-4,py-2 rounded"
+        disabled={isPending}
+        type="submit"
+        className="bg-red-500 text-white font-bold px-4 py-2 rounded "
       >
         Add Mistake
       </button>
-    </div>
+      {state ? <p className="text-red-500">{state}</p> : null}
+    </form>
   );
 }
