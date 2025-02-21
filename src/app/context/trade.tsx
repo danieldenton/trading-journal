@@ -32,6 +32,7 @@ type TradeContext = {
   postTrade: (prevState: any, formData: FormData) => void;
   patchAndSaveUpdatedTradeToTrades: (updatedTrade: Trade) => void;
   deleteTradeFromDb: (tradeId: number) => void;
+  calculateRiskReward: (trade: Trade) => number;
 };
 
 export const TradeContext = createContext<TradeContext | undefined>(undefined);
@@ -70,6 +71,17 @@ export default function TradeContextProvider({
     };
   };
 
+  const calculateRiskReward = (trade: Trade) => {
+    const { entryPrice, stop, takeProfits, long } = trade;
+    const risk = long ? entryPrice - stop : stop - entryPrice;
+    const reward = long
+      ? takeProfits[0] - entryPrice
+      : entryPrice - takeProfits[0];
+    const riskRewardRatio = risk / reward;
+    const roundedRiskRewardRatio = Math.round(riskRewardRatio * 100) / 100;
+    return roundedRiskRewardRatio;
+  };
+
   const fetchTrades = async () => {
     if (!user?.id) {
       return;
@@ -94,7 +106,7 @@ export default function TradeContextProvider({
       console.error("User needs to be logged in to add a trade");
       return;
     }
-    console.log
+    console.log;
     formData.append("userId", user.id.toString());
     formData.append("date", new Date().toISOString());
     formData.append("setupIds", JSON.stringify(setupIds));
@@ -155,6 +167,7 @@ export default function TradeContextProvider({
         postTrade,
         patchAndSaveUpdatedTradeToTrades,
         deleteTradeFromDb,
+        calculateRiskReward
       }}
     >
       {children}
