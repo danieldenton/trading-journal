@@ -32,7 +32,11 @@ type TradeContext = {
   postTrade: (prevState: any, formData: FormData) => void;
   patchAndSaveUpdatedTradeToTrades: (updatedTrade: Trade) => void;
   deleteTradeFromDb: (tradeId: number) => void;
-  calculateRiskReward: (trade: Trade) => number;
+  calculateRiskReward: (trade: Trade) => {
+    actualRisk: number;
+    actualReward: number;
+    riskReward: number;
+  };
 };
 
 export const TradeContext = createContext<TradeContext | undefined>(undefined);
@@ -72,13 +76,19 @@ export default function TradeContextProvider({
   };
 
   const calculateRiskReward = (trade: Trade) => {
-    const { entryPrice, stop, takeProfits, long } = trade;
+    const { entryPrice, stop, takeProfits, long, numberOfContracts } = trade;
     const risk = long ? entryPrice - stop : stop - entryPrice;
     const reward = long
       ? takeProfits[0] - entryPrice
       : entryPrice - takeProfits[0];
-    const riskRewardRatio = risk / reward;
-    return Math.round(riskRewardRatio * 100) / 100;
+    const riskRewardRatio = reward / risk;
+    const actualRisk = (risk / 25) * 100 * numberOfContracts;
+    const actualReward = (reward / 25) * 100 * numberOfContracts;
+    return {
+      actualRisk,
+      actualReward,
+      riskReward: Math.round(riskRewardRatio * 100) / 100,
+    };
   };
 
   const fetchTrades = async () => {
