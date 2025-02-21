@@ -78,8 +78,7 @@ export default function TradeContextProvider({
       ? takeProfits[0] - entryPrice
       : entryPrice - takeProfits[0];
     const riskRewardRatio = risk / reward;
-    const roundedRiskRewardRatio = Math.round(riskRewardRatio * 100) / 100;
-    return roundedRiskRewardRatio;
+    return Math.round(riskRewardRatio * 100) / 100;
   };
 
   const fetchTrades = async () => {
@@ -167,7 +166,7 @@ export default function TradeContextProvider({
         postTrade,
         patchAndSaveUpdatedTradeToTrades,
         deleteTradeFromDb,
-        calculateRiskReward
+        calculateRiskReward,
       }}
     >
       {children}
