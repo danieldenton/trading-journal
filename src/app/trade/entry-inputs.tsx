@@ -10,16 +10,12 @@ export default function EntryInputs() {
   const handleLong = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
       setLongOrShort("long");
-    } else {
-      setLongOrShort(undefined);
-    }
+    } 
   };
 
   const handleShort = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
       setLongOrShort("short");
-    } else {
-      setLongOrShort(undefined);
     }
   };
 
@@ -38,6 +34,7 @@ export default function EntryInputs() {
             name="long"
             onChange={(e) => handleLong(e)}
             checked={longOrShort === "long"}
+            value={longOrShort === "long" ? "true" : "false"}
             className="m-2"
           />
           <label htmlFor="long">Long</label>

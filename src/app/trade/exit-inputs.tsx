@@ -5,12 +5,12 @@ export default function ExitInputs() {
     <>
       <input
         type="number"
-        name="entryPrice"
+        name="exitPrice"
         placeholder="Exit Price"
         className="m-2 p-1 rounded-lg text-black border-black border-2"
       />
       <input
-        type="number"
+        type="text"
         name="exitTime"
         placeholder="Exit Time"
         className="m-2 p-1 rounded-lg text-black border-black border-2"
