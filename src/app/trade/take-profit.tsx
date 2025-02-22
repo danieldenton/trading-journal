@@ -31,7 +31,7 @@ export default function TakeProfit() {
     <>
       <div className="flex">
         <input
-          type="test"
+          type="text"
           className="m-2 p-1 rounded-lg text-black border-black border-2"
           onChange={(e) => setTakeProfit(e.target.value)}
           value={takeProfit}
