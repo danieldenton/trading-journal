@@ -16,12 +16,24 @@ export type Trigger = {
 };
 
 export type TriggerWithWinRate = Trigger & {
+  id: number;
   winRate: number | undefined;
 };
-
 export type TriggerModalProps = {
-  trigger: TriggerWithWinRate;
   setModalType: Dispatch<SetStateAction<"delete" | "edit" | undefined>>;
+  trigger: TriggerWithWinRate;
+};
+
+export type Mistake = {
+  id: number;
+  name: string;
+  onSuccessfulTrades: number[];
+  onFailedTrades: number[];
+};
+
+export type MistakeModalProps = {
+  setModalType: Dispatch<SetStateAction<"delete" | "edit" | undefined>>;
+  mistake: Mistake;
 };
 
 // Trade
@@ -40,7 +52,7 @@ export type Trade = {
 
 // Setup
 export type Setup = {
-  id: number 
+  id: number;
   name: string;
   triggerIds: number[];
   successCount: number;

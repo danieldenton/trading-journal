@@ -46,7 +46,7 @@ export default function TriggerContextProvider({
 
   function addWinRateToTriggers(
     triggersToUpdated: Trigger[] | undefined
-  ): TriggerWithWinRate[] {
+  ) {
     const triggersWithWinRate = triggersToUpdated?.map((trigger) => ({
       ...trigger,
       winRate: calculateWinRate(trigger.successCount, trigger.failureCount),

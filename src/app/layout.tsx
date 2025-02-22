@@ -4,6 +4,7 @@ import "./globals.css";
 import TradeContextProvider from "./context/trade";
 import TriggerContextProvider from "./context/trigger";
 import SetupContextProvider from "./context/setup";
+import MistakeContextProvider from "./context/mistake";
 import UserContextProvider from "./context/user";
 import Navbar from "./components/navbar";
 
@@ -35,10 +36,12 @@ export default function RootLayout({
         <UserContextProvider>
           <TriggerContextProvider>
             <SetupContextProvider>
-              <TradeContextProvider>
-                <Navbar />
-                {children}
-              </TradeContextProvider>
+              <MistakeContextProvider>
+                <TradeContextProvider>
+                  <Navbar />
+                  {children}
+                </TradeContextProvider>
+              </MistakeContextProvider>
             </SetupContextProvider>
           </TriggerContextProvider>
         </UserContextProvider>
