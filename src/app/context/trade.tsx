@@ -22,6 +22,8 @@ import { QueryResultRow } from "@vercel/postgres";
 
 type TradeContext = {
   trades: Trade[];
+  longOrShort: "long" | "short" | undefined;
+  setLongOrShort: Dispatch<SetStateAction<"long" | "short" | undefined>>;
   setupIds: number[];
   setSetupIds: Dispatch<SetStateAction<number[]>>;
   triggerIds: number[];
@@ -47,6 +49,9 @@ export default function TradeContextProvider({
   children: ReactNode;
 }) {
   const [trades, setTrades] = useState<Trade[]>([]);
+  const [longOrShort, setLongOrShort] = useState<"long" | "short" | undefined>(
+    undefined
+  );
   const [setupIds, setSetupIds] = useState<number[]>([]);
   const [triggerIds, setTriggerIds] = useState<number[]>([]);
   const [mistakeIds, setMistakeIds] = useState<number[]>([]);
@@ -166,6 +171,8 @@ export default function TradeContextProvider({
     <TradeContext.Provider
       value={{
         trades,
+        longOrShort,
+        setLongOrShort,
         setupIds,
         setSetupIds,
         triggerIds,

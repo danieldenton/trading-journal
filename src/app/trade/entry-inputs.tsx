@@ -1,21 +1,24 @@
 "use client";
 
 import React, { useState, ChangeEvent } from "react";
+import { useTradeContext } from "../context/trade";
 
 export default function EntryInputs() {
-  const [longOrShort, setLongOrShort] = useState<"long" | "short" | undefined>(
-    undefined
-  );
+  const { longOrShort, setLongOrShort } = useTradeContext();
 
   const handleLong = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
       setLongOrShort("long");
-    } 
+    } else {
+      setLongOrShort(undefined);
+    }
   };
 
   const handleShort = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
       setLongOrShort("short");
+    } else {
+      setLongOrShort(undefined);
     }
   };
 
