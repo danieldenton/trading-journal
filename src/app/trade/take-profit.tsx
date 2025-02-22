@@ -4,15 +4,18 @@ import React, { useState } from "react";
 import { useTradeContext } from "../context/trade";
 
 export default function TakeProfit() {
-  const [takeProfit, setTakeProfit] = useState<number | undefined>(undefined);
+  const [takeProfit, setTakeProfit] = useState<string>("");
+  const [error, setError] = useState<string>("");
   const { setTakeProfits, takeProfits } = useTradeContext();
 
-  const handleAddTakeProfitToTakeProfits = (tp: number) => {
-    if (!isNaN(tp)) {
+  const handleAddTakeProfitToTakeProfits = (tpString: string) => {
+    const tp = Number(tpString);
+    if (!isNaN(tp) && tp > 0) {
       setTakeProfits((prevState) => [...prevState, tp]);
-      setTakeProfit(undefined);
+      setTakeProfit("");
+      setError("");
     } else {
-      console.error("Invalid take profit value");
+      setError("Invalid take profit value");
     }
   };
 
@@ -28,22 +31,21 @@ export default function TakeProfit() {
     <>
       <div className="flex">
         <input
-          type="number"
+          type="test"
           className="m-2 p-1 rounded-lg text-black border-black border-2"
-          onChange={(e) => setTakeProfit(Number(e.target.value))}
+          onChange={(e) => setTakeProfit(e.target.value)}
           value={takeProfit}
         />
         <button
+          type="button"
           onClick={() => {
-            if (takeProfit !== undefined) {
-              handleAddTakeProfitToTakeProfits(takeProfit);
-            }
+            handleAddTakeProfitToTakeProfits(takeProfit);
           }}
-          disabled={takeProfit === undefined}
           className="m-2 p-1 rounded-lg bg-red-600 text-white font-bold"
         >
           Add Take Profit
         </button>
+        {error && <p className="text-red-600">{error}</p>}
       </div>
       {takeProfiltList}
     </>
