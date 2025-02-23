@@ -25,7 +25,7 @@ type MistakeContext = {
   setNewMistakeName: Dispatch<SetStateAction<string>>;
   addNewMistake: (prevState: Mistake[], formData: FormData) => void;
   deleteMistakeFromUser: (mistakeId: number) => void;
-  // postAndSaveUpdatedMistakeToMistakes: (updatedMistake: Mistake) => void;
+  postAndSaveUpdatedMistakeToMistakes: (updatedMistake: Mistake) => void;
 };
 
 export const MistakeContext = createContext<MistakeContext | undefined>(
@@ -97,13 +97,14 @@ export default function MistakeContextProvider({
     }
   };
 
-  // const postAndSaveUpdatedMistakeToMistakes = (updatedMistake: Mistake) => {
-  //   setMistakes((prev) =>
-  //     prev.map((mistake) =>
-  //       mistake.id === updatedMistake.id ? updatedMistake : mistake
-  //     )
-  //   );
-  // };
+  // TODO: Add the action to this function
+  const postAndSaveUpdatedMistakeToMistakes = (updatedMistake: Mistake) => {
+    setMistakes((prev) =>
+      prev.map((mistake) =>
+        mistake.id === updatedMistake.id ? updatedMistake : mistake
+      )
+    );
+  };
 
   const deleteMistakeFromUser = async (mistakeId: number) => {
     try {
@@ -127,7 +128,7 @@ export default function MistakeContextProvider({
         setNewMistakeName,
         addNewMistake,
         deleteMistakeFromUser,
-        // postAndSaveUpdatedMistakeToMistakes,
+        postAndSaveUpdatedMistakeToMistakes,
       }}
     >
       {children}
