@@ -60,7 +60,7 @@ export async function createTrigger(
     const response = await sql`
             INSERT INTO triggers (name, user_id)
             VALUES (${name}, ${userId})
-             RETURNING id, name, success_count, failure_count;
+             RETURNING *
           `;
 
     const trigger = response.rows[0];
