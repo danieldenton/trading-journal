@@ -13,12 +13,23 @@ export type Trigger = {
   name: string;
   successCount: number;
   failureCount: number;
-  winRate: number;
 };
 
 export type TriggerModalProps = {
   trigger: Trigger;
+  setModalType: Dispatch<SetStateAction<"delete" | "edit" | undefined>>;;
+};
+
+export type Mistake = {
+  id: number;
+  name: string;
+  onSuccessfulTrades: number[];
+  onFailedTrades: number[];
+};
+
+export type MistakeModalProps = {
   setModalType: Dispatch<SetStateAction<"delete" | "edit" | undefined>>;
+  mistake: Mistake;
 };
 
 // Trade
