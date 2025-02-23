@@ -29,13 +29,13 @@ export default function MistakesTable() {
         </td>
         <td className="border border-gray-300 py-2 flex items-center justify-center gap-2">
           <button
-            className="bg-white rounded text-black font-bold px-4"
+            className="text-red-500 font-bold mx-1"
             onClick={() => handleEdit(mistake)}
           >
             Edit
           </button>
           <button
-            className="bg-white rounded text-black font-bold px-2"
+            className="text-red-500 font-bold mx-1"
             onClick={() => handleDelete(mistake)}
           >
             Delete
