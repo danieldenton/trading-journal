@@ -117,13 +117,10 @@ export async function updateMistake(mistake: Mistake) {
   }
 }
 
-export async function deleteMistake(
-  mistakeId: number,
-  userId: number | undefined
-) {
+export async function deleteMistake(mistakeId: number) {
   try {
     const response = await sql`
-      DELETE FROM mistakes WHERE id = ${mistakeId} AND user_id = ${userId};
+      DELETE FROM mistakes WHERE id = ${mistakeId};
     `;
 
     if (response.rowCount === 0) {

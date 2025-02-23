@@ -112,7 +112,7 @@ export default function MistakeContextProvider({
         console.error("User needs to be logged in to delete a mistake");
         return "User needs to be logged in to delete a mistake";
       }
-      await deleteMistake(mistakeId, user.id);
+      await deleteMistake(mistakeId);
       setMistakes((prev) => prev.filter((mistake) => mistake.id !== mistakeId));
     } catch (error) {
       console.error(error);
