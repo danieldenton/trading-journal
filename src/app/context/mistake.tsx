@@ -56,7 +56,10 @@ export default function MistakeContextProvider({
       if (!user?.id) return;
       const userMistakes = await getMistakes(user.id);
       if (!userMistakes) return;
-      setMistakes(userMistakes);
+      const formattedMistakes = userMistakes.map((mistake) =>
+        formatMistakeReturn(mistake)
+      );
+      setMistakes(formattedMistakes);
     } catch (error) {
       console.error(error);
     }

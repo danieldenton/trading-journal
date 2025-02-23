@@ -12,16 +12,11 @@ export async function getMistakes(userId: number | undefined) {
     const response =
       await sql`SELECT * FROM mistakes WHERE user_id = ${userId};`;
 
-    const mistakes: Mistake[] = response.rows.map((row) => ({
-      id: row.id,
-      name: row.name,
-      onSuccessfulTrades: row.on_successful_trades,
-      onFailedTrades: row.on_failed_trades,
-    }));
+    const mistakes = response.rows;
 
     if (!mistakes.length) {
       console.log("User has no mistakes");
-      return [];
+      return;
     }
 
     return mistakes;
@@ -104,7 +99,7 @@ export async function updateMistake(mistake: Mistake) {
       return { errors: { name: ["Failed to update mistake"] } };
     }
 
-    return updateMistake
+    return updateMistake;
   } catch (error) {
     console.error(error);
   }
