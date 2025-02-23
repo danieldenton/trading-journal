@@ -63,7 +63,7 @@ export async function createMistake(
     const response = await sql`
       INSERT INTO mistakes (name, user_id)
       VALUES (${name}, ${userId})
-      RETURNING id, name, on_successful_trades, on_failed_trades;
+      RETURNING *;
     `;
 
     const mistake = response.rows[0];
