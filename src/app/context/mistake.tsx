@@ -14,6 +14,7 @@ import { Mistake } from "../lib/types";
 import {
   createMistake,
   getMistakes,
+  updateMistake,
   deleteMistake,
 } from "../lib/actions/mistake-actions";
 import { useUserContext } from "./user";
@@ -92,12 +93,16 @@ export default function MistakeContextProvider({
   };
 
   // TODO: Add the action to this function
-  const postAndSaveUpdatedMistakeToMistakes = (updatedMistake: Mistake) => {
+  const postAndSaveUpdatedMistakeToMistakes = async (mistakeToUpdate: Mistake) => {
+    const updatedMistake = await updateMistake(mistakeToUpdate);
+    if (typeof updatedMistake === "object" && "id" in updatedMistake) {
+    const formattedMistake = formatMistakeReturn(updatedMistake);
     setMistakes((prev) =>
       prev.map((mistake) =>
-        mistake.id === updatedMistake.id ? updatedMistake : mistake
+        mistake.id === formattedMistake.id ? formattedMistake : mistake
       )
     );
+  }
   };
 
   const deleteMistakeFromUser = async (mistakeId: number) => {
