@@ -1,42 +1,39 @@
 "use client";
+
 import React, { ChangeEvent } from "react";
 
+
 import { useTriggerContext } from "../context/trigger";
-import { useSetupContext } from "../context/setup";
-import { useTradeContext } from "../context/trade";
-import { Setup, SetupWithWinRate } from "../lib/types";
+
+type MiniTriggerTableProps = {
+  triggerState: number[];
+  setTriggerState: React.Dispatch<React.SetStateAction<number[]>>;
+};
 
 export default function MiniTriggerTable({
-  setup,
-}: {
-  setup: Setup | SetupWithWinRate | undefined;
-}) {
+  triggerState,
+  setTriggerState,
+}: MiniTriggerTableProps) {
   const { triggers } = useTriggerContext();
-  const { addOrRemoveTriggerFromTrade, trade } = useTradeContext();
-  const { addOrRemoveTriggerFromSetup, selectedTriggerIds } = useSetupContext();
 
-  const handleAddTrigger = (
-    e: ChangeEvent<HTMLInputElement>,
-    triggerId: number
-  ) => {
-    if (setup) {
-      addOrRemoveTriggerFromSetup(e.target.checked, triggerId);
+  const handleAddTrigger = (triggerId: number) => {
+    if (!triggerState.includes(triggerId)) {
+      setTriggerState((prevState) => [...prevState, triggerId]);
     } else {
-      addOrRemoveTriggerFromTrade(e.target.checked, triggerId);
+      setTriggerState((prevState) =>
+        prevState.filter((id) => id !== triggerId)
+      );
     }
   };
 
   const miniTriggerTable = triggers.map((trigger, index) => {
-    const checked = setup
-      ? selectedTriggerIds.includes(trigger.id)
-      : trade.triggerIds.includes(trigger.id);
     return (
       <tr key={index}>
         <td className="border border-gray-300 p-2 text-center">
           <input
             type="checkbox"
-            checked={checked}
-            onChange={(e) => handleAddTrigger(e, trigger.id)}
+            checked={triggerState.includes(trigger.id)}
+            onChange={() => handleAddTrigger(trigger.id)}
           />
         </td>
         <td className="border border-gray-300 p-2 text-center font-bold">

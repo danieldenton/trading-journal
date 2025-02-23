@@ -10,7 +10,7 @@ import React, {
   ReactNode,
 } from "react";
 
-import { Trigger, TriggerWithWinRate } from "../lib/types";
+import { Trigger } from "../lib/types";
 import {
   createTrigger,
   getTriggers,
@@ -19,106 +19,98 @@ import {
 } from "../lib/actions/trigger-actions";
 import { calculateWinRate } from "../lib/utils";
 import { useUserContext } from "./user";
+import { QueryResultRow } from "@vercel/postgres";
 
 type TriggerContext = {
-  triggers: TriggerWithWinRate[];
-  setTriggers: Dispatch<SetStateAction<TriggerWithWinRate[]>>;
+  triggers: Trigger[];
+  setTriggers: Dispatch<SetStateAction<Trigger[]>>;
   newTriggerName: string;
   setNewTriggerName: Dispatch<SetStateAction<string>>;
   addNewTrigger: (prevState: any, formData: FormData) => void;
 
   patchAndSaveUpdatedTriggerToTriggers: (
-    updatedTrigger: TriggerWithWinRate
+    updatedTrigger: Trigger
   ) => void;
-  deleteTriggerFromUser: (triggerId: number) => void;
+  deleteTriggerFromDb: (triggerId: number) => void;
 };
 
-export const TriggerContext = createContext<TriggerContext | undefined>(undefined);
+export const TriggerContext = createContext<TriggerContext | undefined>(
+  undefined
+);
 
 export default function TriggerContextProvider({
   children,
 }: {
   children: ReactNode;
 }) {
-  const [triggers, setTriggers] = useState<TriggerWithWinRate[]>([]);
+  const [triggers, setTriggers] = useState<Trigger[]>([]);
   const [newTriggerName, setNewTriggerName] = useState("");
   const { user } = useUserContext();
 
-  function addWinRateToTriggers(
-    triggersToUpdated: Trigger[] | undefined
-  ) {
-    const triggersWithWinRate = triggersToUpdated?.map((trigger) => ({
-      ...trigger,
-      winRate: calculateWinRate(trigger.successCount, trigger.failureCount),
-    }));
-    const sortedTriggers =
-      triggersWithWinRate?.sort((a, b) => b.winRate - a.winRate) || [];
-    return sortedTriggers;
-  }
-
   const fetchTriggers = async () => {
+    if (!user?.id) {
+      return;
+    }
     try {
-      const userTriggers = await getTriggers(user?.id);
-      const triggersWithWinRate = addWinRateToTriggers(userTriggers);
-      setTriggers(triggersWithWinRate);
+      const userTriggers = await getTriggers(user.id);
+      if (userTriggers) {
+        const formattedTriggers = userTriggers.map((trigger) => {
+          return formatTriggerReturn(trigger);
+        });
+        const sortedTriggers =
+          formattedTriggers?.sort((a, b) => b.winRate - a.winRate) || [];
+        setTriggers(sortedTriggers);
+      }
     } catch (error) {
       console.error(error);
     }
   };
 
   useEffect(() => {
-    if (user?.id) {
-      fetchTriggers();
-    }
+    fetchTriggers();
   }, [user?.id]);
 
-  const addNewTrigger = async (prevState: any, formData: FormData) => {
-    try {
-      if (!user?.id) {
-        console.error("User needs to be logged in to add a trigger");
-        return "User needs to be logged in to add a trigger";
-      }
+  const formatTriggerReturn = (trigger: QueryResultRow): Trigger => {
+    return {
+      id: trigger.id,
+      name: trigger.name,
+      successCount: trigger.success_count,
+      failureCount: trigger.failure_count,
+      winRate: calculateWinRate(trigger.success_count, trigger.failure_count),
+    };
+  };
 
+  const addNewTrigger = async (prevState: any, formData: FormData) => {
+    if (!user?.id) {
+      console.error("User needs to be logged in to add a trigger");
+      return;
+    }
+    try {
       const newTrigger = await createTrigger(formData, user.id);
       if (newTrigger?.errors) {
         const { name } = newTrigger.errors;
         return name[0];
       }
 
-      if (typeof newTrigger?.name === "string") {
-        setTriggers((prev) => [
-          ...prev,
-          {
-            id: newTrigger.id,
-            name: newTrigger.name,
-            successCount: 0,
-            failureCount: 0,
-            winRate: 0,
-          },
-        ]);
+      if (typeof newTrigger === "object" && "id" in newTrigger) {
+        const formattedTrigger = formatTriggerReturn(newTrigger);
+        setTriggers((prev) => [...prev, formattedTrigger]);
       }
     } catch (error) {
       console.error(error);
     }
   };
- 
+
   const patchAndSaveUpdatedTriggerToTriggers = async (
-    updatedTrigger: TriggerWithWinRate
+    updatedTrigger: Trigger
   ) => {
     try {
       const returnedTrigger = await updateTrigger(updatedTrigger);
       if (typeof returnedTrigger === "object" && "id" in returnedTrigger) {
-        const triggerWithWinRate = {
-          ...returnedTrigger,
-          winRate: calculateWinRate(
-            returnedTrigger.successCount,
-            returnedTrigger.failureCount
-          ),
-        };
-
+        const formattedTrigger = formatTriggerReturn(returnedTrigger);
         setTriggers((prevTriggers) =>
           prevTriggers.map((trigger) =>
-            trigger.id === triggerWithWinRate.id ? triggerWithWinRate : trigger
+            trigger.id === formattedTrigger.id ? formattedTrigger : trigger
           )
         );
       }
@@ -127,13 +119,9 @@ export default function TriggerContextProvider({
     }
   };
 
-  const deleteTriggerFromUser = async (triggerId: number) => {
+  const deleteTriggerFromDb = async (triggerId: number) => {
     try {
-      if (!user?.id) {
-        console.error("User needs to be logged in to delete a trigger");
-        return "User needs to be logged in to delete a trigger";
-      }
-      await deleteTrigger(triggerId, user.id);
+      await deleteTrigger(triggerId);
       setTriggers((prev) => prev.filter((trigger) => trigger.id !== triggerId));
     } catch (error) {
       console.error(error);
@@ -149,7 +137,7 @@ export default function TriggerContextProvider({
         setNewTriggerName,
         addNewTrigger,
         patchAndSaveUpdatedTriggerToTriggers,
-        deleteTriggerFromUser,
+        deleteTriggerFromDb,
       }}
     >
       {children}
