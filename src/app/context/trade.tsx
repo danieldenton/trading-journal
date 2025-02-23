@@ -19,6 +19,7 @@ import {
 import { Trade } from "../lib/types";
 import { useUserContext } from "./user";
 import { QueryResultRow } from "@vercel/postgres";
+import { error } from "console";
 
 type TradeContext = {
   trades: Trade[];
@@ -39,6 +40,8 @@ type TradeContext = {
     actualReward: number;
     riskReward: number;
   };
+  error: string;
+  setError: Dispatch<SetStateAction<string>>;
 };
 
 export const TradeContext = createContext<TradeContext | undefined>(undefined);
@@ -56,6 +59,7 @@ export default function TradeContextProvider({
   const [triggerIds, setTriggerIds] = useState<number[]>([]);
   const [mistakeIds, setMistakeIds] = useState<number[]>([]);
   const [takeProfits, setTakeProfits] = useState<number[]>([]);
+  const [error, setError] = useState<string>("");
 
   const { user } = useUserContext();
 
@@ -184,6 +188,8 @@ export default function TradeContextProvider({
         patchAndSaveUpdatedTradeToTrades,
         deleteTradeFromDb,
         calculateRiskReward,
+        error,
+        setError
       }}
     >
       {children}

@@ -5,8 +5,7 @@ import { useTradeContext } from "../context/trade";
 
 export default function TakeProfit() {
   const [takeProfit, setTakeProfit] = useState<string>("");
-  const [error, setError] = useState<string>("");
-  const { setTakeProfits, takeProfits } = useTradeContext();
+  const { setTakeProfits, takeProfits, error, setError } = useTradeContext();
 
   const handleAddTakeProfitToTakeProfits = (tpString: string) => {
     const tp = Number(tpString);
@@ -45,7 +44,9 @@ export default function TakeProfit() {
         >
           Add Take Profit
         </button>
-        {error && <p className="text-red-600">{error}</p>}
+        {error === "Invalid take profit value" && (
+          <p className="text-red-600">{error}</p>
+        )}
       </div>
       {takeProfiltList}
     </>

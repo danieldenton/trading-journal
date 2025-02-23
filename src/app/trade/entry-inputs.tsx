@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, ChangeEvent } from "react";
+import React, { ChangeEvent } from "react";
 import { useTradeContext } from "../context/trade";
 
 export default function EntryInputs() {
