@@ -7,15 +7,15 @@ export default function EditModal({
   setModalType,
 }: MistakeModalProps) {
   const [newMistakeName, setNewMistakeName] = useState(mistake.name);
-  const { postAndSaveUpdatedMistakeToMistakes } = useMistakeContext();
+  const { patchAndSaveUpdatedMistakeToMistakes } = useMistakeContext();
 
   const updatedMistake = {
-    id: mistake.id,
+    ...mistake,
     name: newMistakeName,
   };
 
   const handleCompleteEdit = () => {
-    postAndSaveUpdatedMistakeToMistakes(updatedMistake);
+    patchAndSaveUpdatedMistakeToMistakes(updatedMistake);
     setModalType(undefined);
   };
 
