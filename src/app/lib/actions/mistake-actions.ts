@@ -33,7 +33,7 @@ export async function getMistakes(userId: number | undefined) {
 export async function createMistake(
   formData: FormData,
   userId: number | undefined
-): Promise<Mistake | { errors: { name: string[] } }> {
+) {
   try {
     if (!userId) {
       console.error("User ID is missing");
@@ -45,13 +45,12 @@ export async function createMistake(
     if (!result.success) {
       console.log(result.error.flatten().fieldErrors);
       return {
-        errors: { name: result.error.flatten().fieldErrors.name ?? [] },
+        errors: { errors: result.error.flatten().fieldErrors },
       };
     }
 
     const { name } = result.data;
 
-    // Check for existing mistake
     const existingMistake = await sql`
       SELECT 1 FROM mistakes WHERE name = ${name} AND user_id = ${userId};
     `;
@@ -61,7 +60,6 @@ export async function createMistake(
       return { errors: { name: ["Mistake already exists"] } };
     }
 
-    // Insert new mistake into the database
     const response = await sql`
       INSERT INTO mistakes (name, user_id)
       VALUES (${name}, ${userId})
@@ -75,13 +73,7 @@ export async function createMistake(
       return { errors: { name: ["Failed to create mistake"] } };
     }
 
-    // Ensure the returned object fully matches the Mistake type
-    return {
-      id: mistake.id,
-      name: mistake.name,
-      onSuccessfulTrades: mistake.on_successful_trades || [], // Default to empty array if null
-      onFailedTrades: mistake.on_failed_trades || [], // Default to empty array if null
-    };
+    return mistake;
   } catch (error) {
     console.error(error);
     return { errors: { name: ["An unexpected error occurred"] } };

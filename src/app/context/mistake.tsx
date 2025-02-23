@@ -74,10 +74,10 @@ export default function MistakeContextProvider({
 
     try {
       const newMistake = await createMistake(formData, user.id);
-      // if (newMistake?.errors) {
-      //   console.log(newMistake.errors);
-      //   return;
-      // }
+      if (newMistake?.errors) {
+        console.log(newMistake.errors);
+        return;
+      }
 
       if (typeof newMistake === "object" && "id" in newMistake) {
         const formattedMistake = formatMistakeReturn(newMistake);
