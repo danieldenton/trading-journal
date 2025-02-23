@@ -98,12 +98,13 @@ export async function updateMistake(mistake: Mistake) {
       RETURNING *;
     `;
 
-    if (response.rowCount === 0) {
+    const updatedMistake = response.rows[0];
+    if (!updatedMistake) {
       console.log("Failed to update mistake");
       return { errors: { name: ["Failed to update mistake"] } };
     }
 
-    return response.rows[0];
+    return updateMistake
   } catch (error) {
     console.error(error);
   }
