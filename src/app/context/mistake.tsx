@@ -59,7 +59,7 @@ export default function MistakeContextProvider({
   const addNewMistake = async (prevState: Mistake[], formData: FormData) => {
     if (!user?.id) {
       console.error("User needs to be logged in to add a mistake");
-      return "User needs to be logged in to add a mistake";
+      return 
     }
 
     try {
@@ -93,7 +93,7 @@ export default function MistakeContextProvider({
         },
       ]);
     } catch (error) {
-      console.error("Error adding new mistake:", error);
+      console.log("Error adding new mistake:", error);
     }
   };
 
@@ -109,8 +109,8 @@ export default function MistakeContextProvider({
   const deleteMistakeFromUser = async (mistakeId: number) => {
     try {
       if (!user?.id) {
-        console.error("User needs to be logged in to delete a mistake");
-        return "User needs to be logged in to delete a mistake";
+        console.log("User needs to be logged in to delete a mistake");
+        return 
       }
       await deleteMistake(mistakeId);
       setMistakes((prev) => prev.filter((mistake) => mistake.id !== mistakeId));
