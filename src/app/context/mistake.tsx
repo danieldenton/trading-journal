@@ -17,6 +17,7 @@ import {
   deleteMistake,
 } from "../lib/actions/mistake-actions";
 import { useUserContext } from "./user";
+import { QueryResultRow } from "@vercel/postgres";
 
 type MistakeContext = {
   mistakes: Mistake[];
@@ -41,6 +42,15 @@ export default function MistakeContextProvider({
   const [newMistakeName, setNewMistakeName] = useState("");
   const { user } = useUserContext();
 
+  const formatMistakeReturn = (mistake: QueryResultRow): Mistake => {
+    return {
+      id: mistake.id,
+      name: mistake.name,
+      onSuccessfulTrades: mistake.on_successful_trades,
+      onFailedTrades: mistake.on_failed_trades,
+    };
+  };
+
   const fetchMistakes = async () => {
     try {
       if (!user?.id) return;
@@ -58,40 +68,21 @@ export default function MistakeContextProvider({
 
   const addNewMistake = async (prevState: Mistake[], formData: FormData) => {
     if (!user?.id) {
-      console.error("User needs to be logged in to add a mistake");
-      return 
+      console.log("User needs to be logged in to add a mistake");
+      return;
     }
 
     try {
       const newMistake = await createMistake(formData, user.id);
+      // if (newMistake?.errors) {
+      //   console.log(newMistake.errors);
+      //   return;
+      // }
 
-      // Check if it's an error object
-      if ("errors" in newMistake) {
-        return newMistake.errors.name?.[0] || "An unknown error occurred";
+      if (typeof newMistake === "object" && "id" in newMistake) {
+        const formattedMistake = formatMistakeReturn(newMistake);
+        setMistakes((prev) => [...prev, formattedMistake]);
       }
-
-      // Ensure onSuccessfulTrades and onFailedTrades are valid number arrays
-      const validOnSuccessfulTrades: number[] = Array.isArray(
-        newMistake.onSuccessfulTrades
-      )
-        ? newMistake.onSuccessfulTrades
-        : [];
-      const validOnFailedTrades: number[] = Array.isArray(
-        newMistake.onFailedTrades
-      )
-        ? newMistake.onFailedTrades
-        : [];
-
-      // Now update the state with proper typing
-      setMistakes((prev) => [
-        ...prev,
-        {
-          id: newMistake.id,
-          name: newMistake.name,
-          onSuccessfulTrades: validOnSuccessfulTrades,
-          onFailedTrades: validOnFailedTrades,
-        },
-      ]);
     } catch (error) {
       console.log("Error adding new mistake:", error);
     }
@@ -110,7 +101,7 @@ export default function MistakeContextProvider({
     try {
       if (!user?.id) {
         console.log("User needs to be logged in to delete a mistake");
-        return 
+        return;
       }
       await deleteMistake(mistakeId);
       setMistakes((prev) => prev.filter((mistake) => mistake.id !== mistakeId));
