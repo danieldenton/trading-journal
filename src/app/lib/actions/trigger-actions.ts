@@ -5,19 +5,18 @@ import {
   newTriggerSchema,
   updateTriggerSchema,
 } from "../schema/trigger-schema";
-import { TriggerWithWinRate, Trigger } from "../types";
+import { Trigger } from "../types";
 
 export async function getTriggers(userId: number | undefined) {
+  if (!userId) {
+    console.log("User ID is missing");
+    return 
+  }
   try {
     const response =
       await sql`SELECT * FROM triggers WHERE user_id = ${userId}`;
 
-    const triggers = response.rows.map((row) => ({
-      id: row.id,
-      name: row.name,
-      successCount: row.success_count,
-      failureCount: row.failure_count,
-    }));
+    const triggers = response.rows
 
     if (!triggers) {
       console.log("User has no triggers");
@@ -34,21 +33,21 @@ export async function createTrigger(
   formData: FormData,
   userId: number | undefined
 ) {
+  if (!userId) {
+    console.error("User ID is missing");
+    return { errors: { name: ["User ID is missing"] } };
+  }
+
+  const result = newTriggerSchema.safeParse(Object.fromEntries(formData));
+
+  if (!result.success) {
+    console.log(result.error.flatten().fieldErrors);
+    return { errors: result.error.flatten().fieldErrors };
+  }
+
+  const { name } = result.data;
+
   try {
-    if (!userId) {
-      console.error("User ID is missing");
-      return { errors: { name: ["User ID is missing"] } };
-    }
-
-    const result = newTriggerSchema.safeParse(Object.fromEntries(formData));
-
-    if (!result.success) {
-      console.log(result.error.flatten().fieldErrors);
-      return { errors: result.error.flatten().fieldErrors };
-    }
-
-    const { name } = result.data;
-
     const existingTrigger = await sql`
         SELECT 1 FROM triggers WHERE name= ${name} AND user_id = ${userId};
       `;
@@ -61,7 +60,7 @@ export async function createTrigger(
     const response = await sql`
             INSERT INTO triggers (name, user_id)
             VALUES (${name}, ${userId})
-             RETURNING id, name
+             RETURNING id, name, success_count, failure_count;
           `;
 
     const trigger = response.rows[0];
@@ -77,7 +76,7 @@ export async function createTrigger(
   }
 }
 
-export async function updateTrigger(trigger: TriggerWithWinRate) {
+export async function updateTrigger(trigger: Trigger) {
   try {
     const result = updateTriggerSchema.safeParse(trigger);
 
@@ -98,17 +97,11 @@ export async function updateTrigger(trigger: TriggerWithWinRate) {
         RETURNING id, name, success_count, failure_count;
       `;
 
-    if (response.rowCount === 0) {
+    const updatedTrigger = response.rows[0];
+    if (!updatedTrigger) {
       console.log("Failed to update trigger");
       return { errors: { name: ["Failed to update trigger"] } };
     }
-
-    const updatedTrigger = {
-      id: response.rows[0].id,
-      name: response.rows[0].name,
-      successCount: response.rows[0].success_count,
-      failureCount: response.rows[0].failure_count,
-    };
 
     return updatedTrigger;
   } catch (error) {
@@ -116,13 +109,10 @@ export async function updateTrigger(trigger: TriggerWithWinRate) {
   }
 }
 
-export async function deleteTrigger(
-  triggerId: number,
-  userId: number | undefined
-) {
+export async function deleteTrigger(triggerId: number) {
   try {
     const response = await sql`
-        DELETE FROM triggers WHERE id = ${triggerId} AND user_id = ${userId}
+        DELETE FROM triggers WHERE id = ${triggerId} 
       `;
 
     if (response.rowCount === 0) {

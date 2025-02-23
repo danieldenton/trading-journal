@@ -5,11 +5,11 @@ import { useSetupContext } from "../context/setup";
 import { SetupModalProps } from "../lib/types";
 
 export default function DeleteModal({ setup, setModalType }: SetupModalProps) {
-  const { deleteSetupFromUser } = useSetupContext();
+  const { deleteSetupFromDb } = useSetupContext();
 
   const handleDelete = () => {
     if (setup.id) {
-      deleteSetupFromUser(setup.id);
+      deleteSetupFromDb(setup.id);
       setModalType(undefined);
     }
   };

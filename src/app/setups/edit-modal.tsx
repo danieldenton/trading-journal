@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { SetupModalProps } from "../lib/types";
 import { useSetupContext } from "../context/setup";
 import MiniTriggerTable from "../components/mini-trigger-table";
-import { set } from "zod";
 
 export default function EditModal({ setup, setModalType }: SetupModalProps) {
   const [newSetupName, setNewSetupName] = useState(setup.name);
@@ -40,7 +39,10 @@ export default function EditModal({ setup, setModalType }: SetupModalProps) {
           onChange={(e) => setNewSetupName(e.target.value)}
           className="p-2 rounded font-bold text-black placeholder-gray-500 w-[50%] text-center focus:outline-none border border-black mb-1"
         />
-        <MiniTriggerTable setup={setup} />
+        <MiniTriggerTable
+          triggerState={selectedTriggerIds}
+          setTriggerState={setSelectedTriggerIds}
+        />
         <button
           onClick={() => handleCompleteEdit()}
           className="bg-red-500 text-white font-bold px-12 py-2 m-1 rounded gap-2"

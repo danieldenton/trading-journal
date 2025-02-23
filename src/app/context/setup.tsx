@@ -16,19 +16,17 @@ import {
   updateSetup,
   deleteSetup,
 } from "../lib/actions/setup-actions";
-import { Setup, SetupWithWinRate } from "../lib/types";
+import { Setup } from "../lib/types";
 import { calculateWinRate } from "../lib/utils";
 import { useUserContext } from "./user";
+import { QueryResultRow } from "@vercel/postgres";
 
 type SetupContext = {
-  setups: SetupWithWinRate[];
-  setSetups: Dispatch<SetStateAction<SetupWithWinRate[]>>;
-  setup: Setup;
-  setSetup: Dispatch<SetStateAction<Setup>>;
+  setups: Setup[];
+  setSetups: Dispatch<SetStateAction<Setup[]>>;
   addNewSetup: (prevState: any, formData: FormData) => void;
-  patchAndSaveUpdatedSetupToSetups: (updatedSetup: SetupWithWinRate) => void;
-  deleteSetupFromUser: (setupId: number) => void;
-  addOrRemoveTriggerFromSetup: (add: boolean, triggerId: number) => void;
+  patchAndSaveUpdatedSetupToSetups: (updatedSetup: Setup) => void;
+  deleteSetupFromDb: (setupId: number) => void;
   selectedTriggerIds: number[];
   setSelectedTriggerIds: Dispatch<SetStateAction<number[]>>;
 };
@@ -40,54 +38,51 @@ export default function SetupContextProvider({
 }: {
   children: ReactNode;
 }) {
-  const [setups, setSetups] = useState<SetupWithWinRate[]>([]);
+  const [setups, setSetups] = useState<Setup[]>([]);
   const [selectedTriggerIds, setSelectedTriggerIds] = useState<number[]>([]);
-  const [setup, setSetup] = useState<Setup>({
-    id: 0,
-    name: "",
-    triggerIds: selectedTriggerIds,
-    successCount: 0,
-    failureCount: 0,
-  });
   const { user } = useUserContext();
 
-  function addWinRateToSetups(
-    setupsToUpdated: Setup[] | undefined
-  ): SetupWithWinRate[] {
-    const setupsWithWinRate = setupsToUpdated?.map((setup) => ({
-      ...setup,
-      winRate: calculateWinRate(setup.successCount, setup.failureCount),
-    }));
-    const sortedSetups =
-      setupsWithWinRate?.sort((a, b) => b.winRate - a.winRate) || [];
-    return sortedSetups;
-  }
+  const formatSetupReturn = (setup: QueryResultRow): Setup => {
+    return {
+      id: setup.id,
+      name: setup.name,
+      triggerIds: setup.trigger_ids,
+      successCount: setup.success_count,
+      failureCount: setup.failure_count,
+      winRate: calculateWinRate(setup.success_count, setup.failure_count),
+    };
+  };
 
   const fetchSetups = async () => {
+    if (!user?.id) {
+      return;
+    }
     try {
-      const userSetups = await getSetups(user?.id);
-      const setupsWithWinRate = addWinRateToSetups(userSetups);
-      setSetups(setupsWithWinRate);
+      const userSetups = await getSetups(user.id);
+      if (userSetups) {
+        const formattedSetups = userSetups.map((setup) =>
+          formatSetupReturn(setup)
+        );
+        const sortedSetups =
+          formattedSetups.sort((a, b) => b.winRate - a.winRate) || [];
+        setSetups(sortedSetups);
+      }
     } catch (error) {
       console.error(error);
     }
   };
 
   useEffect(() => {
-    if (user?.id) {
-      fetchSetups();
-    }
+    fetchSetups();
   }, [user?.id]);
 
   const addNewSetup = async (prevState: any, formData: FormData) => {
+    if (!user?.id) {
+      console.error("User needs to be logged in to add a setup");
+      return;
+    }
+    formData.append("triggerIds", JSON.stringify(selectedTriggerIds));
     try {
-      if (!user?.id) {
-        console.error("User needs to be logged in to add a setup");
-        return "User needs to be logged in to add a setup";
-      }
-
-      formData.append("triggerIds", JSON.stringify(selectedTriggerIds));
-
       const newSetup = await createSetup(formData, user.id);
       if (newSetup?.errors) {
         const { name } = newSetup.errors;
@@ -95,47 +90,23 @@ export default function SetupContextProvider({
       }
 
       if (typeof newSetup?.id === "number" && newSetup.id > 0) {
-        setSetups((prev) => [
-          ...prev,
-          {
-            id: newSetup.id,
-            name: newSetup.name,
-            triggerIds: newSetup.setupIds,
-            successCount: 0,
-            failureCount: 0,
-            winRate: 0,
-          },
-        ]);
-        setSetup({
-          id: 0,
-          name: "",
-          triggerIds: [],
-          successCount: 0,
-          failureCount: 0,
-        });
+        const formattedSetup = formatSetupReturn(newSetup);
+        setSetups((prev) => [...prev, formattedSetup]);
       }
     } catch (error) {
       console.error(error);
     }
   };
 
-  const patchAndSaveUpdatedSetupToSetups = async (
-    updatedSetup: SetupWithWinRate
-  ) => {
+  const patchAndSaveUpdatedSetupToSetups = async (updatedSetup: Setup) => {
     try {
       const returnedSetup = await updateSetup(updatedSetup);
       if (typeof returnedSetup === "object" && "id" in returnedSetup) {
-        const setupWithWinRate = {
-          ...returnedSetup,
-          winRate: calculateWinRate(
-            returnedSetup.successCount,
-            returnedSetup.failureCount
-          ),
-        };
+        const formattedSetup = formatSetupReturn(returnedSetup);
 
         setSetups((prevsetups) =>
           prevsetups.map((setup) =>
-            setup.id === setupWithWinRate.id ? setupWithWinRate : setup
+            setup.id === formattedSetup.id ? formattedSetup : setup
           )
         );
       }
@@ -144,26 +115,12 @@ export default function SetupContextProvider({
     }
   };
 
-  const deleteSetupFromUser = async (setupId: number) => {
+  const deleteSetupFromDb = async (setupId: number) => {
     try {
-      if (!user?.id) {
-        console.error("User needs to be logged in to delete a setup");
-        return "User needs to be logged in to delete a setup";
-      }
-      await deleteSetup(setupId, user.id);
+      await deleteSetup(setupId);
       setSetups((prev) => prev.filter((setup) => setup.id !== setupId));
     } catch (error) {
       console.error(error);
-    }
-  };
-
-  const addOrRemoveTriggerFromSetup = (add: boolean, triggerId: number) => {
-    if (add) {
-      setSelectedTriggerIds((prevState) => [...prevState, triggerId]);
-    } else {
-      setSelectedTriggerIds((prevState) =>
-        prevState.filter((id) => id !== triggerId)
-      );
     }
   };
 
@@ -172,12 +129,9 @@ export default function SetupContextProvider({
       value={{
         setups,
         setSetups,
-        setup,
-        setSetup,
         addNewSetup,
         patchAndSaveUpdatedSetupToSetups,
-        deleteSetupFromUser,
-        addOrRemoveTriggerFromSetup,
+        deleteSetupFromDb,
         selectedTriggerIds,
         setSelectedTriggerIds,
       }}

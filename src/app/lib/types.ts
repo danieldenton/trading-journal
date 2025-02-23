@@ -15,13 +15,9 @@ export type Trigger = {
   failureCount: number;
 };
 
-export type TriggerWithWinRate = Trigger & {
-  id: number;
-  winRate: number | undefined;
-};
 export type TriggerModalProps = {
-  setModalType: Dispatch<SetStateAction<"delete" | "edit" | undefined>>;
-  trigger: TriggerWithWinRate;
+  trigger: Trigger;
+  setModalType: Dispatch<SetStateAction<"delete" | "edit" | undefined>>;;
 };
 
 export type Mistake = {
@@ -38,16 +34,22 @@ export type MistakeModalProps = {
 
 // Trade
 export type Trade = {
-  id: number | undefined;
+  id: number;
   date: string;
-  time: string;
   symbol: string;
+  long: boolean | undefined;
   setupIds: number[];
   triggerIds: number[];
+  entryTime: string;
+  entryPrice: number;
+  numberOfContracts: number;
+  stop: number;
+  takeProfits: number[];
+  exitTime: string;
+  exitPrice: number;
+  pnl: number;
   mistakeIds: number[];
   notes: string;
-  success: boolean;
-  pnl: number;
 };
 
 // Setup
@@ -57,13 +59,10 @@ export type Setup = {
   triggerIds: number[];
   successCount: number;
   failureCount: number;
-};
-
-export type SetupWithWinRate = Setup & {
-  winRate: number | undefined;
+  winRate: number;
 };
 
 export type SetupModalProps = {
-  setup: SetupWithWinRate;
+  setup: Setup;
   setModalType: Dispatch<SetStateAction<"delete" | "edit" | undefined>>;
 };
