@@ -121,10 +121,14 @@ export default function TradeContextProvider({
 
   const postTrade = async (prevState: any, formData: FormData) => {
     if (!user?.id) {
-      console.error("User needs to be logged in to add a trade");
+      console.log("User needs to be logged in to add a trade");
       return;
     }
-    console.log;
+    if (!longOrShort) {
+      setError("Please select long or short");
+      console.log("Please select long or short");
+      return;
+    }
     formData.append("userId", user.id.toString());
     formData.append("date", new Date().toISOString());
     formData.append("setupIds", JSON.stringify(setupIds));
