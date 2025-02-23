@@ -94,7 +94,7 @@ export async function updateTrigger(trigger: Trigger) {
           success_count = ${successCount},
           failure_count = ${failureCount}
         WHERE id = ${id}
-        RETURNING id, name, success_count, failure_count;
+        RETURNING *;
       `;
 
     const updatedTrigger = response.rows[0];
