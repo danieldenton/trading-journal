@@ -69,7 +69,7 @@ export default function MistakeContextProvider({
     fetchMistakes();
   }, [user?.id]);
 
-  const addNewMistake = async (prevState: Mistake[], formData: FormData) => {
+  const addNewMistake = async (prevState: any, formData: FormData) => {
     if (!user?.id) {
       console.log("User needs to be logged in to add a mistake");
       return;
