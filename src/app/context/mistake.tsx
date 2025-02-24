@@ -93,11 +93,11 @@ export default function MistakeContextProvider({
   };
 
   const patchAndSaveUpdatedMistakeToMistakes = async (
-    mistakeToUpdate: Mistake
+    updatedMistake: Mistake
   ) => {
-    const updatedMistake = await updateMistake(mistakeToUpdate);
-    if (typeof updatedMistake === "object" && "id" in updatedMistake) {
-      const formattedMistake = formatMistakeReturn(updatedMistake);
+    const returnedMistake = await updateMistake(updatedMistake);
+    if (typeof returnedMistake === "object" && "id" in returnedMistake) {
+      const formattedMistake = formatMistakeReturn(returnedMistake);
       setMistakes((prev) =>
         prev.map((mistake) =>
           mistake.id === formattedMistake.id ? formattedMistake : mistake

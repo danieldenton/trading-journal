@@ -33,7 +33,7 @@ export default function EditModal({
           className="p-2 rounded font-bold text-black placeholder-gray-500 w-[50%] text-center focus:outline-none border border-black mb-1"
         />
         <button
-          onClick={handleCompleteEdit}
+          onClick={() => handleCompleteEdit()}
           className="bg-red-500 text-white font-bold px-12 py-2 m-1 rounded"
         >
           Save
