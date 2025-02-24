@@ -26,7 +26,7 @@ type MistakeContext = {
   newMistakeName: string;
   setNewMistakeName: Dispatch<SetStateAction<string>>;
   addNewMistake: (prevState: Mistake[], formData: FormData) => void;
-  deleteMistakeFromUser: (mistakeId: number) => void;
+  deleteMistakeFromDb: (mistakeId: number) => void;
   patchAndSaveUpdatedMistakeToMistakes: (updatedMistake: Mistake) => void;
 };
 
@@ -92,19 +92,21 @@ export default function MistakeContextProvider({
     }
   };
 
-  const patchAndSaveUpdatedMistakeToMistakes = async (mistakeToUpdate: Mistake) => {
+  const patchAndSaveUpdatedMistakeToMistakes = async (
+    mistakeToUpdate: Mistake
+  ) => {
     const updatedMistake = await updateMistake(mistakeToUpdate);
     if (typeof updatedMistake === "object" && "id" in updatedMistake) {
-    const formattedMistake = formatMistakeReturn(updatedMistake);
-    setMistakes((prev) =>
-      prev.map((mistake) =>
-        mistake.id === formattedMistake.id ? formattedMistake : mistake
-      )
-    );
-  }
+      const formattedMistake = formatMistakeReturn(updatedMistake);
+      setMistakes((prev) =>
+        prev.map((mistake) =>
+          mistake.id === formattedMistake.id ? formattedMistake : mistake
+        )
+      );
+    }
   };
 
-  const deleteMistakeFromUser = async (mistakeId: number) => {
+  const deleteMistakeFromDb = async (mistakeId: number) => {
     try {
       if (!user?.id) {
         console.log("User needs to be logged in to delete a mistake");
@@ -125,7 +127,7 @@ export default function MistakeContextProvider({
         newMistakeName,
         setNewMistakeName,
         addNewMistake,
-        deleteMistakeFromUser,
+        deleteMistakeFromDb,
         patchAndSaveUpdatedMistakeToMistakes,
       }}
     >

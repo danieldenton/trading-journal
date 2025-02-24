@@ -6,10 +6,10 @@ export default function DeleteModal({
   mistake,
   setModalType,
 }: MistakeModalProps) {
-  const { deleteMistakeFromMistakes } = useMistakeContext();
+  const { deleteMistakeFromDb } = useMistakeContext();
 
   const handleDelete = () => {
-    deleteMistakeFromMistakes(mistake.id);
+    deleteMistakeFromDb(mistake.id);
     setModalType(undefined);
   };
 
