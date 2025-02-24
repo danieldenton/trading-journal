@@ -25,7 +25,7 @@ type MistakeContext = {
   setMistakes: Dispatch<SetStateAction<Mistake[]>>;
   newMistakeName: string;
   setNewMistakeName: Dispatch<SetStateAction<string>>;
-  addNewMistake: (prevState: Mistake[], formData: FormData) => void;
+  addNewMistake: (prevState: any, formData: FormData) => void;
   deleteMistakeFromDb: (mistakeId: number) => void;
   patchAndSaveUpdatedMistakeToMistakes: (updatedMistake: Mistake) => void;
 };
