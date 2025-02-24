@@ -98,8 +98,8 @@ export default function MistakeContextProvider({
     const returnedMistake = await updateMistake(updatedMistake);
     if (typeof returnedMistake === "object" && "id" in returnedMistake) {
       const formattedMistake = formatMistakeReturn(returnedMistake);
-      setMistakes((prev) =>
-        prev.map((mistake) =>
+      setMistakes((prevMistakes) =>
+        prevMistakes.map((mistake) =>
           mistake.id === formattedMistake.id ? formattedMistake : mistake
         )
       );
