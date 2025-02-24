@@ -92,7 +92,6 @@ export default function MistakeContextProvider({
     }
   };
 
-  // TODO: Add the action to this function
   const patchAndSaveUpdatedMistakeToMistakes = async (mistakeToUpdate: Mistake) => {
     const updatedMistake = await updateMistake(mistakeToUpdate);
     if (typeof updatedMistake === "object" && "id" in updatedMistake) {
