@@ -10,11 +10,8 @@ export default function EditModal({
   const { patchAndSaveUpdatedTriggerToTriggers } = useTriggerContext();
 
   const updatedTigger = {
-    id: trigger.id,
+    ...trigger,
     name: newTriggerName,
-    successCount: trigger.successCount,
-    failureCount: trigger.failureCount,
-    winRate: trigger.winRate,
   };
 
   const handleCompleteEdit = () => {

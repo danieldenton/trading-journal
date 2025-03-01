@@ -12,16 +12,11 @@ export async function getMistakes(userId: number | undefined) {
     const response =
       await sql`SELECT * FROM mistakes WHERE user_id = ${userId};`;
 
-    const mistakes: Mistake[] = response.rows.map((row) => ({
-      id: row.id,
-      name: row.name,
-      onSuccessfulTrades: row.on_successful_trades,
-      onFailedTrades: row.on_failed_trades,
-    }));
+    const mistakes = response.rows;
 
     if (!mistakes.length) {
       console.log("User has no mistakes");
-      return [];
+      return;
     }
 
     return mistakes;
@@ -33,7 +28,7 @@ export async function getMistakes(userId: number | undefined) {
 export async function createMistake(
   formData: FormData,
   userId: number | undefined
-): Promise<Mistake | { errors: { name: string[] } }> {
+) {
   try {
     if (!userId) {
       console.error("User ID is missing");
@@ -45,13 +40,12 @@ export async function createMistake(
     if (!result.success) {
       console.log(result.error.flatten().fieldErrors);
       return {
-        errors: { name: result.error.flatten().fieldErrors.name ?? [] },
+        errors: { errors: result.error.flatten().fieldErrors },
       };
     }
 
     const { name } = result.data;
 
-    // Check for existing mistake
     const existingMistake = await sql`
       SELECT 1 FROM mistakes WHERE name = ${name} AND user_id = ${userId};
     `;
@@ -61,11 +55,10 @@ export async function createMistake(
       return { errors: { name: ["Mistake already exists"] } };
     }
 
-    // Insert new mistake into the database
     const response = await sql`
       INSERT INTO mistakes (name, user_id)
       VALUES (${name}, ${userId})
-      RETURNING id, name, on_successful_trades, on_failed_trades;
+      RETURNING *;
     `;
 
     const mistake = response.rows[0];
@@ -75,13 +68,7 @@ export async function createMistake(
       return { errors: { name: ["Failed to create mistake"] } };
     }
 
-    // Ensure the returned object fully matches the Mistake type
-    return {
-      id: mistake.id,
-      name: mistake.name,
-      onSuccessfulTrades: mistake.on_successful_trades || [], // Default to empty array if null
-      onFailedTrades: mistake.on_failed_trades || [], // Default to empty array if null
-    };
+    return mistake;
   } catch (error) {
     console.error(error);
     return { errors: { name: ["An unexpected error occurred"] } };
@@ -106,12 +93,13 @@ export async function updateMistake(mistake: Mistake) {
       RETURNING *;
     `;
 
-    if (response.rowCount === 0) {
+    const updatedMistake = response.rows[0];
+    if (!updatedMistake) {
       console.log("Failed to update mistake");
       return { errors: { name: ["Failed to update mistake"] } };
     }
 
-    return response.rows[0];
+    return updateMistake;
   } catch (error) {
     console.error(error);
   }

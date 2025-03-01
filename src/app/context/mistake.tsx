@@ -14,9 +14,11 @@ import { Mistake } from "../lib/types";
 import {
   createMistake,
   getMistakes,
+  updateMistake,
   deleteMistake,
 } from "../lib/actions/mistake-actions";
 import { useUserContext } from "./user";
+import { QueryResultRow } from "@vercel/postgres";
 
 type MistakeContext = {
   mistakes: Mistake[];
@@ -25,7 +27,7 @@ type MistakeContext = {
   setNewMistakeName: Dispatch<SetStateAction<string>>;
   addNewMistake: (prevState: Mistake[], formData: FormData) => void;
   deleteMistakeFromUser: (mistakeId: number) => void;
-  postAndSaveUpdatedMistakeToMistakes: (updatedMistake: Mistake) => void;
+  patchAndSaveUpdatedMistakeToMistakes: (updatedMistake: Mistake) => void;
 };
 
 export const MistakeContext = createContext<MistakeContext | undefined>(
@@ -41,12 +43,24 @@ export default function MistakeContextProvider({
   const [newMistakeName, setNewMistakeName] = useState("");
   const { user } = useUserContext();
 
+  const formatMistakeReturn = (mistake: QueryResultRow): Mistake => {
+    return {
+      id: mistake.id,
+      name: mistake.name,
+      onSuccessfulTrades: mistake.on_successful_trades,
+      onFailedTrades: mistake.on_failed_trades,
+    };
+  };
+
   const fetchMistakes = async () => {
     try {
       if (!user?.id) return;
       const userMistakes = await getMistakes(user.id);
       if (!userMistakes) return;
-      setMistakes(userMistakes);
+      const formattedMistakes = userMistakes.map((mistake) =>
+        formatMistakeReturn(mistake)
+      );
+      setMistakes(formattedMistakes);
     } catch (error) {
       console.error(error);
     }
@@ -56,61 +70,46 @@ export default function MistakeContextProvider({
     fetchMistakes();
   }, [user?.id]);
 
-  const addNewMistake = async (prevState: Mistake[], formData: FormData) => {
+  const addNewMistake = async (prevState: any, formData: FormData) => {
     if (!user?.id) {
-      console.error("User needs to be logged in to add a mistake");
-      return "User needs to be logged in to add a mistake";
+      console.log("User needs to be logged in to add a mistake");
+      return;
     }
 
     try {
       const newMistake = await createMistake(formData, user.id);
-
-      // Check if it's an error object
-      if ("errors" in newMistake) {
-        return newMistake.errors.name?.[0] || "An unknown error occurred";
+      if (newMistake?.errors) {
+        console.log(newMistake.errors);
+        return;
       }
 
-      // Ensure onSuccessfulTrades and onFailedTrades are valid number arrays
-      const validOnSuccessfulTrades: number[] = Array.isArray(
-        newMistake.onSuccessfulTrades
-      )
-        ? newMistake.onSuccessfulTrades
-        : [];
-      const validOnFailedTrades: number[] = Array.isArray(
-        newMistake.onFailedTrades
-      )
-        ? newMistake.onFailedTrades
-        : [];
-
-      // Now update the state with proper typing
-      setMistakes((prev) => [
-        ...prev,
-        {
-          id: newMistake.id,
-          name: newMistake.name,
-          onSuccessfulTrades: validOnSuccessfulTrades,
-          onFailedTrades: validOnFailedTrades,
-        },
-      ]);
+      if (typeof newMistake === "object" && "id" in newMistake) {
+        const formattedMistake = formatMistakeReturn(newMistake);
+        setMistakes((prev) => [...prev, formattedMistake]);
+      }
     } catch (error) {
-      console.error("Error adding new mistake:", error);
+      console.log("Error adding new mistake:", error);
     }
   };
 
   // TODO: Add the action to this function
-  const postAndSaveUpdatedMistakeToMistakes = (updatedMistake: Mistake) => {
+  const patchAndSaveUpdatedMistakeToMistakes = async (mistakeToUpdate: Mistake) => {
+    const updatedMistake = await updateMistake(mistakeToUpdate);
+    if (typeof updatedMistake === "object" && "id" in updatedMistake) {
+    const formattedMistake = formatMistakeReturn(updatedMistake);
     setMistakes((prev) =>
       prev.map((mistake) =>
-        mistake.id === updatedMistake.id ? updatedMistake : mistake
+        mistake.id === formattedMistake.id ? formattedMistake : mistake
       )
     );
+  }
   };
 
   const deleteMistakeFromUser = async (mistakeId: number) => {
     try {
       if (!user?.id) {
-        console.error("User needs to be logged in to delete a mistake");
-        return "User needs to be logged in to delete a mistake";
+        console.log("User needs to be logged in to delete a mistake");
+        return;
       }
       await deleteMistake(mistakeId);
       setMistakes((prev) => prev.filter((mistake) => mistake.id !== mistakeId));
@@ -128,7 +127,7 @@ export default function MistakeContextProvider({
         setNewMistakeName,
         addNewMistake,
         deleteMistakeFromUser,
-        postAndSaveUpdatedMistakeToMistakes,
+        patchAndSaveUpdatedMistakeToMistakes,
       }}
     >
       {children}
