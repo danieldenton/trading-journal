@@ -25,8 +25,8 @@ type MistakeContext = {
   setMistakes: Dispatch<SetStateAction<Mistake[]>>;
   newMistakeName: string;
   setNewMistakeName: Dispatch<SetStateAction<string>>;
-  addNewMistake: (prevState: Mistake[], formData: FormData) => void;
-  deleteMistakeFromUser: (mistakeId: number) => void;
+  addNewMistake: (prevState: any, formData: FormData) => void;
+  deleteMistakeFromDb: (mistakeId: number) => void;
   patchAndSaveUpdatedMistakeToMistakes: (updatedMistake: Mistake) => void;
 };
 
@@ -92,20 +92,21 @@ export default function MistakeContextProvider({
     }
   };
 
-  // TODO: Add the action to this function
-  const patchAndSaveUpdatedMistakeToMistakes = async (mistakeToUpdate: Mistake) => {
-    const updatedMistake = await updateMistake(mistakeToUpdate);
-    if (typeof updatedMistake === "object" && "id" in updatedMistake) {
-    const formattedMistake = formatMistakeReturn(updatedMistake);
-    setMistakes((prev) =>
-      prev.map((mistake) =>
-        mistake.id === formattedMistake.id ? formattedMistake : mistake
-      )
-    );
-  }
+  const patchAndSaveUpdatedMistakeToMistakes = async (
+    updatedMistake: Mistake
+  ) => {
+    const returnedMistake = await updateMistake(updatedMistake);
+    if (typeof returnedMistake === "object" && "id" in returnedMistake) {
+      const formattedMistake = formatMistakeReturn(returnedMistake);
+      setMistakes((prevMistakes) =>
+        prevMistakes.map((mistake) =>
+          mistake.id === formattedMistake.id ? formattedMistake : mistake
+        )
+      );
+    }
   };
 
-  const deleteMistakeFromUser = async (mistakeId: number) => {
+  const deleteMistakeFromDb = async (mistakeId: number) => {
     try {
       if (!user?.id) {
         console.log("User needs to be logged in to delete a mistake");
@@ -126,7 +127,7 @@ export default function MistakeContextProvider({
         newMistakeName,
         setNewMistakeName,
         addNewMistake,
-        deleteMistakeFromUser,
+        deleteMistakeFromDb,
         patchAndSaveUpdatedMistakeToMistakes,
       }}
     >
