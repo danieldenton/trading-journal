@@ -56,7 +56,7 @@ export default function MistakesTable() {
         <thead>
           <tr className="bg-white text-black">
             <th className="border border-gray-300 py-2 text-center">
-              Mistake Name
+              Mistake
             </th>
             <th className="border border-gray-300 py-2 w-15% text-center">
               Update

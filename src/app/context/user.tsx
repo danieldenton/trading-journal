@@ -23,14 +23,22 @@ export default function UserContextProvider({
 
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
+    console.log("savedUser", savedUser);
     if (savedUser) {
-      setUser(JSON.parse(savedUser));
+      try {
+        setUser(JSON.parse(savedUser));
+      } catch (error) {
+        console.log("Failed to parse user data from localStorage:", error);
+        localStorage.removeItem("user");
+      }
     }
   }, []);
 
   useEffect(() => {
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
+    } else {
+      localStorage.removeItem("user");
     }
   }, [user]);
 
