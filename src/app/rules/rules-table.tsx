@@ -1,42 +1,42 @@
 "use client";
 
 import { useState } from "react";
-import { useMistakeContext } from "../context/mistake";
-import { Mistake } from "../lib/types";
+import { useRuleContext } from "../context/rule";
+import { Rule } from "../lib/types";
 import DeleteModal from "./delete-modal";
 import EditModal from "./edit-modal";
 
-export default function MistakesTable() {
+export default function RulesTable() {
   const [modalType, setModalType] = useState<"delete" | "edit" | undefined>();
-  const [selectedMistake, setSelectedMistake] = useState<Mistake | undefined>();
-  const { mistakes } = useMistakeContext();
+  const [selectedRule, setSelectedRule] = useState<Rule | undefined>();
+  const { rules } = useRuleContext();
 
-  const handleEdit = (mistake: Mistake) => {
+  const handleEdit = (Rule: Rule) => {
     setModalType("edit");
-    setSelectedMistake(mistake);
+    setSelectedRule(Rule);
   };
 
-  const handleDelete = (mistake: Mistake) => {
+  const handleDelete = (Rule: Rule) => {
     setModalType("delete");
-    setSelectedMistake(mistake);
+    setSelectedRule(Rule);
   };
 
-  const mistakeTable = mistakes.map((mistake, index) => {
+  const ruleTable = rules.map((rule, index) => {
     return (
       <tr key={index}>
         <td className="border border-gray-300 py-2 text-center font-bold">
-          {mistake.name}
+          {rule.name}
         </td>
         <td className="border border-gray-300 py-2 flex items-center justify-center gap-2">
           <button
             className="text-red-500 font-bold mx-1"
-            onClick={() => handleEdit(mistake)}
+            onClick={() => handleEdit(rule)}
           >
             Edit
           </button>
           <button
             className="text-red-500 font-bold mx-1"
-            onClick={() => handleDelete(mistake)}
+            onClick={() => handleDelete(rule)}
           >
             Delete
           </button>
@@ -47,23 +47,23 @@ export default function MistakesTable() {
 
   return (
     <>
-      {modalType === "delete" && selectedMistake ? (
-        <DeleteModal mistake={selectedMistake} setModalType={setModalType} />
-      ) : modalType === "edit" && selectedMistake ? (
-        <EditModal mistake={selectedMistake} setModalType={setModalType} />
+      {modalType === "delete" && selectedRule ? (
+        <DeleteModal rule={selectedRule} setModalType={setModalType} />
+      ) : modalType === "edit" && selectedRule ? (
+        <EditModal rule={selectedRule} setModalType={setModalType} />
       ) : null}
       <table className="table-auto w-full border-collapse border border-gray-300">
         <thead>
           <tr className="bg-white text-black">
             <th className="border border-gray-300 py-2 text-center">
-              Mistake
+              Rule
             </th>
             <th className="border border-gray-300 py-2 w-15% text-center">
               Update
             </th>
           </tr>
         </thead>
-        <tbody>{mistakeTable}</tbody>
+        <tbody>{ruleTable}</tbody>
       </table>
     </>
   );
