@@ -5,6 +5,7 @@ import TradeContextProvider from "./context/trade";
 import TriggerContextProvider from "./context/trigger";
 import SetupContextProvider from "./context/setup";
 import MistakeContextProvider from "./context/mistake";
+import RuleContextProvider from "./context/rule";
 import UserContextProvider from "./context/user";
 import Navbar from "./components/navbar";
 
@@ -34,16 +35,18 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black`}
       >
         <UserContextProvider>
-          <TriggerContextProvider>
-            <SetupContextProvider>
-              <MistakeContextProvider>
-                <TradeContextProvider>
-                  <Navbar />
-                  {children}
-                </TradeContextProvider>
-              </MistakeContextProvider>
-            </SetupContextProvider>
-          </TriggerContextProvider>
+          <RuleContextProvider>
+            <TriggerContextProvider>
+              <SetupContextProvider>
+                <MistakeContextProvider>
+                  <TradeContextProvider>
+                    <Navbar />
+                    {children}
+                  </TradeContextProvider>
+                </MistakeContextProvider>
+              </SetupContextProvider>
+            </TriggerContextProvider>
+          </RuleContextProvider>
         </UserContextProvider>
       </body>
     </html>
