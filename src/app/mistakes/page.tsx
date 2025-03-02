@@ -1,4 +1,4 @@
-import NewMistakeInput from "../components/new-mistake-input";
+import NewMistakeInput from "./new-mistake-input";
 import MistakesTable from "./mistakes-table";
 
 export default function MistakesPage() {
