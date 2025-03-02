@@ -67,3 +67,13 @@ export type SetupModalProps = {
   setup: Setup;
   setModalType: Dispatch<SetStateAction<"delete" | "edit" | undefined>>;
 };
+
+export type Rule = {
+  id: number;
+  name: string;
+}
+
+export type RuleModalProps = {
+  rule: Rule;
+  setModalType: Dispatch<SetStateAction<"delete" | "edit" | undefined>>;
+};
