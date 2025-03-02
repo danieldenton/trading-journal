@@ -17,6 +17,7 @@ export default function Navbar() {
           <Link href="/setups">Setups</Link>
           <Link href="/triggers">Triggers</Link>
           <Link href="/mistakes">Mistakes</Link>
+          <Link href="/rules">Rules</Link>
           <LogoutButton />
         </>
       ) : (
