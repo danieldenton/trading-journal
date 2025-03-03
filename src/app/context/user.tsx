@@ -42,7 +42,6 @@ export default function UserContextProvider({
 
   const handleLogout = () => {
     setUser(undefined);
-    localStorage.removeItem("user");
     logout();
     router.push("/");
   };
