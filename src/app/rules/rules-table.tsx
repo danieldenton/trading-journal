@@ -10,7 +10,7 @@ export default function RulesTable() {
   const [modalType, setModalType] = useState<"delete" | "edit" | undefined>();
   const [selectedRule, setSelectedRule] = useState<Rule | undefined>();
   const { rules } = useRuleContext();
-
+console.log(rules)
   const handleEdit = (rule: Rule) => {
     setModalType("edit");
     setSelectedRule(rule);

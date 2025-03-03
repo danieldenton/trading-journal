@@ -44,7 +44,7 @@ export default function RuleContextProvider({
   const formatRuleReturn = (rule: QueryResultRow): Rule => {
     return {
       id: rule.id,
-      rule: rule.name,
+      rule: rule.rule,
     };
   };
 
