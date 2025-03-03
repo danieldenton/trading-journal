@@ -18,7 +18,7 @@ export default function DeleteModal({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white h-[25%] w-[25%] flex items-center justify-center flex-col rounded shadow-lg p-4">
         <p className="text-black font-bold text-lg px-2 text-center mb-3">
-          Are you sure you want to delete "{rule.name}"?
+          Are you sure you want to delete "{rule.rule}"?
         </p>
         <div className="flex gap-4">
           <button

@@ -17,7 +17,7 @@ export default function NewRuleInput() {
     >
       <input
         type="text"
-        name="name"
+        name="rule"
         placeholder="Enter new Rule"
         className="p-2 rounded font-bold text-black placeholder-gray-500 text-center focus:outline-none"
       />

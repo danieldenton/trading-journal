@@ -70,7 +70,7 @@ export type SetupModalProps = {
 
 export type Rule = {
   id: number;
-  name: string;
+  rule: string;
 }
 
 export type RuleModalProps = {

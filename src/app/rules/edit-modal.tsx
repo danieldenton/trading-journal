@@ -6,12 +6,12 @@ export default function EditModal({
   rule,
   setModalType,
 }: RuleModalProps) {
-  const [newRuleName, setNewRuleName] = useState(rule.name);
+  const [newRule, setNewRule] = useState(rule.rule);
   const { patchAndSaveUpdatedRuleToRules } = useRuleContext()
 
   const updatedRule = {
     ...rule,
-    name: newRuleName,
+    rule: newRule,
   };
 
   const handleCompleteEdit = () => {
@@ -28,8 +28,8 @@ export default function EditModal({
         <input
           type="text"
           name="name"
-          value={newRuleName}
-          onChange={(e) => setNewRuleName(e.target.value)}
+          value={newRule}
+          onChange={(e) => setNewRule(e.target.value)}
           className="p-2 rounded font-bold text-black placeholder-gray-500 w-[50%] text-center focus:outline-none border border-black mb-1"
         />
         <button
