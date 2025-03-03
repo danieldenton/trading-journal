@@ -96,7 +96,7 @@ export async function login(prevState: unknown, formData: FormData) {
   }
 }
 
-export const getUser = async () => {
+export const getUserIdFromSessionAndUserFromDb = async () => {
   const cookieStore = await cookies();
   const cookie = cookieStore.get("session")?.value;
   const session = await decrypt(cookie);
