@@ -1,10 +1,18 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, Dispatch, SetStateAction, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+  ReactNode,
+} from "react";
 import { useRouter } from "next/navigation";
 import { logout } from "../lib/actions/auth-actions";
 import { User } from "../lib/types";
-
+import { getUserIdFromSessionAndUserFromDb } from "../lib/actions/auth-actions";
 type UserContext = {
   user: User | undefined;
   setUser: Dispatch<SetStateAction<User | undefined>>;
@@ -21,33 +29,21 @@ export default function UserContextProvider({
   const [user, setUser] = useState<User | undefined>();
   const router = useRouter();
 
+  const fetchUser = async () => {
+    const user = await getUserIdFromSessionAndUserFromDb();
+    setUser(user);
+  };
+
   useEffect(() => {
-    const savedUser = localStorage.getItem("user");
-    console.log("savedUser", savedUser);
-    if (savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-      } catch (error) {
-        console.log("Failed to parse user data from localStorage:", error);
-        localStorage.removeItem("user");
-      }
-    }
+    fetchUser();
   }, []);
 
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem("user", JSON.stringify(user));
-    } else {
-      localStorage.removeItem("user");
-    }
-  }, [user]);
-
-  const handleLogout = () => {  
+  const handleLogout = () => {
     setUser(undefined);
     localStorage.removeItem("user");
     logout();
     router.push("/");
-  }
+  };
 
   return (
     <UserContext.Provider
