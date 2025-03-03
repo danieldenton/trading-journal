@@ -31,7 +31,9 @@ export default function UserContextProvider({
 
   const fetchUser = async () => {
     const user = await getUserIdFromSessionAndUserFromDb();
-    setUser(user);
+    if (user) {
+      setUser(user);
+    }
   };
 
   useEffect(() => {
