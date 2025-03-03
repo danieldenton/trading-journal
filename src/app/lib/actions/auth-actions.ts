@@ -5,7 +5,6 @@ import bcrypt from "bcrypt";
 import { sql } from "@vercel/postgres";
 import { createSession, deleteSession, decrypt } from "../sessions";
 import { registerSchema, loginSchema } from "../schema/auth-schema";
-import { User } from "../types";
 
 export async function registerUser(prevState: unknown, formData: FormData) {
   try {
@@ -90,7 +89,7 @@ export async function login(prevState: unknown, formData: FormData) {
 
     await createSession(user.id);
 
-    return { user, errors: undefined };
+    return user;
   } catch (error) {
     console.error(error);
   }
@@ -106,10 +105,12 @@ export const getUserIdFromSessionAndUserFromDb = async () => {
       const response = await sql`
       SELECT id, email, first_name FROM users WHERE id = ${userId}
     `;
-      const user = response.rows[0];
-      if (user && typeof user === "object" && "id" in user && "email" in user) {
-        return user as User;
-      }
+      const user = {
+        id: response.rows[0].id,
+        email: response.rows[0].email,
+        first_name: response.rows[0].first_name,
+      };
+      return user;
     } catch (error) {
       console.error(error);
     }
