@@ -1,9 +1,11 @@
 "use server";
 
+import { cookies } from "next/headers";
 import bcrypt from "bcrypt";
 import { sql } from "@vercel/postgres";
-import { createSession, deleteSession } from "../sessions";
+import { createSession, deleteSession, decrypt } from "../sessions";
 import { registerSchema, loginSchema } from "../schema/auth-schema";
+import { User } from "../types";
 
 export async function registerUser(prevState: unknown, formData: FormData) {
   try {
@@ -93,6 +95,26 @@ export async function login(prevState: unknown, formData: FormData) {
     console.error(error);
   }
 }
+
+export const getUser = async () => {
+  const cookieStore = await cookies();
+  const cookie = cookieStore.get("session")?.value;
+  const session = await decrypt(cookie);
+  const userId = session?.userId;
+  if (userId && typeof userId === "number") {
+    try {
+      const response = await sql`
+      SELECT id, email, first_name FROM users WHERE id = ${userId}
+    `;
+      const user = response.rows[0];
+      if (user && typeof user === "object" && "id" in user && "email" in user) {
+        return user as User;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+};
 
 export async function logout() {
   try {
