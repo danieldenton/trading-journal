@@ -11,12 +11,12 @@ import React, {
 } from "react";
 
 import { Rule } from "../lib/types";
-// import {
-//   createRule,
-//   getRules,
-//   updateRule,
-//   deleteRule,
-// } from "../lib/actions/rule-actions";
+import {
+  createRule,
+  getRules,
+  updateRule,
+  deleteRule,
+} from "../lib/actions/rule-actions";
 import { useUserContext } from "./user";
 import { QueryResultRow } from "@vercel/postgres";
 
@@ -44,19 +44,19 @@ export default function RuleContextProvider({
   const formatRuleReturn = (rule: QueryResultRow): Rule => {
     return {
       id: rule.id,
-      name: rule.name,
+      rule: rule.name,
     };
   };
 
   const fetchRules = async () => {
     try {
       if (!user?.id) return;
-      //   const userRules = await getRules(user.id);
-      //   if (!userRules) return;
-      //   const formattedRules = userRules.map((Rule) =>
-      //     formatRuleReturn(Rule)
-      //   );
-      //   setRules(formattedRules);
+        const userRules = await getRules(user.id);
+        if (!userRules) return;
+        const formattedRules = userRules.map((rule) =>
+          formatRuleReturn(rule)
+        );
+        setRules(formattedRules);
     } catch (error) {
       console.error(error);
     }
@@ -73,15 +73,15 @@ export default function RuleContextProvider({
     }
 
     try {
-      //   const newRule = await createRule(formData, user.id);
-      //   if (newRule?.errors) {
-      //     console.log(newRule.errors);
-      //     return;
-      //   }
-      //   if (typeof newRule === "object" && "id" in newRule) {
-      //     const formattedRule = formatRuleReturn(newRule);
-      //     setRules((prev) => [...prev, formattedRule]);
-      //   }
+        const newRule = await createRule(formData, user.id);
+        if (newRule?.errors) {
+          console.log(newRule.errors);
+          return;
+        }
+        if (typeof newRule === "object" && "id" in newRule) {
+          const formattedRule = formatRuleReturn(newRule);
+          setRules((prev) => [...prev, formattedRule]);
+        }
     } catch (error) {
       console.log("Error adding new Rule:", error);
     }
@@ -89,15 +89,15 @@ export default function RuleContextProvider({
 
   const patchAndSaveUpdatedRuleToRules = async (updatedRule: Rule) => {
     try {
-    //   const returnedRule = await updateRule(updatedRule);
-    //   if (typeof returnedRule === "object" && "id" in returnedRule) {
-    //     const formattedRule = formatRuleReturn(returnedRule);
-    //     setRules((prevRules) =>
-    //       prevRules.map((Rule) =>
-    //         Rule.id === formattedRule.id ? formattedRule : Rule
-    //       )
-    //     );
-    //   }
+      const returnedRule = await updateRule(updatedRule);
+      if (typeof returnedRule === "object" && "id" in returnedRule) {
+        const formattedRule = formatRuleReturn(returnedRule);
+        setRules((prevRules) =>
+          prevRules.map((Rule) =>
+            Rule.id === formattedRule.id ? formattedRule : Rule
+          )
+        );
+      }
     } catch (error) {
       console.log("Error adding new Rule:", error);
     }
@@ -109,7 +109,7 @@ export default function RuleContextProvider({
         console.log("User needs to be logged in to delete a Rule");
         return;
       }
-    //   await deleteRule(ruleId);
+      await deleteRule(ruleId);
       setRules((prev) => prev.filter((rule) => rule.id !== ruleId));
     } catch (error) {
       console.error(error);

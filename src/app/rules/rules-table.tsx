@@ -11,21 +11,21 @@ export default function RulesTable() {
   const [selectedRule, setSelectedRule] = useState<Rule | undefined>();
   const { rules } = useRuleContext();
 
-  const handleEdit = (Rule: Rule) => {
+  const handleEdit = (rule: Rule) => {
     setModalType("edit");
-    setSelectedRule(Rule);
+    setSelectedRule(rule);
   };
 
-  const handleDelete = (Rule: Rule) => {
+  const handleDelete = (rule: Rule) => {
     setModalType("delete");
-    setSelectedRule(Rule);
+    setSelectedRule(rule);
   };
 
   const ruleTable = rules.map((rule, index) => {
     return (
       <tr key={index}>
         <td className="border border-gray-300 py-2 text-center font-bold">
-          {rule.name}
+          {rule.rule}
         </td>
         <td className="border border-gray-300 py-2 flex items-center justify-center gap-2">
           <button
@@ -55,9 +55,7 @@ export default function RulesTable() {
       <table className="table-auto w-full border-collapse border border-gray-300">
         <thead>
           <tr className="bg-white text-black">
-            <th className="border border-gray-300 py-2 text-center">
-              Rule
-            </th>
+            <th className="border border-gray-300 py-2 text-center">Rule</th>
             <th className="border border-gray-300 py-2 w-15% text-center">
               Update
             </th>
