@@ -4,17 +4,17 @@ This app for trade journaling will tell you which criteria for entering a trade 
 
 ## User Stories
 
-- The user should be able to log there trades in detail. This includes the date and time of the trade, the triggers or reasons for entering the trade, as well as any other market conditions like daily bias, news, stc.
+- The user should be able to begin a trading day by journaling premarket conditions, specifically what the daily, 4hr, 1hr and 15 minute time frames look like. Also if there is a clear draw on liquidity aas well as any liquidity you would want to see taken before heading toward the draw.
 
-- The user should be able to select triggers from a list of triggers. If the trigger does not exist, the user will be able to add a new trigger to that list.
+-The user should be able to create their own list of rules to follow. These rules should pop up when the user is journaling the premarket conditions. THe user should be able to turn this feature off if they so choose.
 
-- The user should be able to review these trades with a screen shot or replay of the trade included in the notes.
+- The user should be able to log there trades in detail. This includes the time of the trade, the triggers and or setups (combinations of triggers) present when entering the trade, any mistakes made on the trade, as well as any other notes.
 
-- The user should be able to review a list of triggers and see which of them are most successful. They will be ordered by how many successful trades they were included in.
+- The user should be able to review these trades with a screen shot or replay of the trade.
 
-- The user should be able to review a list of set-ups or groups of triggers, that are most successful.
+- The user should see the stats of the triggers, setups and mistakes, for example which mistake is made most frequently or which triggers or setups has the highest success rate, as well as total win rate and pnl by day, week, month, year or total, all ont the user dashboard.
 
-- The user should be able to review a list of mistakes ordered by how often they are made in losing trades.
+
 
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
