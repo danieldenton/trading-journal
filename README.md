@@ -19,8 +19,6 @@ This app for trade journaling will tell you which criteria for entering a trade 
 - The user should be able to review these trades with a screen shot or replay of the trade.
 
 
-
-
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
