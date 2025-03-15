@@ -33,6 +33,7 @@ export default function UserContextProvider({
     const user = await getUserIdFromSessionAndUserFromDb();
     if (user) {
       setUser(user);
+      
     }
   };
 

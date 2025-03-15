@@ -3,25 +3,25 @@
 import { useState } from "react";
 import { useSetupContext } from "../context/setup";
 import { useTriggerContext } from "../context/trigger";
-import { SetupWithWinRate } from "../lib/types";
+import { Setup } from "../lib/types";
 import DeleteModal from "./delete-modal";
 import EditModal from "./edit-modal";
 
 export default function SetupsTable() {
   const [modalType, setModalType] = useState<"delete" | "edit" | undefined>();
   const [selectedSetup, setSelectedSetup] = useState<
-    SetupWithWinRate | undefined
+    Setup | undefined
   >();
   const { setups, setSelectedTriggerIds } = useSetupContext();
   const { triggers } = useTriggerContext();
 
-  const handleEdit = (setup: SetupWithWinRate) => {
+  const handleEdit = (setup: Setup) => {
     setModalType("edit");
     setSelectedTriggerIds(setup.triggerIds);
     setSelectedSetup(setup);
   };
 
-  const handleDelete = (setup: SetupWithWinRate) => {
+  const handleDelete = (setup: Setup) => {
     setModalType("delete");
     setSelectedSetup(setup);
   };
