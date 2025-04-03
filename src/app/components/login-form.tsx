@@ -44,8 +44,8 @@ export default function LoginForm() {
         }}
       />
 
-      {state?.errors?.email && (
-        <p className="text-red-500">{state.errors.email}</p>
+      {state?.error && (
+        <p className="text-red-500">{state.error}</p>
       )}
       <button
         disabled={isPending}

@@ -69,7 +69,7 @@ export async function login(prevState: unknown, formData: FormData) {
 `;
 
     if (existingUser.rows.length === 0) {
-      return { success: false, error: "User not found" };
+      return { error: "User not found" };
     }
 
     const validPassword = await bcrypt.compare(
@@ -89,7 +89,7 @@ export async function login(prevState: unknown, formData: FormData) {
 
     await createSession(user.id);
 
-    return user;
+    return { status: "success", user: user };
   } catch (error) {
     console.error(error);
   }

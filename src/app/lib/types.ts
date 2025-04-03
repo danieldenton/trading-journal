@@ -1,6 +1,16 @@
 import { Dispatch, SetStateAction } from "react";
 
 // User
+export type LoginSuccess = {
+  status: "success";
+  user: {
+    id: string;
+    email: string;
+    first_name: string;
+  };
+};
+
+
 export type User = {
   id: number;
   email: string;
