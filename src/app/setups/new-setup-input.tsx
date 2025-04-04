@@ -35,7 +35,7 @@ export default function NewSetupInput() {
       >
         Add Setup
       </button>
-      {state?.errors?.triggerIds && <p className="text-red-500">{state.errors.triggerIds}</p>}
+      {state?.errors && <p className="text-red-500">{state.errors.triggerIds}</p>}
     </form>
   );
 }

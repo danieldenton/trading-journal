@@ -74,7 +74,7 @@ export async function createSetup(
       return { errors: { name: ["Failed to create setup"] } };
     }
 
-    return setup;
+    return setup
   } catch (error) {
     console.error(error);
   }

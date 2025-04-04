@@ -40,12 +40,12 @@ export default function SetupsTable() {
         <td className="flex flex-col border border-gray-300 py-2 text-center font-bold">
           {triggerNames}
         </td>
-        <td className="border border-gray-300 py-2 text-center font-bold">
+        {/* <td className="border border-gray-300 py-2 text-center font-bold">
           {setup.failureCount + setup.successCount}
         </td>
         <td className="border border-gray-300 py-2 text-center  font-bold">
           {setup.winRate}%
-        </td>
+        </td> */}
         <td className="border border-gray-300 py-2 text-center">
           <div className="flex justify-center items-center gap-2">
             <button

@@ -1,16 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 
 // User
-export type LoginSuccess = {
-  status: "success";
-  user: {
-    id: string;
-    email: string;
-    first_name: string;
-  };
-};
-
-
 export type User = {
   id: number;
   email: string;
@@ -68,9 +58,11 @@ export type Setup = {
   id: number;
   name: string;
   triggerIds: number[];
-  successCount: number;
-  failureCount: number;
-  winRate: number;
+};
+
+export type SetupErrors = {
+  name?: string[];
+  triggerIds?: string[];
 };
 
 export type SetupModalProps = {

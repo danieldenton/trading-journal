@@ -16,7 +16,7 @@ import {
   updateSetup,
   deleteSetup,
 } from "../lib/actions/setup-actions";
-import { Setup } from "../lib/types";
+import { Setup, SetupErrors } from "../lib/types";
 import { calculateWinRate } from "../lib/utils";
 import { useUserContext } from "./user";
 import { QueryResultRow } from "@vercel/postgres";
@@ -47,9 +47,6 @@ export default function SetupContextProvider({
       id: setup.id,
       name: setup.name,
       triggerIds: setup.trigger_ids,
-      successCount: setup.success_count,
-      failureCount: setup.failure_count,
-      winRate: calculateWinRate(setup.success_count, setup.failure_count),
     };
   };
 
@@ -63,9 +60,9 @@ export default function SetupContextProvider({
         const formattedSetups = userSetups.map((setup) =>
           formatSetupReturn(setup)
         );
-        const sortedSetups =
-          formattedSetups.sort((a, b) => b.winRate - a.winRate) || [];
-        setSetups(sortedSetups);
+      //   const sortedSetups =
+      //     formattedSetups.sort((a, b) => b.winRate - a.winRate) || [];
+      //   setSetups(sortedSetups);
       }
     } catch (error) {
       console.error(error);
@@ -76,17 +73,16 @@ export default function SetupContextProvider({
     fetchSetups();
   }, [user?.id]);
 
-  const addNewSetup = async (prevState: any, formData: FormData) => {
+  const addNewSetup = async (prevState: any, formData: FormData): Promise<SetupErrors | undefined>  => {
     if (!user?.id) {
-      console.error("User needs to be logged in to add a setup");
+      console.log("User needs to be logged in to add a setup");
       return;
     }
     formData.append("triggerIds", JSON.stringify(selectedTriggerIds));
     try {
       const newSetup = await createSetup(formData, user.id);
       if (newSetup?.errors) {
-        const { name } = newSetup.errors;
-        return name;
+        return newSetup.errors;
       }
 
       if (typeof newSetup?.id === "number" && newSetup.id > 0) {
