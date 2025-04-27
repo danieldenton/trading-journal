@@ -12,7 +12,7 @@ export async function getMistakes(userId: number | undefined) {
     const response =
       await sql`SELECT * FROM mistakes WHERE user_id = ${userId};`;
 
-    const mistakes = response.rows;
+    const mistakes = response.rows as Mistake[];
 
     if (!mistakes.length) {
       console.log("User has no mistakes");
@@ -61,7 +61,7 @@ export async function createMistake(
       RETURNING *;
     `;
 
-    const mistake = response.rows[0];
+    const mistake = response.rows[0] as Mistake;
 
     if (!mistake) {
       console.log("Failed to create mistake");
@@ -93,7 +93,7 @@ export async function updateMistake(mistake: Mistake) {
       RETURNING *;
     `;
 
-    const updatedMistake = response.rows[0];
+    const updatedMistake = response.rows[0] as Mistake;
     if (!updatedMistake) {
       console.log("Failed to update mistake");
       return { errors: { name: ["Failed to update mistake"] } };

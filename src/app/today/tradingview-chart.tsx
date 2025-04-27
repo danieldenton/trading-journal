@@ -18,7 +18,7 @@ function TradingViewWidget() {
     script.innerHTML = `
       {
         "autosize": true,
-        "symbol": "MNQ1!",
+        "symbol": "NQ1!",
         "interval": "D",
         "range": "2M",
         "timezone": "America/New_York",

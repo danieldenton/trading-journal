@@ -43,24 +43,15 @@ export default function MistakeContextProvider({
   const [newMistakeName, setNewMistakeName] = useState("");
   const { user } = useUserContext();
 
-  const formatMistakeReturn = (mistake: QueryResultRow): Mistake => {
-    return {
-      id: mistake.id,
-      name: mistake.name,
-      onSuccessfulTrades: mistake.on_successful_trades,
-      onFailedTrades: mistake.on_failed_trades,
-    };
-  };
+ 
 
   const fetchMistakes = async () => {
     try {
       if (!user?.id) return;
       const userMistakes = await getMistakes(user.id);
       if (!userMistakes) return;
-      const formattedMistakes = userMistakes.map((mistake) =>
-        formatMistakeReturn(mistake)
-      );
-      setMistakes(formattedMistakes);
+      
+      setMistakes(userMistakes);
     } catch (error) {
       console.error(error);
     }
@@ -84,8 +75,7 @@ export default function MistakeContextProvider({
       }
 
       if (typeof newMistake === "object" && "id" in newMistake) {
-        const formattedMistake = formatMistakeReturn(newMistake);
-        setMistakes((prev) => [...prev, formattedMistake]);
+        setMistakes((prev) => [...prev, newMistake]);
       }
     } catch (error) {
       console.log("Error adding new mistake:", error);
@@ -97,10 +87,9 @@ export default function MistakeContextProvider({
   ) => {
     const returnedMistake = await updateMistake(updatedMistake);
     if (typeof returnedMistake === "object" && "id" in returnedMistake) {
-      const formattedMistake = formatMistakeReturn(returnedMistake);
       setMistakes((prevMistakes) =>
         prevMistakes.map((mistake) =>
-          mistake.id === formattedMistake.id ? formattedMistake : mistake
+          mistake.id === returnedMistake.id ? returnedMistake : mistake
         )
       );
     }
